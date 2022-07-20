@@ -14,13 +14,19 @@ Run pytest, note how
    FAILED tests/test_grammar_parser/test_Var_Name.py::Test_Var_Name::test_A - as...    
    FAILED tests/test_grammar_parser/test_Var_Name.py::Test_Var_Name::test_B - as...    
 These tests previously passed when the parameterized test was commented out.     
-  
- On windows 10, version "10.0.19041.1806"    
- Also fails on Githubs Ubuntu runner    
+
+Also note how running the copy of the code beneath the if __name__ == "__main__" works fine.    
+Have also checked that the functools lru_cache is getting cleared by using
+print(<method>.cache_info())
+Should also clear in _set_src and also added a seperate clear_cache in the test. 
  
- See Github actions test runs "Commented" and "Uncommented" for evidence of Ubuntu runners failure. 
-   
- Have tried rolling back pytest to 7.0.0, didn't work    
- Have tried setting up venv again and reinstalling pytest, didn't work    
+ 
+On windows 10, version "10.0.19041.1806"    
+Also fails on Githubs Ubuntu runner    
+
+See Github actions test runs "Commented" and "Uncommented" for evidence of Ubuntu runners failure. 
+
+Have tried rolling back pytest to 7.0.0, didn't work    
+Have tried setting up venv again and reinstalling pytest, didn't work    
  
 
