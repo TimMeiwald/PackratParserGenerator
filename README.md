@@ -18,7 +18,7 @@ These tests previously passed when the parameterized test was commented out.
  On windows 10, version "10.0.19041.1806"    
  Also fails on Githubs Ubuntu runner    
  
- See last two test run results for proof.    
+ See Github actions test runs "Commented" and "Uncommented" for evidence of Ubuntu runners failure. 
    
  Have tried rolling back pytest to 7.0.0, didn't work    
  Have tried setting up venv again and reinstalling pytest, didn't work    
