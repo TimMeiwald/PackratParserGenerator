@@ -1,0 +1,2 @@
+python setup.py sdist
+'python -m pip install -e PackratParserGenerator' : To install package, remember to activate venv first if you want to install there. 

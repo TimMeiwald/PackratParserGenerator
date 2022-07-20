@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 HERE = pathlib.Path(__file__).parent
 
 VERSION = '0.0.1'
-PACKAGE_NAME = 'Generated Parser Generator 3'
+PACKAGE_NAME = 'PackratParserGenerator'
 AUTHOR = 'Tim Meiwald'
 AUTHOR_EMAIL = 'tim.meiwald@gmail.com'
 URL = 'https://github.com/TimMeiwald/GPG2'
