@@ -6,6 +6,8 @@ TODO: QOL Feature Use uint[0-255] to get all ASCII chars as opposed to current s
 
 # [Reproduction Steps]
 git clone <repo>    
+create venv
+pip install pytest
 run commands in BuildInstructions.txt      
 Navigate to tests\test_grammar_parser\test_Var_Name.py     
 Run pytest, note how only "FAILED tests/test_grammar_parser/test_Sequence.py::Test_Sequence::test_Sequence[<This_is_a_name>, <Another_Name>-answer5]" fails    
