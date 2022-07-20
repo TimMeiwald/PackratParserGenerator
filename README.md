@@ -1,6 +1,6 @@
 [![Tests](https://github.com/TimMeiwald/PackratParserGenerator/actions/workflows/PackratParserGenerator.yml/badge.svg)](https://github.com/TimMeiwald/PackratParserGenerator/actions/workflows/PackratParserGenerator.yml)
-# GPG3
-GPG3
+# PackratParserGenerator
+PackratParserGenerator
 TODO: QOL Feature Use uint[0-255] to get all ASCII chars as opposed to current solution  
 
 
@@ -19,4 +19,8 @@ These tests previously passed when the parameterized test was commented out.
  Also fails on Githubs Ubuntu runner    
  
  See last two test run results for proof.    
+   
+ Have tried rolling back pytest to 7.0.0, didn't work    
+ Have tried setting up venv again and reinstalling pytest, didn't work    
+ 
 
