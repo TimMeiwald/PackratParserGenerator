@@ -1,4 +1,4 @@
-[![Tests](https://github.com/TimMeiwald/GPG3/actions/workflows/GPG2-test-runner.yml/badge.svg)](https://github.com/TimMeiwald/GPG2/actions/workflows/GPG2-test-runner.yml)
+[![Tests](https://github.com/TimMeiwald/PackratParserGenerator/actions/workflows/PackratParserGenerator.yml/badge.svg)](https://github.com/TimMeiwald/PackratParserGenerator/actions/workflows/PackratParserGenerator.yml)
 # GPG3
 GPG3
 
