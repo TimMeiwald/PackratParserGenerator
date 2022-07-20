@@ -5,8 +5,8 @@ TODO: QOL Feature Use uint[0-255] to get all ASCII chars as opposed to current s
 
 
 # [Reproduction Steps]
-git clone <repo>
-run commands in BuildInstructions.txt 
-Navigate to tests\test_grammar_parser\test_Var_Name.py
+git clone <repo>  
+run commands in BuildInstructions.txt   
+Navigate to tests\test_grammar_parser\test_Var_Name.py  
 
 
