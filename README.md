@@ -2,7 +2,7 @@
 # PackratParserGenerator
 PackratParserGenerator
 TODO: QOL Feature Use uint[0-255] to get all ASCII chars as opposed to current solution  
-
+TODO: Investigate "\t" failure     
 
 
 
