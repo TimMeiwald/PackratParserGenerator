@@ -23,7 +23,7 @@ class Test_RHS():
     def test_RHS(self, gparser, src, answer):
         gparser._set_src(src)
         gparser.RHS.cache_clear()
-        tup = (gparser.RHS, ())
+        tup = (gparser.RHS, None)
         # Needs to be called from _VAR_NAME so that 
         # rule_name gets added to dict so that cache gets cleared correctly
         # not needed on core parser tests because they're statically defined and always get cleared with _set_src

@@ -196,6 +196,7 @@ class Parser():
                         node.children.append(child) #Don't actually want to append zero or more or optinal as such
                 return position, True, node
             else:
+                # Should never happen?
                 position = temp_position
                 return position, False, None
         else:
@@ -258,15 +259,3 @@ class Parser():
         """For testing purposes, may be able to refactor somehow to test
         but not sure how"""
         return self._TERMINAL(position, args)
-
-    
-
-if __name__ == "__main__":
-    p = Parser()
-    p._set_src("ABCA")
-
-    position, bool, node = p._SEQUENCE(0, ((p._TERMINAL, 'A'), (p._TERMINAL, 'B')))
-    print(position, bool)
-    p.pretty_print(node)
-    p._set_src("ABABFGA")
-

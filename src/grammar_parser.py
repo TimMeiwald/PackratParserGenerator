@@ -299,75 +299,36 @@ class Grammar_Parser(Parser):
     
     @cache
     def LHS(self, position: int, dummy = None):
-        position, bool, node = self._VAR_NAME(self.Var_Name, dummy)
+        position, bool, node = self._VAR_NAME(position, (self.Var_Name, dummy))
         return position, bool, node
 
     @cache
     def Rule(self, position: int, dummy = None):
-        arg = self._token(position)
-        args = [self.LHS, self.Whitespace, self.Assignment, self.Whitespace, self.RHS, self.Whitespace, self.End_Rule, self.Whitespace]
-        for val in range(0,len(args)-1):
-            arg1, arg2 = (self._VAR_NAME, (args[val], arg)), (self._VAR_NAME, (args[val+1], arg))
-            position, bool, node = self._ORDERED_CHOICE(position, (arg1, arg2))
-            if(bool == True):
-                return position, bool, node
-        return position, False, None
+        tup1 = (self._VAR_NAME, (self.LHS, dummy))
+        tup2 = (self._VAR_NAME, (self.Whitespace, dummy))
+        tup3 = (self._VAR_NAME, (self.Assignment, dummy))
+        tup4 = (self._VAR_NAME, (self.RHS, dummy))
+        tup5 = (self._VAR_NAME, (self.End_Rule, dummy))
+
+        tup6 = (self._SEQUENCE, (tup1, tup2)) # <LHS>, <Whitespace>
+        tup7 = (self._SEQUENCE, (tup6, tup3)) # <LHS>, <Whitespace>, <Assignment>
+        tup8 = (self._SEQUENCE, (tup7, tup2)) # <LHS>, <Whitespace>, <Assignment>, <Whitespace>
+        tup9 = (self._SEQUENCE, (tup8, tup4)) # <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>
+        tup10 = (self._SEQUENCE, (tup9, tup2)) # <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>
+        tup11 = (self._SEQUENCE, (tup10, tup5)) # <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>
+        position, bool, node = self._SEQUENCE(position, (tup11, tup2)) # <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace>
+        return position, bool, node
 
     @cache
     def Grammar(self, position: int, dummy = None):
         tup1 = (self._VAR_NAME, (self.Rule, dummy))
         position, bool, node = self._ONE_OR_MORE(position, tup1)
         return position, bool, node
-    
-
 
 if __name__ == "__main__":
-    #parser = Grammar_Parser()
-    #parser._set_src("Z")
-    #position1, bool1, node1 = parser._VAR_NAME(0, (parser.Alphabet_Upper, "Z"))
-    #parser.pretty_print(node1)
-    #parser._set_src("0")
-    #position1, bool1, node1 = parser._VAR_NAME(0, (parser.Num, "0"))
-    #parser.pretty_print(node1)
-    #parser = Grammar_Parser()
-    #parser._set_src("]")
-    #position1, bool1, node1 = parser._VAR_NAME(0, (parser.Specials, "]"))
-    #parser.pretty_print(node1)
-    #parser = Grammar_Parser()
-    #parser._set_src("]")
-    #position1, bool1, node1 = parser._VAR_NAME(0, (parser.ASCII, "]"))
-    #parser.pretty_print(node1)
-    #parser = Grammar_Parser()
-    #parser._set_src('"')
-    #position1, bool1, node1 = parser.Apostrophe(0)
-    #parser.pretty_print(node1)
-    #parser = Grammar_Parser()
-    #parser._set_src('<a_name>')
-    #position1, bool1, node1 = parser.Var_Name(0)
-    #print(position1, bool1, node1)
-    #parser.pretty_print(node1)
-
     parser = Grammar_Parser()
-    #parser._set_src('<name>')
-    #tup = (parser.Var_Name, None)
-    #position1, bool1, node1 = parser._VAR_NAME(0, tup)
-    #print(position1, bool1, node1)
-    #parser.pretty_print(node1)
-    #parser._set_src('<yo>')
-    #tup = (parser.Var_Name, None)
-    #position1, bool1, node1 = parser._VAR_NAME(0, tup)
-    #print(position1, bool1, node1)
-    #parser.pretty_print(node1)
-    parser._set_src('"a"/"b"')
-    tup1 = (parser._VAR_NAME, (parser.Sequence, None))
-    tup2 = (parser._VAR_NAME, (parser.Ordered_Choice, None))
-    tup3 = (parser._VAR_NAME, (parser.Atom, None))
-    tup4 = (parser._ORDERED_CHOICE, (tup1, tup2))
-    position, bool, node = parser._ORDERED_CHOICE(0, (tup1, tup2))
-    print(position, bool, node)
+    parser._set_src("<var_name> = <var>;")
+    position, bool, node = parser.Rule(0, None)
     parser.pretty_print(node)
-
-
-
-    
+    print(position, bool)
     

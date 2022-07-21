@@ -7,6 +7,7 @@ class Test_ASCII():
         ("ABC", (1, True)), 
         ('001',  (1, True)),
         ('*',  (1, True)),
+        ('Ü',  (0, False)),
         ("9", (1, True))])
     def test_ASCII(self, gparser, src, answer):
         gparser._set_src(src)
