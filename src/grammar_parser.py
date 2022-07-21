@@ -45,7 +45,7 @@ class Grammar_Parser(Parser):
     
     @cache
     def Specials(self, position: int, dummy = None):
-        args = ["+","*","-","&","!","?","<",">",'"',"(",")","_",",",",",";","=","\\","#",":","|",".","{","}","[","]"]
+        args = ["+","*","-","&","!","?","<",">",'"',"(",")","_",",",",",";","=","/","\\","#",":","|",".","{","}","[","]"]
         for val in range(0,len(args)-1):
             arg1, arg2 = (self._TERMINAL, args[val]), (self._TERMINAL, args[val+1])
             position, bool, node = self._ORDERED_CHOICE(position, (arg1, arg2))
@@ -321,14 +321,18 @@ class Grammar_Parser(Parser):
 
     @cache
     def Grammar(self, position: int, dummy = None):
+        #tup1 = (self._VAR_NAME, (self.Rule, dummy))
+        #tup2 = (self._VAR_NAME, (self.Whitespace, dummy))
+        #tup4 = (self._ONE_OR_MORE, tup1)
+        #position, bool, node = self._SEQUENCE(position, (tup4, tup2))
+        #return position, bool, node
         tup1 = (self._VAR_NAME, (self.Rule, dummy))
-        position, bool, node = self._ONE_OR_MORE(position, tup1)
+        position, bool, node =  self._ONE_OR_MORE(position, tup1)
         return position, bool, node
-
 if __name__ == "__main__":
     parser = Grammar_Parser()
-    parser._set_src("<var_name> = <var>;")
-    position, bool, node = parser.Rule(0, None)
+    parser._set_src("\\")
+    position, bool, node = parser._TERMINAL(0, "\\")
     parser.pretty_print(node)
     print(position, bool)
     

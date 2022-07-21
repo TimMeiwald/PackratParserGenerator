@@ -111,7 +111,7 @@ class Parser():
                 self.__rules_dict[key] = self.__rules_count
                 self.__rules_dict_inverse[self.__rules_count] = (key, func)
                 self.__rules_count += 1
-                print(f"\nAdded Rule: {key} with int: {self.__rules_count-1}")
+                #print(f"\nAdded Rule: {key} with int: {self.__rules_count-1}")
             var_node = Node(Rules._VAR, key)
             if(node != None):
                 var_node.children.append(node)

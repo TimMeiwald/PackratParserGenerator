@@ -1,8 +1,8 @@
 <Alphabet_Upper> ="A"/"B"/"C"/"D"/"E"/"F"/"G"/"H"/"I"/"J"/"K"/"L"/"M"/"N"/"O"/"P"/"Q"/"R"/"S"/"T"/"U"/"V"/"W"/"X"/"Y"/"Z";
 <Alphabet_Lower> ="a"/"b"/"c"/"d"/"e"/"f"/"g"/"h"/"i"/"j"/"k"/"l"/"m"/"n"/"o"/"p"/"q"/"r"/"s"/"t"/"u"/"v"/"w"/"x"/"y"/"z";
 <Num> = "0"/"1"/"2"/"3"/"4"/"5"/"6"/"7"/"8"/"9";
-<Spaces> = "\n"/"\t"/"\r"/" ";
 <Specials> = "+"/"*"/"-"/"&"/"!"/"?"/"<"/">"/"""/"("/")"/"_"/","/"/"/";"/"="/"\"/"#"/":"/"|"/"."/"{"/"}"/"["/"]";
+<Spaces> = "\n"/"\r"/" ";
 <ASCII> = <Alphabet_Lower>/<Alphabet_Upper>/<Num>/<Spaces>/<Specials>;
 <Apostrophe> = """;
 <Left_Angle_Bracket> = "<";
@@ -38,6 +38,4 @@
 <RHS> = <Sequence>/<Ordered_Choice>/<Atom>;
 <LHS> = <Var_Name>;
 <Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace>;
-<Grammar> = <Rule>+;
-
-
+<Grammar> = <Rule>+, <Whitespace>;
