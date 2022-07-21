@@ -329,10 +329,4 @@ class Grammar_Parser(Parser):
         tup1 = (self._VAR_NAME, (self.Rule, dummy))
         position, bool, node =  self._ONE_OR_MORE(position, tup1)
         return position, bool, node
-if __name__ == "__main__":
-    parser = Grammar_Parser()
-    parser._set_src("\\")
-    position, bool, node = parser._TERMINAL(0, "\\")
-    parser.pretty_print(node)
-    print(position, bool)
     
