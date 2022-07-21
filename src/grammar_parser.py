@@ -186,20 +186,20 @@ class Grammar_Parser(Parser):
 
     @cache
     def Atom(self, position: int, dummy = None):
-        tup1 = (self._VAR_NAME, (self.And_Predicate, dummy))
-        tup2 = (self._VAR_NAME, (self.Not_Predicate, dummy))
-        tup3 = (self._VAR_NAME, (self.One_Or_More, dummy))
-        tup4 = (self._VAR_NAME, (self.Zero_Or_More, dummy))
-        tup5 = (self._VAR_NAME, (self.Optional, dummy))
-        tup6 = (self._VAR_NAME, (self.Nucleus, dummy))
-        tup7 = (self._VAR_NAME, (self.Whitespace, dummy))
-        tup8 = (self._ORDERED_CHOICE, (tup1, tup2))
-        tup9 = (self._ORDERED_CHOICE, (tup8, tup3))
-        tup10 = (self._ORDERED_CHOICE, (tup9, tup4))
-        tup11 = (self._ORDERED_CHOICE, (tup10, tup5))
-        tup12 = (self._ORDERED_CHOICE, (tup11, tup6))
-        tup13 = (self._SUBEXPR, tup12)
-        position, bool, node = self._SEQUENCE(position, (tup13, tup7))
+        tup1 = (self._VAR_NAME, (self.And_Predicate, dummy)) # <And_Predicate>
+        tup2 = (self._VAR_NAME, (self.Not_Predicate, dummy)) # <Not_Predicate>
+        tup3 = (self._VAR_NAME, (self.One_Or_More, dummy)) # <One_Or_More>
+        tup4 = (self._VAR_NAME, (self.Zero_Or_More, dummy)) # <Zero_Or_More>
+        tup5 = (self._VAR_NAME, (self.Optional, dummy)) # <Optional>
+        tup6 = (self._VAR_NAME, (self.Nucleus, dummy)) # <Nucleus>
+        tup7 = (self._VAR_NAME, (self.Whitespace, dummy)) # <Whitespace>
+        tup8 = (self._ORDERED_CHOICE, (tup1, tup2)) # <And_Predicate>/<Not_Predicate>
+        tup9 = (self._ORDERED_CHOICE, (tup8, tup3)) # <And_Predicate>/<Not_Predicate>/<One_Or_More>
+        tup10 = (self._ORDERED_CHOICE, (tup9, tup4)) # <And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>
+        tup11 = (self._ORDERED_CHOICE, (tup10, tup5)) # <And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>/<Optional>
+        tup12 = (self._ORDERED_CHOICE, (tup11, tup6)) # <And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>/<Nucleus>
+        tup13 = (self._SUBEXPR, tup12) # (<And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>/<Nucleus>)
+        position, bool, node = self._SEQUENCE(position, (tup13, tup7)) # (<And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>/<Nucleus>), <Whitespace>
         return position, bool, node
     
     @cache
@@ -294,7 +294,7 @@ class Grammar_Parser(Parser):
         tup2 = (self._VAR_NAME, (self.Ordered_Choice, dummy))
         tup3 = (self._VAR_NAME, (self.Atom, dummy))
         tup4 = (self._ORDERED_CHOICE, (tup1, tup2))
-        position, bool, node = self.Ordered_Choice(position, tup4, tup3)
+        position, bool, node = self._ORDERED_CHOICE(position, (tup4, tup3))
         return position, bool, node
     
     @cache
@@ -348,16 +348,25 @@ if __name__ == "__main__":
     #parser.pretty_print(node1)
 
     parser = Grammar_Parser()
-    parser._set_src('<name>')
-    tup = (parser.Var_Name, None)
-    position1, bool1, node1 = parser._VAR_NAME(0, tup)
-    print(position1, bool1, node1)
-    parser.pretty_print(node1)
-    parser._set_src('<yo>')
-    tup = (parser.Var_Name, None)
-    position1, bool1, node1 = parser._VAR_NAME(0, tup)
-    print(position1, bool1, node1)
-    parser.pretty_print(node1)
+    #parser._set_src('<name>')
+    #tup = (parser.Var_Name, None)
+    #position1, bool1, node1 = parser._VAR_NAME(0, tup)
+    #print(position1, bool1, node1)
+    #parser.pretty_print(node1)
+    #parser._set_src('<yo>')
+    #tup = (parser.Var_Name, None)
+    #position1, bool1, node1 = parser._VAR_NAME(0, tup)
+    #print(position1, bool1, node1)
+    #parser.pretty_print(node1)
+    parser._set_src('"a"/"b"')
+    tup1 = (parser._VAR_NAME, (parser.Sequence, None))
+    tup2 = (parser._VAR_NAME, (parser.Ordered_Choice, None))
+    tup3 = (parser._VAR_NAME, (parser.Atom, None))
+    tup4 = (parser._ORDERED_CHOICE, (tup1, tup2))
+    position, bool, node = parser._ORDERED_CHOICE(0, (tup1, tup2))
+    print(position, bool, node)
+    parser.pretty_print(node)
+
 
 
     
