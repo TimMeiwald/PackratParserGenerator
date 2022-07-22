@@ -31,9 +31,9 @@ class Parser():
         TODO: remember to deep copy on data extraction as AST because many nodes will be shared due to cache
         This could cause issues when manipulating the AST"""
         self.src = ""
-        self.__rules_count = 20 # So it doesn't clash with enum, 20 so I have space for other stuff
-        self.__rules_dict = {}
-        self.__rules_dict_inverse = {}
+        self._rules_count = 20 # So it doesn't clash with enum, 20 so I have space for other stuff
+        self._rules_dict = {}
+        self._rules_dict_inverse = {}
     
     def _set_src(self, src: str):
         self.src = src
@@ -57,14 +57,14 @@ class Parser():
         for rule in native_rules:
             cache_info.append(rule.cache_info())
             rule.cache_clear()
-        for rule in self.__rules_dict_inverse:
-            key, func = self.__rules_dict_inverse[rule]
+        for rule in self._rules_dict_inverse:
+            key, func = self._rules_dict_inverse[rule]
             cache_info.append(func.cache_info())
             print(key, func)
             func.cache_clear()
-        self.__rules_count = 20
-        self.__rules_dict = {}
-        self.__rules_dict_inverse = {}
+        self._rules_count = 20
+        self._rules_dict = {}
+        self._rules_dict_inverse = {}
         return cache_info
 
     def pretty_print(self, node, indent = 0):
@@ -72,11 +72,11 @@ class Parser():
         if(node != None):
             if(type(node.type) == int):
                 if(node.type < 20):
-                    print(indent_str*indent + f"Node: {self.__rules_dict_inverse[node.type]}, {node.content}")
+                    print(indent_str*indent + f"Node: {self.__rules_dict_inverse[node.type]}, {node.content}, {node.parent}")
                 else:
-                    print(indent_str*indent + f"Node: {self.__rules_dict_inverse[node.type]}, {node.content}")
+                    print(indent_str*indent + f"Node: {self.__rules_dict_inverse[node.type]}, {node.content}, {node.parent}")
             else:
-                print(indent_str*indent + f"Node: {node.type}, {node.content}")
+                print(indent_str*indent + f"Node: {node.type}, {node.content}, {node.parent}")
             for child in node.children:
                 self.pretty_print(child, indent+1)
 
@@ -107,14 +107,15 @@ class Parser():
         position, bool, node = func(position, args)
         if(bool == True):
             key = func.__name__
-            if(key not in self.__rules_dict):
-                self.__rules_dict[key] = self.__rules_count
-                self.__rules_dict_inverse[self.__rules_count] = (key, func)
-                self.__rules_count += 1
-                #print(f"\nAdded Rule: {key} with int: {self.__rules_count-1}")
+            if(key not in self._rules_dict):
+                self._rules_dict[key] = self._rules_count
+                self._rules_dict_inverse[self._rules_count] = (key, func)
+                self._rules_count += 1
+                #print(f"\nAdded Rule: {key} with int: {self._rules_count-1}")
             var_node = Node(Rules._VAR, key)
             if(node != None):
                 var_node.children.append(node)
+                node.parent = var_node
             return position, True, var_node
         else:
             position = temp_position
@@ -130,12 +131,14 @@ class Parser():
         if(bool == True):
             ordered_choice_node = Node(Rules._ORDERED_CHOICE)
             ordered_choice_node.children.append(node)
+            node.parent = ordered_choice_node
             return position, True, ordered_choice_node
         position = temp_position
         position, bool, node = RHS_func(position, RHS_arg)
         if(bool == True):
             ordered_choice_node = Node(Rules._ORDERED_CHOICE)
             ordered_choice_node.children.append(node)
+            node.parent = ordered_choice_node
             return position, True, ordered_choice_node
         position = temp_position
         return position, False, None    
@@ -151,8 +154,12 @@ class Parser():
             position, bool, rnode = RHS_func(position, RHS_arg)
             if(bool == True):
                 node = Node(Rules._SEQUENCE)
-                node.children.append(lnode)
-                node.children.append(rnode)
+                if(lnode != None):
+                    node.children.append(lnode)
+                    lnode.parent = node
+                if(rnode != None):
+                    node.children.append(rnode)
+                    rnode.parent = node
                 return position, True, node
             else:
                 position = temp_position
@@ -170,6 +177,7 @@ class Parser():
             temp_position = position
             position, bool, term_node = func(temp_position, arg)
             if(bool == True):
+                term_node.parent = zero_node
                 zero_node.children.append(term_node)
                 continue
             else:
@@ -191,9 +199,11 @@ class Parser():
             if(bool == True):
                 node = Node(Rules._ONE_OR_MORE)
                 node.children.append(opt_node.children[0])
+                opt_node.children[0].parent = node
                 if(zero_node != None):
                     for child in zero_node.children:
                         node.children.append(child) #Don't actually want to append zero or more or optinal as such
+                        child.parent = node
                 return position, True, node
             else:
                 # Should never happen?
@@ -212,6 +222,7 @@ class Parser():
         if(bool == True):
             node = Node(Rules._OPTIONAL)
             node.children.append(term_node)
+            term_node.parent = node
             return position, True, node
         else:
             position = temp_position
@@ -249,6 +260,7 @@ class Parser():
         if(bool == True):
             subexpr_node = Node(Rules._SUBEXPRESSION)
             subexpr_node.children.append(node)
+            node.parent = subexpr_node
             return position, True, subexpr_node
         else:
             position = temp_position
