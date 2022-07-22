@@ -152,24 +152,26 @@ class Grammar_Parser(Parser):
     
     @cache
     def Terminal(self, position: int, dummy = None):
-        tup1 = (self._VAR_NAME, (self.Apostrophe, dummy)) # <Apostrophe>
-        tup2 = (self._VAR_NAME, (self.ASCII, dummy)) # <ASCII>
-        tup4 = (self._SEQUENCE, (tup1,tup2)) # <Apostrophe>,<ASCII>
-        tup5 = (self._SEQUENCE, (tup4,tup1)) # <Apostrophe>,<ASCII>, <Apostrophe>
-        tup6_0 = (self._SUBEXPR, tup5) #(<Apostrophe>,<ASCII>,<Apostrophe>)
-        tup2 = (self._TERMINAL, "\\") # "\"
-        n = (self._TERMINAL, "n") # "n"
-        r = (self._TERMINAL, "r") # "r"
-        t = (self._TERMINAL, "t") # "t"
-        tup3 = (self._ORDERED_CHOICE, (n,r)) # "n"/"r"
-        tup4 = (self._ORDERED_CHOICE, (r,t)) # "r"/"t"
-        tup5 = (self._ORDERED_CHOICE, (tup1,tup2)) # "n"/"r"/"t"
-        tup6 = (self._SUBEXPR, tup3) # ("n"/"r"/"t")
-        tup7 = (self._SEQUENCE,(tup1,tup2))
-        tup8 = (self._SEQUENCE,(tup7,tup6))
-        tup9 = (self._SEQUENCE,(tup8,tup1)) # <Apostrophe>,"\",("n"/"r"/"t"),<Apostrophe>
-        tup10 = (self._SUBEXPR, tup9) # (<Apostrophe>,"\",("n"/"r"/"t"),<Apostrophe>)
-        position, bool, node = self._ORDERED_CHOICE(position, (tup6_0,tup10))
+        tup1 = (self._VAR_NAME, (self.Apostrophe, dummy))
+        tup2 = (self._VAR_NAME, (self.ASCII, dummy))
+        tup3 = (self._VAR_NAME, (self._TERMINAL, "\\"))
+        tup4 = (self._VAR_NAME, (self._TERMINAL, "n"))
+        tup5 = (self._VAR_NAME, (self._TERMINAL, "r"))
+        tup6 = (self._VAR_NAME, (self._TERMINAL, "t"))
+
+        tup7 = (self._SEQUENCE, (tup1, tup2))
+        tup8 = (self._SEQUENCE, (tup7, tup1))
+        tup9 = (self._SUBEXPR, tup8) #(<Apostrophe>,<ASCII>,<Apostrophe>)
+
+        tup10 = (self._SEQUENCE, (tup1, tup3)) #<Apostrophe>,"\"
+        tup11 = (self._ORDERED_CHOICE,(tup4, tup5))
+        tup12 = (self._ORDERED_CHOICE,(tup11, tup6)) #"n"/"r"/"t"
+        tup13 = (self._SUBEXPR, tup12)
+
+        tup14 = (self._SEQUENCE, (tup10, tup13)) #<Apostrophe>,"\",("n"/"r"/"t")
+        tup15 = (self._SEQUENCE, (tup14, tup1)) #<Apostrophe>,"\",("n"/"r"/"t"),<Apostrophe>
+        tup16 = (self._SUBEXPR, tup15) #(<Apostrophe>,"\",("n"/"r"/"t"),<Apostrophe>)
+        position, bool, node = self._ORDERED_CHOICE(position, (tup9, tup16))
         return position, bool, node
 
     @cache

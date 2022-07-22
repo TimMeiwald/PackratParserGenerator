@@ -2,7 +2,7 @@
 <Alphabet_Lower> ="a"/"b"/"c"/"d"/"e"/"f"/"g"/"h"/"i"/"j"/"k"/"l"/"m"/"n"/"o"/"p"/"q"/"r"/"s"/"t"/"u"/"v"/"w"/"x"/"y"/"z";
 <Num> = "0"/"1"/"2"/"3"/"4"/"5"/"6"/"7"/"8"/"9";
 <Specials> = "+"/"*"/"-"/"&"/"!"/"?"/"<"/">"/"""/"("/")"/"_"/","/"/"/";"/"="/"\"/"#"/":"/"|"/"."/"{"/"}"/"["/"]";
-<Spaces> = "\n"/"\r"/" ";
+<Spaces> = "\n"/"\t"/"\r"/" ";
 <ASCII> = <Alphabet_Lower>/<Alphabet_Upper>/<Num>/<Spaces>/<Specials>;
 <Apostrophe> = """;
 <Left_Angle_Bracket> = "<";
