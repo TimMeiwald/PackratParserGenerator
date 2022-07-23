@@ -3,6 +3,7 @@ from collections import deque
 from functools import lru_cache as cache
 
 class Rules(enum.Enum):
+    _ROOT = -1
     _TERMINAL = 1
     _SEQUENCE = 2
     _ORDERED_CHOICE = 3
@@ -18,10 +19,10 @@ class Rules(enum.Enum):
 class Node():
     """Core data type"""
     def __init__(self, type: Rules | int, content: str = ""):
-        self.parent = None
         self.type = type
         self.content = content
         self.children = deque()
+        self.parent = None
 
 class Parser():
 
@@ -72,11 +73,11 @@ class Parser():
         if(node != None):
             if(type(node.type) == int):
                 if(node.type < 20):
-                    print(indent_str*indent + f"Node: {self.__rules_dict_inverse[node.type]}, {node.content}, {node.parent}")
+                    print(indent_str*indent + f"Node: {self._rules_dict_inverse[node.type]}, {node.content}")
                 else:
-                    print(indent_str*indent + f"Node: {self.__rules_dict_inverse[node.type]}, {node.content}, {node.parent}")
+                    print(indent_str*indent + f"Node: {self._rules_dict_inverse[node.type]}, {node.content}")
             else:
-                print(indent_str*indent + f"Node: {node.type}, {node.content}, {node.parent}")
+                print(indent_str*indent + f"Node: {node.type}, {node.content}")
             for child in node.children:
                 self.pretty_print(child, indent+1)
 
@@ -115,7 +116,6 @@ class Parser():
             var_node = Node(Rules._VAR, key)
             if(node != None):
                 var_node.children.append(node)
-                node.parent = var_node
             return position, True, var_node
         else:
             position = temp_position
@@ -131,14 +131,12 @@ class Parser():
         if(bool == True):
             ordered_choice_node = Node(Rules._ORDERED_CHOICE)
             ordered_choice_node.children.append(node)
-            node.parent = ordered_choice_node
             return position, True, ordered_choice_node
         position = temp_position
         position, bool, node = RHS_func(position, RHS_arg)
         if(bool == True):
             ordered_choice_node = Node(Rules._ORDERED_CHOICE)
             ordered_choice_node.children.append(node)
-            node.parent = ordered_choice_node
             return position, True, ordered_choice_node
         position = temp_position
         return position, False, None    
@@ -156,10 +154,8 @@ class Parser():
                 node = Node(Rules._SEQUENCE)
                 if(lnode != None):
                     node.children.append(lnode)
-                    lnode.parent = node
                 if(rnode != None):
                     node.children.append(rnode)
-                    rnode.parent = node
                 return position, True, node
             else:
                 position = temp_position
@@ -177,7 +173,6 @@ class Parser():
             temp_position = position
             position, bool, term_node = func(temp_position, arg)
             if(bool == True):
-                term_node.parent = zero_node
                 zero_node.children.append(term_node)
                 continue
             else:
@@ -199,11 +194,9 @@ class Parser():
             if(bool == True):
                 node = Node(Rules._ONE_OR_MORE)
                 node.children.append(opt_node.children[0])
-                opt_node.children[0].parent = node
                 if(zero_node != None):
                     for child in zero_node.children:
                         node.children.append(child) #Don't actually want to append zero or more or optinal as such
-                        child.parent = node
                 return position, True, node
             else:
                 # Should never happen?
@@ -222,7 +215,6 @@ class Parser():
         if(bool == True):
             node = Node(Rules._OPTIONAL)
             node.children.append(term_node)
-            term_node.parent = node
             return position, True, node
         else:
             position = temp_position

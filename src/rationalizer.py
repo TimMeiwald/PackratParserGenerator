@@ -2,13 +2,15 @@ from typing import Callable
 from core_parser import Node, Rules
 from functools import partial
 from collections import deque
+
 class Rationalizer():
 
     def __init__(self, dict, inverse_dict):
         self.dict = dict
         self.inverse_dict = inverse_dict
+        self.node = Node(Rules._ROOT)
 
-    def deep_copy_tree(self, node: Node, top_level = False):
+    def deep_copy_tree(self, node: Node, top_level = True, parent = None):
         """This makes a deep copy of the AST. 
         This matters because the caching means that sometimes stuff shares the same nodes
         and then causes circular loops. 
@@ -16,42 +18,60 @@ class Rationalizer():
         regardless of how many passes of the treewalker you do"""
         # Makes copy of node
         new_node = Node(node.type, node.content)
-        new_node.parent = node.parent
+        new_node.parent = parent
 
         # Makes copy of children
         for child in node.children:
-            new_child = self.deep_copy_tree(child)
+            new_child = self.deep_copy_tree(child, False, new_node)
             new_node.children.append(new_child)
         if(top_level == True):
             print("Tree has been deep copied")
         return new_node
 
-    def tree_walker(self, node: Node, func : Callable):
-        node = func(node)
-        for child in node.children:
-            self.tree_walker(child, func)
-        return node
+    def tree_walker(self, node: Node, type: Rules | int ,func: Callable):
+        self.node = Node(Rules._ROOT)
+        self.node.children.append(node)
+        self.__tree_walker(self.node, type, func)
+        return self.node.children[0]
+        
 
-    def passthrough(self, node: Node, type: Rules | int):
-        to_append_left = deque()
-        to_del = deque()
+
+    def __tree_walker(self, node: Node, type: Rules | int ,func: Callable):
+        changes_made = False
         for child in node.children:
-            print("ye")
+            self.__tree_walker(child, type, func)
             if(child.type.value == type.value):
-                print("you")
-                for subchild in child.children:
-                    to_append_left.append(subchild)
-                    subchild.parent = node
-                to_del.append(child)
-                print("Added to_del")
-        for child in to_del:
-            node.children.popleft()
-        for subchild in to_append_left:
-            node.children.appendleft(subchild)
-        return node
+                changes_made, node_to_remove, node_to_add = func(type, child)
+        if(changes_made == True):
+            for child in node_to_add:
+                node.children.append(child)
+            node.children.remove(node_to_remove)
+            self.__tree_walker(node, type, func)
 
-    def test(self, node):
-        print(f"Node type: {node.type}, Node parent: {node.parent}, Node children: {node.children}")
+    def test(self, type, node):
+        # Return True to have the function be reapplied to the same function
+        # e.g To deal with newly appended Node.
+        print(f"Node type: {node.type}")
+        if(node.type.value == type.value):
+            return False #Since no changes made causes a RecursionError as always sequence availdable
+        else:
+            return False
+
+    def passthrough(self, type, node):
+        """Collapses a given node type, by appending it's children to it's parent and making the childrens parent
+        it's parent, then deletes itself"""
+        if(node.type.value == type.value):
+            #print(f"Node: {node.type}, Parent:{node.parent.type}")
+            #print(len(node.parent.children))
+            for child in node.children:
+                child.parent = node.parent
+            node_to_remove = node
+            node_to_add = node.children
+            return True, node_to_remove, node_to_add
+        else:
+            return False, None, None
+    
+    def var_collector(self, type, node, var_type):
 
 
 if __name__ == "__main__":
@@ -63,18 +83,20 @@ if __name__ == "__main__":
     with open(path, "r") as fp:
         src = fp.read()
     print(f"Length of File is : {len(src)}")
-    src = '<hey> = "A";'
+    #src = '<hey> = "A";'
     
     parser._set_src(src)
     position, bool, node = parser.Grammar(0)
     dict, inverse_dict = parser._rules_dict, parser._rules_dict_inverse
     rationalizer = Rationalizer(dict, inverse_dict)
-    func1 = partial(rationalizer.passthrough, type = Rules._ORDERED_CHOICE)
-    func2 = partial(rationalizer.passthrough, type = Rules._SEQUENCE)
-    node = rationalizer.deep_copy_tree(node,True) # Needed because sometimes cached copies are used so multiple things have the same copies
-    # This causes an infinite loop
+
+    node = rationalizer.deep_copy_tree(node) 
+    node = rationalizer.tree_walker(node, Rules._SEQUENCE, rationalizer.passthrough)
+    node = rationalizer.tree_walker(node, Rules._ORDERED_CHOICE, rationalizer.passthrough)
+    node = rationalizer.tree_walker(node, Rules._OPTIONAL, rationalizer.passthrough)
+    node = rationalizer.tree_walker(node, Rules._SUBEXPRESSION, rationalizer.passthrough)
+    node = rationalizer.tree_walker(node, Rules._ONE_OR_MORE, rationalizer.passthrough)
+    node = rationalizer.tree_walker(node, Rules._ZERO_OR_MORE, rationalizer.passthrough)
     
-    #parser.pretty_print(node)
-    node = rationalizer.tree_walker(node, func1)
-    node = rationalizer.tree_walker(node, func2)
+    var_collecter = partial(rationalizer.var_collecter, var_type=)
     parser.pretty_print(node)
