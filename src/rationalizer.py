@@ -4,10 +4,12 @@ from functools import partial
 from collections import deque
 
 class Rationalizer():
-
-    def __init__(self, dict, inverse_dict):
-        self.dict = dict
-        self.inverse_dict = inverse_dict
+    """Class eliminates the superfluous nodes that result from parsing
+    Leaving only terminals and vars
+    
+    This means that the user can do whatever they want with their AST
+    without needing to know the details of how PEG parsing works"""
+    def __init__(self):
         self.node = Node(Rules._ROOT)
 
     def deep_copy_tree(self, node: Node, top_level = True, parent = None):
@@ -32,9 +34,11 @@ class Rationalizer():
         self.node = Node(Rules._ROOT)
         self.node.children.append(node)
         self.__tree_walker(self.node, type, func)
-        return self.node.children[0]
+        if(len(self.node.children) != 0):
+            return self.node.children[0]
+        else:
+            return Node(Rules._ROOT, "ALL CONTENT REMOVED DUE TO RATIONALIZATION")
         
-
 
     def __tree_walker(self, node: Node, type: Rules | int ,func: Callable):
         changes_made = False
@@ -43,37 +47,50 @@ class Rationalizer():
             if(child.type.value == type.value):
                 changes_made, node_to_remove, node_to_add = func(type, child)
         if(changes_made == True):
-            for child in node_to_add:
-                node.children.append(child)
-            node.children.remove(node_to_remove)
+            if(node_to_remove != None):
+                index = node.children.index(node_to_remove)
+                node.children.remove(node_to_remove)
+                if(node_to_add != None):
+                    node_to_add.reverse()
+                    for child in node_to_add:
+                        node.children.insert(index, child)
             self.__tree_walker(node, type, func)
-
-    def test(self, type, node):
-        # Return True to have the function be reapplied to the same function
-        # e.g To deal with newly appended Node.
-        print(f"Node type: {node.type}")
-        if(node.type.value == type.value):
-            return False #Since no changes made causes a RecursionError as always sequence availdable
-        else:
-            return False
 
     def passthrough(self, type, node):
         """Collapses a given node type, by appending it's children to it's parent and making the childrens parent
         it's parent, then deletes itself"""
-        if(node.type.value == type.value):
-            #print(f"Node: {node.type}, Parent:{node.parent.type}")
-            #print(len(node.parent.children))
-            for child in node.children:
-                child.parent = node.parent
-            node_to_remove = node
-            node_to_add = node.children
-            return True, node_to_remove, node_to_add
-        else:
-            return False, None, None
+        for child in node.children:
+            child.parent = node.parent
+        node_to_remove = node
+        node_to_add = node.children
+        return True, node_to_remove, node_to_add
     
-    def var_collector(self, type, node, var_type):
+    def find(self, type, node):
+        """Finds a specific node type and returns it
+        
+        Allows you to only call specific actions on some subtrees"""
+        print(f"MATCHED {node.type}")
+        return False, None, None
 
+    
+    def delete(self, type, node):
+        """Deletes every specific node
+        can be used in conjunction with find to
+        do a specific op on only the subtree at a specific kind of node"""
+        return True, node, None
 
+    def rationalize(self, node):
+        node = self.deep_copy_tree(node) # Don't know if this is even needed, seems to work without
+        node = self.tree_walker(node, Rules._SEQUENCE, self.passthrough)
+        node = self.tree_walker(node, Rules._ORDERED_CHOICE, self.passthrough)
+        node = self.tree_walker(node, Rules._OPTIONAL, self.passthrough)
+        node = self.tree_walker(node, Rules._SUBEXPRESSION, self.passthrough)
+        node = self.tree_walker(node, Rules._ONE_OR_MORE, self.passthrough)
+        node = self.tree_walker(node, Rules._ZERO_OR_MORE, self.passthrough)
+        node = self.tree_walker(node, Rules._NOT_PREDICATE, self.passthrough)
+        node = self.tree_walker(node, Rules._AND_PREDICATE, self.passthrough)
+        return node
+        
 if __name__ == "__main__":
     from grammar_parser import Grammar_Parser
     from os import getcwd
@@ -83,20 +100,11 @@ if __name__ == "__main__":
     with open(path, "r") as fp:
         src = fp.read()
     print(f"Length of File is : {len(src)}")
-    #src = '<hey> = "A";'
+    src = '<hey> = "A";'
     
     parser._set_src(src)
     position, bool, node = parser.Grammar(0)
-    dict, inverse_dict = parser._rules_dict, parser._rules_dict_inverse
-    rationalizer = Rationalizer(dict, inverse_dict)
-
-    node = rationalizer.deep_copy_tree(node) 
-    node = rationalizer.tree_walker(node, Rules._SEQUENCE, rationalizer.passthrough)
-    node = rationalizer.tree_walker(node, Rules._ORDERED_CHOICE, rationalizer.passthrough)
-    node = rationalizer.tree_walker(node, Rules._OPTIONAL, rationalizer.passthrough)
-    node = rationalizer.tree_walker(node, Rules._SUBEXPRESSION, rationalizer.passthrough)
-    node = rationalizer.tree_walker(node, Rules._ONE_OR_MORE, rationalizer.passthrough)
-    node = rationalizer.tree_walker(node, Rules._ZERO_OR_MORE, rationalizer.passthrough)
+    rationalizer = Rationalizer()
+    node = rationalizer.rationalize(node)
     
-    var_collecter = partial(rationalizer.var_collecter, var_type=)
     parser.pretty_print(node)
