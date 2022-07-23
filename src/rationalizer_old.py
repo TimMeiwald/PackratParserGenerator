@@ -30,22 +30,22 @@ class Rationalizer():
             print("Tree has been deep copied")
         return new_node
 
-    def tree_walker(self, node: Node):
+    def tree_walker(self, node: Node, type: Rules | int ,func: Callable):
         self.node = Node(Rules._ROOT)
         self.node.children.append(node)
-        self.__tree_walker(self.node)
+        self.__tree_walker(self.node, type, func)
         if(len(self.node.children) != 0):
             return self.node.children[0]
         else:
             return Node(Rules._ROOT, "ALL CONTENT REMOVED DUE TO RATIONALIZATION")
         
 
-    def __tree_walker(self, node: Node):
+    def __tree_walker(self, node: Node, type: Rules | int ,func: Callable):
         changes_made = False
         for child in node.children:
-            self.__tree_walker(child)
-            if(child.type.value >= 2 and child.type.value <= 10):
-                changes_made, node_to_remove, node_to_add = self.passthrough(child)
+            self.__tree_walker(child, type, func)
+            if(child.type.value == type.value):
+                changes_made, node_to_remove, node_to_add = func(type, child)
         if(changes_made == True):
             if(node_to_remove != None):
                 index = node.children.index(node_to_remove)
@@ -54,9 +54,9 @@ class Rationalizer():
                     node_to_add.reverse()
                     for child in node_to_add:
                         node.children.insert(index, child)
-            self.__tree_walker(node)
+            self.__tree_walker(node, type, func)
 
-    def passthrough(self, node):
+    def passthrough(self, type, node):
         """Collapses a given node type, by appending it's children to it's parent and making the childrens parent
         it's parent, then deletes itself"""
         for child in node.children:
@@ -64,10 +64,31 @@ class Rationalizer():
         node_to_remove = node
         node_to_add = node.children
         return True, node_to_remove, node_to_add
+    
+    def find(self, type, node):
+        """Finds a specific node type and returns it
+        
+        Allows you to only call specific actions on some subtrees"""
+        print(f"MATCHED {node.type}")
+        return False, None, None
+
+    
+    def delete(self, type, node):
+        """Deletes every specific node
+        can be used in conjunction with find to
+        do a specific op on only the subtree at a specific kind of node"""
+        return True, node, None
 
     def rationalize(self, node):
-        node = self.deep_copy_tree(node) # Don't know if this is even needed, seems to work without but not that expensive apparently
-        node = self.tree_walker(node)
+        node = self.deep_copy_tree(node) # Don't know if this is even needed, seems to work without
+        node = self.tree_walker(node, Rules._SEQUENCE, self.passthrough)
+        node = self.tree_walker(node, Rules._ORDERED_CHOICE, self.passthrough)
+        node = self.tree_walker(node, Rules._OPTIONAL, self.passthrough)
+        node = self.tree_walker(node, Rules._SUBEXPRESSION, self.passthrough)
+        node = self.tree_walker(node, Rules._ONE_OR_MORE, self.passthrough)
+        node = self.tree_walker(node, Rules._ZERO_OR_MORE, self.passthrough)
+        node = self.tree_walker(node, Rules._NOT_PREDICATE, self.passthrough)
+        node = self.tree_walker(node, Rules._AND_PREDICATE, self.passthrough)
         return node
         
 if __name__ == "__main__":
