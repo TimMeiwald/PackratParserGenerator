@@ -89,15 +89,15 @@ class Parser():
 
     @cache
     def _TERMINAL(self, position: int, Arg: str):
-        assert type(position) == int
-        assert type(Arg) == str
+        #assert type(position) == int
+        #assert type(Arg) == str
         token = self._token(position)
         if(token == Arg):
             position += 1
             node = Node(Rules._TERMINAL, token)
             return position, True, node
         else:
-            return position, False, None
+            return position, False, None # Don't generate anything other than terminal and var on run, means no rationalizer
 
     @cache
     def _VAR_NAME(self, position: int, args):
