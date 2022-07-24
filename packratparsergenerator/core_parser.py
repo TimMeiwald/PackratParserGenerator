@@ -129,15 +129,11 @@ class Parser():
         temp_position = position
         position, bool, node = LHS_func(position, LHS_arg)
         if(bool == True):
-            ordered_choice_node = Node(Rules._ORDERED_CHOICE)
-            ordered_choice_node.children.append(node)
-            return position, True, ordered_choice_node
+            return position, True, node
         position = temp_position
         position, bool, node = RHS_func(position, RHS_arg)
         if(bool == True):
-            ordered_choice_node = Node(Rules._ORDERED_CHOICE)
-            ordered_choice_node.children.append(node)
-            return position, True, ordered_choice_node
+            return position, True, node
         position = temp_position
         return position, False, None    
 
@@ -152,9 +148,12 @@ class Parser():
             position, bool, rnode = RHS_func(position, RHS_arg)
             if(bool == True):
                 node = Node(Rules._SEQUENCE)
+                #print("Last node: ", self.last_node.type)
                 if(lnode != None):
-                    node.children.append(lnode)
+                    #print("LNODE: ",lnode.type)
+                    node.children.append(lnode) #Only append if LNODE not SEQUENCE
                 if(rnode != None):
+                    #print("RNODE: ",rnode.type)
                     node.children.append(rnode)
                 return position, True, node
             else:
@@ -193,7 +192,7 @@ class Parser():
             position, bool, zero_node = self._ZERO_OR_MORE(position, args)
             if(bool == True):
                 node = Node(Rules._ONE_OR_MORE)
-                node.children.append(opt_node.children[0])
+                node.children.append(opt_node)
                 if(zero_node != None):
                     for child in zero_node.children:
                         node.children.append(child) #Don't actually want to append zero or more or optinal as such
@@ -211,10 +210,8 @@ class Parser():
         """Always True, increments position if option matches otherwise continues without doing anything"""
         func, arg = args
         temp_position = position
-        position, bool, term_node = func(temp_position, arg)
+        position, bool, node = func(temp_position, arg)
         if(bool == True):
-            node = Node(Rules._OPTIONAL)
-            node.children.append(term_node)
             return position, True, node
         else:
             position = temp_position
@@ -250,10 +247,7 @@ class Parser():
         temp_position = position
         position, bool, node = func(position, arg)
         if(bool == True):
-            subexpr_node = Node(Rules._SUBEXPRESSION)
-            subexpr_node.children.append(node)
-            node.parent = subexpr_node
-            return position, True, subexpr_node
+            return position, True, node
         else:
             position = temp_position
             return position, False, None

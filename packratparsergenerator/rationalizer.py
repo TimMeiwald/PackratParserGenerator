@@ -44,7 +44,7 @@ class Rationalizer():
         changes_made = False
         for child in node.children:
             self.__tree_walker(child)
-            if(child.type.value >= 2 and child.type.value <= 10):
+            if(child.type.value in [2,7,8]): # 2 is Sequence node, 7,8 zero and one or more
                 changes_made, node_to_remove, node_to_add = self.passthrough(child)
         if(changes_made == True):
             if(node_to_remove != None):
@@ -66,7 +66,7 @@ class Rationalizer():
         return True, node_to_remove, node_to_add
 
     def rationalize(self, node):
-        node = self.deep_copy_tree(node) # Don't know if this is even needed, seems to work without but not that expensive apparently
+        #node = self.deep_copy_tree(node) # Don't know if this is even needed, seems to work without
         node = self.tree_walker(node)
         return node
         
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     from os import getcwd
     from os.path import join
     parser = Grammar_Parser()
-    path = join(getcwd(), "src", "Grammar.txt")
+    path = join(getcwd(), "packratparsergenerator", "Grammar.txt")
     with open(path, "r") as fp:
         src = fp.read()
     print(f"Length of File is : {len(src)}")
@@ -87,11 +87,19 @@ if __name__ == "__main__":
     end1 = time()
     start2 = time()
     rationalizer = Rationalizer()
+    #
     node = rationalizer.rationalize(node)
     end2 = time()
     parser.pretty_print(node)
     parser_time = end1 - start1
     rationalizer_time = end2 - start2
+    total_time = parser_time+rationalizer_time
     print(f"Time to Parse = {parser_time}")
     print(f"Time to Rationalize = {rationalizer_time}")
-    print(f"Time Total = {parser_time+rationalizer_time}")
+    print(f"Time Total = {total_time}")
+    Ms_per_line = (total_time/41)*1000
+    print(f"Milliseconds per line = {Ms_per_line}")
+    lines_per_sec = 41/total_time
+    print(f"Lines per second = {lines_per_sec}")
+    print(f"Estimated speed in C =  {Ms_per_line/100}")
+    print(f"Estimated Lines per second in C = {lines_per_sec*100}")
