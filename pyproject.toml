@@ -6,10 +6,15 @@ authors = ["Tim Meiwald <tim.meiwald@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+pytest = {version = "^7.1.2", optional = true}
+coverage = {version = "^6.4.2", optional = true}
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^7.1.2"
 coverage = "^6.4.2"
+
+[tool.poetry.extras]
+test = ["pytest", "coverage"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
