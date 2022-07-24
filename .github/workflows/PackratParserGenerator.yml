@@ -28,8 +28,8 @@ jobs:
       - name: Test with pytest
         run: |
           coverage run -m pytest
-          coverage report -m --omit=Tests/* --skip-empty
-          coverage xml --skip-empty --omit=Tests/* -o Coverage.xml
+          coverage report -m --omit=tests/* --skip-empty
+          coverage xml --skip-empty --omit=tests/* -o Coverage.xml
       - uses: stefanzweifel/git-auto-commit-action@v4 # Commits any changes in this case commits the xml coverage file
         with:
           commit_message: Commit coverage file to repo
