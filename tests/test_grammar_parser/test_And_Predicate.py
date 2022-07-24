@@ -3,7 +3,7 @@ import pytest
 
 
 class Test_And_Predicate():
-    @pytest.mark.parametrize("src, answer", [('&"A"' ,(4, False)), 
+    @pytest.mark.parametrize("src, answer", [('&"A"' ,(4, True)), 
         ('&<var>' ,(6, True)), 
         ('&(<var>)' ,(8, True)), 
         ('&("A")' ,(6, True)), 
