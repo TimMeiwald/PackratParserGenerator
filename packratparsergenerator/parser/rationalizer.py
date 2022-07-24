@@ -1,5 +1,5 @@
 from typing import Callable
-from core_parser import Node, Rules
+from packratparsergenerator.parser.core_parser import Node, Rules
 from functools import partial
 from collections import deque
 
@@ -70,37 +70,4 @@ class Rationalizer():
         node = self.tree_walker(node)
         return node
         
-if __name__ == "__main__":
-    from grammar_parser import Grammar_Parser
-    from os import getcwd
-    from os.path import join
-    parser = Grammar_Parser()
-    path = join(getcwd(), "packratparsergenerator", "Grammar.txt")
-    with open(path, "r") as fp:
-        src = fp.read()
-    print(f"Length of File is : {len(src)}")
-    #src = '<hey> = "A";'
-    from time import time
-    start1 = time()
-    parser._set_src(src)
-    position, bool, node = parser.Grammar(0)
-    end1 = time()
-    start2 = time()
-    rationalizer = Rationalizer()
-    #
-    node = rationalizer.rationalize(node)
-    end2 = time()
-    parser.pretty_print(node)
-    print(node.children[3].type, node.children[3].content)
-    parser_time = end1 - start1
-    rationalizer_time = end2 - start2
-    total_time = parser_time+rationalizer_time
-    print(f"Time to Parse = {parser_time}")
-    print(f"Time to Rationalize = {rationalizer_time}")
-    print(f"Time Total = {total_time}")
-    Ms_per_line = (total_time/41)*1000
-    print(f"Milliseconds per line = {Ms_per_line}")
-    lines_per_sec = 41/total_time
-    print(f"Lines per second = {lines_per_sec}")
-    print(f"Estimated speed in C =  {Ms_per_line/100}")
-    print(f"Estimated Lines per second in C = {lines_per_sec*100}")
+  

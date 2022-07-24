@@ -1,6 +1,6 @@
 import pytest
-from packratparsergenerator.grammar_parser import Grammar_Parser
-from packratparsergenerator.core_parser import Parser
+from packratparsergenerator.parser.grammar_parser import Grammar_Parser
+from packratparsergenerator.parser.core_parser import Parser
 
 @pytest.fixture(autouse = True)
 def parser():
