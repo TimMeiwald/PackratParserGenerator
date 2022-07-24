@@ -6,7 +6,6 @@ TODO: Error handling, halt start at top level rule and step in find longest matc
 TODO: Implement Rationalizer    
 TODO: Implement Parser Generation    
 TODO: Generate ParserGenerators Parser with ParserGenerator and Test    
-TODO: Move to a PEP517, 518, 660 compliant build process
 DEFECT: Known issue between string inputs and string from file read. Unsure how to solve or what even the issue is.     
 
 
