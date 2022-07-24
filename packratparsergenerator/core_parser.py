@@ -116,7 +116,9 @@ class Parser():
             var_node = Node(Rules._VAR, key)
             if(node != None):
                 var_node.children.append(node)
-            return position, True, var_node
+                return position, True, var_node
+            else:
+                return position, True, None
         else:
             position = temp_position
             return position, False, None

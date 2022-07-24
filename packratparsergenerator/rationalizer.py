@@ -35,7 +35,7 @@ class Rationalizer():
         self.node.children.append(node)
         self.__tree_walker(self.node)
         if(len(self.node.children) != 0):
-            return self.node.children[0]
+            return self.node
         else:
             return Node(Rules._ROOT, "ALL CONTENT REMOVED DUE TO RATIONALIZATION")
         
@@ -44,7 +44,7 @@ class Rationalizer():
         changes_made = False
         for child in node.children:
             self.__tree_walker(child)
-            if(child.type.value in [2,7,8]): # 2 is Sequence node, 7,8 zero and one or more
+            if(child.type.value in [2,7,8]): # 2 is Sequence node, 7, 8 zero and one or more
                 changes_made, node_to_remove, node_to_add = self.passthrough(child)
         if(changes_made == True):
             if(node_to_remove != None):
@@ -91,6 +91,7 @@ if __name__ == "__main__":
     node = rationalizer.rationalize(node)
     end2 = time()
     parser.pretty_print(node)
+    print(node.children[3].type, node.children[3].content)
     parser_time = end1 - start1
     rationalizer_time = end2 - start2
     total_time = parser_time+rationalizer_time
