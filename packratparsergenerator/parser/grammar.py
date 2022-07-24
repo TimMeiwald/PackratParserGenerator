@@ -15,8 +15,8 @@ def parse(src_filepath):
     start2_time = time()
     rationalizer = Rationalizer()
     node = rationalizer.rationalize(node)
-    print(f"Time to rationalize: {end2_time-start2_time}")
     end2_time = time()
+    print(f"Time to rationalize: {end2_time-start2_time}")
 
     print(f"Total time to parse: {end2_time-start_time}")
     return node
