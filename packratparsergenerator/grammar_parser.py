@@ -1,4 +1,4 @@
-from src.core_parser import Parser, Node
+from packratparsergenerator.core_parser import Parser, Node
 from functools import lru_cache as cache
 
 class Grammar_Parser(Parser):
