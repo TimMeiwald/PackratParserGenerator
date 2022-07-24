@@ -15,7 +15,7 @@ class Test_ordered_choice():
     #Nested Sequence
     @pytest.mark.parametrize("src, arg, answer", [('AAAA', "A" ,(1, True)), 
     ("BBC", "A", (1, True)), 
-    ("CBCD", "A", (1, True)), 
+    ("ABCD", "A", (1, True)), 
     ('stuff', "s", (0, False)), # Zero or more is always True
     ("ye", "A", (0, False))])
     def test_ordered_choice_nested(self, parser, src, arg, answer):

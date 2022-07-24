@@ -10,12 +10,14 @@ class Test_sequence():
     ("ye", "A", (0, False))])
     def test_sequence(self, parser, src, arg, answer):
         parser._set_src(src)
-        assert parser._SEQUENCE(0, ((parser._TERMINAL, "A"),(parser._TERMINAL, "B")))[:2] == (answer)
+        ret = parser._SEQUENCE(0, ((parser._TERMINAL, "A"),(parser._TERMINAL, "B")))
+        parser.pretty_print(ret[2])
+        assert ret[:2] == (answer)
 
     #Nested Sequence
     @pytest.mark.parametrize("src, arg, answer", [('AAAA', "A" ,(0, False)), 
     ("ABC", "A", (0, False)), 
-    ("ABCD", "A", (0, False)), 
+    ("ABCD", "A", (4, True)), 
     ('stuff', "s", (0, False)), # Zero or more is always True
     ("ye", "A", (0, False))])
     def test_sequence_nested(self, parser, src, arg, answer):
@@ -26,6 +28,7 @@ class Test_sequence():
         tup4 = (parser._TERMINAL, "D")
         tup5 = (parser._SEQUENCE, (tup1, tup2))
         tup6 = (parser._SEQUENCE, (tup5, tup3))
-        ret = parser._SEQUENCE(0, (tup6, tup4))
+        tup7 =  (parser._SEQUENCE, (tup6, tup4))
+        ret = parser._VAR_NAME(0, tup7)
         parser.pretty_print(ret[2])
         assert ret[:2] == (answer)
