@@ -4,7 +4,7 @@ from os.path import join
 class Test_Grammar():
     
     def test_Grammar(self, gparser):
-        path = join(getcwd(), "PackratParserGenerator", "Grammar.txt")
+        path = join(getcwd(), "tests", "test_grammar_parser", "Grammar.txt")
         with open(path, "r") as fp:
             src = fp.read()
         print(f"Length of File is : {len(src)}")
