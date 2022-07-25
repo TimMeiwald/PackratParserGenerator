@@ -1,6 +1,7 @@
 import enum
 from collections import deque
 from functools import lru_cache as cache
+from typing import Tuple
 
 class Rules(enum.Enum):
     _ROOT = -1
@@ -23,6 +24,20 @@ class Node():
         self.content = content
         self.children = deque()
         self.parent = None
+
+    #Appends nested deque if needed
+    def appender(self, node_deque):
+        if(type(node_deque) == tuple):
+            print("Tuple apparently: ",node_deque)
+            raise Exception
+        if(node_deque == None):
+            return None
+        elif(type(node_deque) != deque):
+            self.children.append(node_deque)
+        else:
+            for child in node_deque:
+                self.appender(child)
+
 
 class Parser():
 
@@ -115,7 +130,7 @@ class Parser():
                 #print(f"\nAdded Rule: {key} with int: {self._rules_count-1}")
             var_node = Node(Rules._VAR, key)
             if(node != None):
-                var_node.children.append(node)
+                var_node.appender(node)
                 return position, True, var_node
             else:
                 return position, True, None
@@ -149,14 +164,9 @@ class Parser():
         if(bool == True):
             position, bool, rnode = RHS_func(position, RHS_arg)
             if(bool == True):
-                node = Node(Rules._SEQUENCE)
-                #print("Last node: ", self.last_node.type)
-                if(lnode != None):
-                    #print("LNODE: ",lnode.type)
-                    node.children.append(lnode) #Only append if LNODE not SEQUENCE
-                if(rnode != None):
-                    #print("RNODE: ",rnode.type)
-                    node.children.append(rnode)
+                node = deque()
+                node.append(lnode)
+                node.append(rnode)
                 return position, True, node
             else:
                 position = temp_position
@@ -169,43 +179,39 @@ class Parser():
     def _ZERO_OR_MORE(self, position: int, args):
         """Always True, increments position each time the expression matches else continues without doing anything"""
         func, arg = args
-        zero_node = Node(Rules._ZERO_OR_MORE)
+        zero_nodes = deque()
         while(True):
             temp_position = position
             position, bool, term_node = func(temp_position, arg)
             if(bool == True):
-                zero_node.children.append(term_node)
+                zero_nodes.append(term_node)
                 continue
             else:
                 position = temp_position
                 break
-        if(len(zero_node.children) == 0):
+        if(len(zero_nodes) == 0):
             return position, True, None
         else:
-            return position, True, zero_node
+            return position, True, zero_nodes
 
     @cache
     def _ONE_OR_MORE(self, position: int, args):
-        """True if there is at least one of the expression, increments position each time the expression matches else false"""
+        """Always True, increments position each time the expression matches else continues without doing anything"""
         func, arg = args
-        temp_position = position
-        position, bool, opt_node = self._OPTIONAL(position, args)
-        if(position != temp_position): #Should have incremented by one expression if optional was successful
-            position, bool, zero_node = self._ZERO_OR_MORE(position, args)
+        one_nodes = deque()
+        while(True):
+            temp_position = position
+            position, bool, term_node = func(temp_position, arg)
             if(bool == True):
-                node = Node(Rules._ONE_OR_MORE)
-                node.children.append(opt_node)
-                if(zero_node != None):
-                    for child in zero_node.children:
-                        node.children.append(child) #Don't actually want to append zero or more or optinal as such
-                return position, True, node
+                one_nodes.append(term_node)
+                continue
             else:
-                # Should never happen?
                 position = temp_position
-                return position, False, None
-        else:
-            position = temp_position
+                break
+        if(len(one_nodes) == 0):
             return position, False, None
+        else:
+            return position, True, one_nodes
 
     @cache
     def _OPTIONAL(self, position: int, args):
