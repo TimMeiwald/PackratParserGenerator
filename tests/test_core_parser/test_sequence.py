@@ -10,7 +10,8 @@ class Test_sequence():
     ("ye", "A", (0, False))])
     def test_sequence(self, parser, src, arg, answer):
         parser._set_src(src)
-        ret = parser._SEQUENCE(0, ((parser._TERMINAL, "A"),(parser._TERMINAL, "B")))
+        tup1 = (parser._SEQUENCE, ((parser._TERMINAL, "A"),(parser._TERMINAL, "B")))
+        ret = parser._VAR_NAME(0, tup1)
         parser.pretty_print(ret[2])
         assert ret[:2] == (answer)
 
