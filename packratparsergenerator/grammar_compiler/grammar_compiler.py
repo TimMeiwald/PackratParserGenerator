@@ -85,8 +85,7 @@ class Grammar_Compiler():
         node = self.tree_walker(node.children[0], "RHS", self.passthrough)
         node = self.tree_walker(node.children[0], "RHS", self.passthrough)
         node = self.tree_walker(node.children[0], "Var_Name", self.collect)
-        
-        return node
+        return node.children[0]
         
   
         
