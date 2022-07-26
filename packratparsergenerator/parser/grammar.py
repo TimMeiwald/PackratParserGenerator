@@ -7,7 +7,9 @@ def parse(src_filepath):
     start_time = time()
     parser = Grammar_Parser()
     parser._set_src(src)
-    position, bool, node = parser.Grammar(0)
+    tup = (parser.Grammar, None)
+    position, bool, node = parser._VAR_NAME(0, tup) 
     end_time = time()
     print(f"Time to Parse: {end_time-start_time}")
+    print(type(node))
     return node

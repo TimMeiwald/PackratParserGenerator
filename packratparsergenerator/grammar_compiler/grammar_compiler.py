@@ -1,5 +1,6 @@
 
 
+from collections import deque
 from packratparsergenerator.parser.grammar import parse
 from packratparsergenerator.parser.core_parser import Rules, Node, Parser
 from os import getcwd
@@ -95,7 +96,7 @@ if __name__ == "__main__":
     print(path)
     printer = Parser()
     ret = parse(path)
-    #printer.pretty_print(ret)
+    printer.pretty_print(ret)
     #x = Grammar_Compiler()
     #start_time = time()
     #node = x.compile(ret)
