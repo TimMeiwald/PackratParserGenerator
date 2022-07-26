@@ -8,4 +8,4 @@ if __name__ == "__main__":
     print(path)
     ret = parse(path)
     x = Parser()
-    #x.pretty_print(ret)
+    x.pretty_print(ret)
