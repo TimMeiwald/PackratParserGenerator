@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PackratParserGenerator"
-version = "0.4.0"
+version = "0.4.1"
 description = "A packrat PEG(Parsing Expression Grammar) parser generator"
 authors = ["Tim Meiwald <tim.meiwald@gmail.com>"]
 
