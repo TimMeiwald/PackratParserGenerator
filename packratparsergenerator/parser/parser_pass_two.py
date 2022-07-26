@@ -1,9 +1,8 @@
 
 
 from collections import deque
-from packratparsergenerator.parser.core_parser import Rules, Node, Parser
-from os import getcwd
-from os.path import join
+from packratparsergenerator.parser.core_parser import Rules
+
 
 
 class Parser_Pass_Two():
@@ -27,15 +26,6 @@ class Parser_Pass_Two():
             del node
         else:
             return node
-    
-    def delete(self, nodes):
-        new_deq = deque()
-        for index in range(0, len(nodes)):
-            node = nodes.pop()
-            node = self.delete_kernel(node)
-            if(node != None):
-                new_deq.append(node)
-        return new_deq
 
     def passthrough_kernel(self, node):
         if(node.content in self.passthrough_nodes):
@@ -46,15 +36,6 @@ class Parser_Pass_Two():
             del node
         else:
             return node
-
-    def passthrough(self, nodes):
-        new_deq = deque()
-        for index in range(0, len(nodes)):
-            node = nodes.pop()
-            node = self.passthrough_kernel(node)
-            if(node != None):
-                new_deq.append(node)
-        return new_deq
 
     def collect_kernel(self, node):
         if(node.content in self.collect_nodes and node.type is Rules._VAR): #Not sure why or is needed
