@@ -331,4 +331,3 @@ class Grammar_Parser(Parser):
         tup1 = (self._VAR_NAME, (self.Rule, dummy))
         position, bool, node =  self._ONE_OR_MORE(position, tup1)
         return position, bool, node
-    
