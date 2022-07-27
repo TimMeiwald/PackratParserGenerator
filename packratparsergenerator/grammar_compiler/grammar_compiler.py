@@ -36,7 +36,7 @@ class Rule():
         self.match(LHS, content = "LHS")
         Var_Name = LHS.children[0]
         self.name = Var_Name.content
-    
+
     def get_core(self, rule_node):
         self.core = rule_node.children[1]
 
@@ -67,4 +67,4 @@ if __name__ == "__main__":
     compiler.compile(node)
 
     parser = Parser()
-    parser.pretty_print(node)
+    #parser.pretty_print(node)

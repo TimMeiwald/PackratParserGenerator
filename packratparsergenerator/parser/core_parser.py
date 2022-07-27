@@ -1,10 +1,9 @@
-import enum
+from enum import Enum
 from collections import deque
 from functools import lru_cache as cache
-from typing import Tuple
 
-class Rules(enum.Enum):
-    _ROOT = -1
+class Rules(Enum):
+    _ROOT = 0
     _TERMINAL = 1
     _SEQUENCE = 2
     _ORDERED_CHOICE = 3
@@ -15,7 +14,7 @@ class Rules(enum.Enum):
     _ONE_OR_MORE = 8
     _SUBEXPRESSION = 10
     _VAR = 11
-
+    
 
 class Node():
     """Core data type"""
@@ -42,10 +41,6 @@ class Node():
 class Parser():
 
     def __init__(self):
-        """
-        TODO: Remember to clear all caches between parses
-        TODO: remember to deep copy on data extraction as AST because many nodes will be shared due to cache
-        This could cause issues when manipulating the AST"""
         self.src = ""
         self._rules_count = 20 # So it doesn't clash with enum, 20 so I have space for other stuff
         self._rules_dict = {}

@@ -14,9 +14,9 @@ class Unary_Node():
         self.type = type
         self.node = node
 
-    def call(self, node, type):
-        if(len(self.child) != 0):
-            self.child = node.children[0]
+    def call(self):
+        if(len(self.node.children) != 0):
+            self.child = self.node.children[0]
             if(self.child.content in ["Sequence", "Ordered_Choice"]):
                 self.arg = Binary_Node(self.child, self.child.type.value)
             else:
@@ -68,3 +68,4 @@ if __name__ == "__main__":
     parser.pretty_print(ret[2])
 
     x = Unary_Node(ret[2], Rules._VAR.value)
+    y = x.call()

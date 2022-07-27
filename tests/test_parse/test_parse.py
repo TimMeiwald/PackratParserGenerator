@@ -9,7 +9,7 @@ class Test_Grammar():
         path = join(getcwd(), "tests", "test_grammar_parser", "Grammar.txt")
         ret = parse(path)
         parser.pretty_print(ret)
-        assert 0 == 0 #Allows me to see output by switching this true or false
+        assert 1 == 0 #Allows me to see output by switching this true or false
 
 
     
