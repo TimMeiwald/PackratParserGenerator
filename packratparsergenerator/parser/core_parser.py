@@ -91,6 +91,11 @@ class Parser():
             for child in node.children:
                 self.pretty_print(child, indent+1)
 
+    def caller(self, position, func, arg = None):
+        """Calls generated functions, ensures converted to node not nested deques, 
+        Useful for testing or calling specific subterminals"""
+        return self._VAR_NAME(position, (func, arg))[2]
+    
     @cache
     def _token(self, position):
         if(position >= len(self.src)):
@@ -98,17 +103,17 @@ class Parser():
         return self.src[position]
 
     @cache
-    def _TERMINAL(self, position: int, Arg: str):
+    def _TERMINAL(self, position: int, arg: str):
         #assert type(position) == int
         #assert type(Arg) == str
         token = self._token(position)
-        if(token == Arg):
+        if(token == arg):
             position += 1
             node = Node(Rules._TERMINAL, token)
             return position, True, node
         else:
             return position, False, None # Don't generate anything other than terminal and var on run, means no rationalizer
-
+    
     @cache
     def _VAR_NAME(self, position: int, args):
         """True if called function evaluates to true else false, Is used to call other functions."""

@@ -323,11 +323,6 @@ class Grammar_Parser(Parser):
 
     @cache
     def Grammar(self, position: int, dummy = None):
-        #tup1 = (self._VAR_NAME, (self.Rule, dummy))
-        #tup2 = (self._VAR_NAME, (self.Whitespace, dummy))
-        #tup4 = (self._ONE_OR_MORE, tup1)
-        #position, bool, node = self._SEQUENCE(position, (tup4, tup2))
-        #return position, bool, node
         tup1 = (self._VAR_NAME, (self.Rule, dummy))
         position, bool, node =  self._ONE_OR_MORE(position, tup1)
         return position, bool, node
