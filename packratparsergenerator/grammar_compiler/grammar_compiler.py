@@ -1,5 +1,7 @@
 from packratparsergenerator.parser.grammar import parse
 from packratparsergenerator.parser.core_parser import Parser
+from packratparsergenerator.grammar_compiler.comment_maker import Comment_Maker
+from packratparsergenerator.grammar_compiler.parser_call_maker import Parser_Call_Maker
 from os import getcwd
 from os.path import join
 
@@ -10,9 +12,13 @@ class Rule():
         if(rule_node.content != "Rule"):
             raise TypeError("This is not a valid rule for Rule")
         self.name = ""
-        self.core = None
         self.get_rule_name(rule_node)
-        self.get_core(rule_node)
+        core = self.get_core(rule_node)
+        Parser().pretty_print(rule_node) 
+        print("\n")
+        self.comment = Comment_Maker(rule_node).comment
+        self.func_call = Parser_Call_Maker(rule_node).parse_string
+
 
     def match(self, node, type=None, content=None):
         if(type == None):
@@ -38,7 +44,7 @@ class Rule():
         self.name = Var_Name.content
 
     def get_core(self, rule_node):
-        self.core = rule_node.children[1]
+        return rule_node.children[1]
 
 
 class Grammar_Compiler():
@@ -68,3 +74,6 @@ if __name__ == "__main__":
 
     parser = Parser()
     parser.pretty_print(node)
+
+    for rule in compiler.rules:
+        print(rule.comment + "\n")

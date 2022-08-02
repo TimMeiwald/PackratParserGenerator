@@ -1,3 +1,4 @@
+from ast import Index
 from packratparsergenerator.parser.core_parser import Rules, Parser
 from packratparsergenerator.parser.grammar_parser import Grammar_Parser
 from packratparsergenerator.parser.grammar import parse
@@ -34,8 +35,10 @@ class Comment_Maker():
             return self.c_rule(node)
         elif(node.content == "LHS"):
             return self.c_lhs(node)
-        elif(node.type == Rules._TERMINAL):
+        elif(node.content == "Terminal"):
             return self.c_terminal(node)
+        elif(node.type == Rules._TERMINAL):
+            return self.c_TERMINAL(node)
         else:
             return self.c_var_name(node)
 
@@ -56,10 +59,13 @@ class Comment_Maker():
         return c_string
     
     def c_subexpression(self, node):
-        c_string = "("
-        child = node.children[0]
-        child_str = self.selector(child)
-        c_string += child_str + ")"
+        try:
+            c_string = "("
+            child = node.children[0]
+            child_str = self.selector(child)
+            c_string += child_str + ")"
+        except IndexError:
+            c_string = self.c_var_name(node)
         return c_string
     
     def c_var_name(self, node):
@@ -69,15 +75,21 @@ class Comment_Maker():
         return c_string
     
     def c_rule(self, node):
-        c_string = ""
-        c_string += self.selector(node.children[0])
-        c_string += self.selector(node.children[1])
-        c_string += " ;"
+        try:
+            c_string = ""
+            c_string += self.selector(node.children[0])
+            c_string += self.selector(node.children[1])
+            c_string += " ;"
+        except IndexError:
+            c_string = self.c_var_name(node)
         return c_string
     
     def c_lhs(self, node):
-        c_string = self.selector(node.children[0])
-        c_string += " = "
+        try:
+            c_string = self.selector(node.children[0])
+            c_string += " = "
+        except IndexError:
+            c_string = self.c_var_name(node)
         return c_string
     
     def c_and_predicate(self, node):
@@ -99,9 +111,25 @@ class Comment_Maker():
     def c_zero_or_more(self, node):
         c_string = self.selector(node.children[0]) + "*"
         return c_string
+    
+    def c_terminal(self, node):
+        node = node.children[0]
+        if(node.content == '"'):
+            c_string = f"'{node.content}'"
+        else:
+            c_string = f'"{node.content}"'
+        return c_string
+
+    def c_TERMINAL(self, node):
+        if(node.content == '"'):
+            c_string = f"'{node.content}'"
+        else:
+            c_string = f'"{node.content}"'
+        return c_string
 
 if __name__ == "__main__":
     src = '<ASCII> = &(<Alphabet_Lower>/<Alphabet_Upper>+),!(<Num>/<Spaces>*/<Specials>), <Specials>?;'
+    src = '<All> = "A";'
     node = parse(src = src)
     node = node.children[0]
     parser = Parser()
