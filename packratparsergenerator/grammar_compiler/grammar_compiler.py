@@ -62,9 +62,9 @@ class Grammar_Compiler():
 if __name__ == "__main__":
     path = join(getcwd(),"packratparsergenerator", "parser", "Grammar.txt")
     print(path)
-    node = parse(path)
+    node = parse(src_filepath =path)
     compiler = Grammar_Compiler()
     compiler.compile(node)
 
     parser = Parser()
-    #parser.pretty_print(node)
+    parser.pretty_print(node)

@@ -3,9 +3,14 @@ from packratparsergenerator.parser.grammar_parser import Grammar_Parser
 from packratparsergenerator.parser.parser_pass_two import Parser_Pass_Two
 from time import time
 
-def parse(src_filepath):
-    with open(src_filepath, "r") as fp:
-        src = fp.read()
+def parse(*,src_filepath=None ,src=None):
+    if(src_filepath != None):
+        with open(src_filepath, "r") as fp:
+            src = fp.read()
+    elif(src != None):
+        src = src
+    else:
+        raise Exception("must provide a valid input")
     start_time = time()
     parser = Grammar_Parser()
     parser._set_src(src)
