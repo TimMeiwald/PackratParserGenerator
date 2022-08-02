@@ -17,7 +17,7 @@ class Rule():
         Parser().pretty_print(rule_node) 
         print("\n")
         self.comment = Comment_Maker(rule_node).comment
-        self.func_call = Parser_Call_Maker(rule_node).parse_string
+        self.parse_string = Parser_Call_Maker(rule_node).parse_string
 
 
     def match(self, node, type=None, content=None):
