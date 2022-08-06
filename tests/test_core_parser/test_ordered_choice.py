@@ -27,5 +27,4 @@ class Test_ordered_choice():
         tup5 = (parser._ORDERED_CHOICE, (tup1, tup2))
         tup6 = (parser._ORDERED_CHOICE, (tup5, tup3))
         ret = parser._ORDERED_CHOICE(0, (tup6, tup4))
-        parser.pretty_print(ret[2])
         assert ret[:2] == (answer)

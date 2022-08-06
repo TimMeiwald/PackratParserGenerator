@@ -10,4 +10,4 @@ class Test_subexpr():
     ("ye", "A", (0, False))])
     def test_subexpr(self, parser, src, arg, answer):
         parser._set_src(src)
-        assert parser._SUBEXPR(0, (parser._test, arg))[:2] == (answer)
+        assert parser._SUBEXPRESSION(0, (parser._test, arg))[:2] == (answer)

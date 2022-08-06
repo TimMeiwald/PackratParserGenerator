@@ -69,8 +69,8 @@ if __name__ == "__main__":
     path = join(getcwd(),"packratparsergenerator", "parser", "Grammar.txt")
     print(path)
     import cProfile
-    #cProfile.run("node = parse(src_filepath =path)")
-    node = parse(src_filepath =path)
+    cProfile.run("node = parse(src_filepath =path)")
+    #node = parse(src_filepath =path)
     #compiler = Grammar_Compiler()
     #compiler.compile(node)
 

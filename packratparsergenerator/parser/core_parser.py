@@ -26,20 +26,32 @@ class Node():
             for child in node_deque:
                 self.appender(child)
 
+    def pretty_print(self):
+        self._pretty_print(self)
+
+    def _pretty_print(self, node, indent = 0):
+        indent_str = "  "
+        if(node != None):
+            print(indent_str*indent + f"Node: {node.type}, {node.content}")
+            for child in node.children:
+                self._pretty_print(child, indent+1)
+
 
 class Parser():
 
     def __init__(self):
         self.src = ""
         self._rules_count = 20 # So it doesn't clash with enum, 20 so I have space for other stuff
-        self._rules_dict = {}
-        self._rules_dict_inverse = {}
     
     def _set_src(self, src: str):
         self.src = src
         # Ensures all caches are cleared on resetting the src
         # Resets state completely 
-        native_rules = [
+        for rule in Rules:
+            if(rule > 0 and rule < 20):
+                func = getattr(self, rule.name)
+                func.cache_clear()
+        """native_rules = [
             Parser._token, 
             Parser._TERMINAL,
             Parser._VAR_NAME,
@@ -60,25 +72,11 @@ class Parser():
         for rule in self._rules_dict_inverse:
             key, func = self._rules_dict_inverse[rule]
             cache_info.append(func.cache_info())
-            print(key, func)
             func.cache_clear()
         self._rules_count = 20
         self._rules_dict = {}
-        self._rules_dict_inverse = {}
-        return cache_info
-
-    def pretty_print(self, node, indent = 0):
-        indent_str = "  "
-        if(node != None):
-            if(type(node.type) == int):
-                if(node.type < 20):
-                    print(indent_str*indent + f"Node: {node.type.name}, {node.content}")
-                else:
-                    print(indent_str*indent + f"Node: {node.type.name}, {node.content}")
-            else:
-                print(indent_str*indent + f"Node: {node.type.name}, {node.content}")
-            for child in node.children:
-                self.pretty_print(child, indent+1)
+        self._rules_dict_inverse = {}"""
+        #return cache_info
 
     def caller(self, position, func, arg = None):
         """Calls generated functions, ensures converted to node not nested deques, 
@@ -112,10 +110,6 @@ class Parser():
         position, bool, node = func(position, args)
         if(bool == True):
             key = func.__name__
-            if(key not in self._rules_dict):
-                self._rules_dict[key] = self._rules_count
-                self._rules_dict_inverse[self._rules_count] = (key, func)
-                self._rules_count += 1
             var_node = Node(Rules[key], None)
             if(node != None):
                 var_node.appender(node)
@@ -233,7 +227,7 @@ class Parser():
         return position, not bool, None
 
     @cache
-    def _SUBEXPR(self, position: int, args):
+    def _SUBEXPRESSION(self, position: int, args):
         """Subexpression is any expression inside a pair of () brackets
         SUBEXPR essentially does nothing but allows for order of precedent 
         more importantly order of precedence is very restricted because it made my life hard
@@ -255,3 +249,6 @@ class Parser():
         return self._TERMINAL(position, args)
 
 
+if __name__ == "__main__":
+    p = Parser()
+    p._set_src("A")
