@@ -1,6 +1,6 @@
-from enum import Enum
+from enum import IntEnum
 
-class Rules(Enum):
+class Rules(IntEnum):
     _ROOT = 0
     _TERMINAL = 1
     _SEQUENCE = 2
@@ -11,7 +11,8 @@ class Rules(Enum):
     _ZERO_OR_MORE = 7
     _ONE_OR_MORE = 8
     _SUBEXPRESSION = 10
-    _VAR = 11
+    _VAR_NAME = 11
+    _test = 12
 
     Alphabet_Upper = 21
     Alphabet_Lower = 22

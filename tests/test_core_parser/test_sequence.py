@@ -12,7 +12,6 @@ class Test_sequence():
         parser._set_src(src)
         tup1 = (parser._SEQUENCE, ((parser._TERMINAL, "A"),(parser._TERMINAL, "B")))
         ret = parser._VAR_NAME(0, tup1)
-        parser.pretty_print(ret[2])
         assert ret[:2] == (answer)
 
     #Nested Sequence
@@ -31,5 +30,4 @@ class Test_sequence():
         tup6 = (parser._SEQUENCE, (tup5, tup3))
         tup7 =  (parser._SEQUENCE, (tup6, tup4))
         ret = parser._VAR_NAME(0, tup7)
-        parser.pretty_print(ret[2])
         assert ret[:2] == (answer)

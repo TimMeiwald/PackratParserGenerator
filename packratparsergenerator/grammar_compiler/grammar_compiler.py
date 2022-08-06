@@ -70,11 +70,12 @@ if __name__ == "__main__":
     print(path)
     import cProfile
     cProfile.run("node = parse(src_filepath =path)")
+    #node = parse(src_filepath =path)
     #compiler = Grammar_Compiler()
     #compiler.compile(node)
 
     #parser = Parser()
-    
+
     #parser.pretty_print(node)
 
     #for rule in compiler.rules:

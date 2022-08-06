@@ -25,7 +25,7 @@ class Test_Rule():
         # rule_name gets added to dict so that cache gets cleared correctly
         # not needed on core parser tests because they're statically defined and always get cleared with _set_src
         ret = gparser._VAR_NAME(0, tup) 
-        #gparser.pretty_print(ret[2])
+        #ret[2].pretty_print()
         #print(f"Position: {ret[0]}, Bool: {ret[1]}")
         gparser._set_src("")
         answer = (len(src), answer)

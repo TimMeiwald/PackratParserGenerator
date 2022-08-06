@@ -3,6 +3,13 @@ from functools import lru_cache as cache
 
 class Grammar_Parser(Parser):
 
+    def _set_src(self, src: str):
+        super()._set_src(src)
+        for rule in Rules:
+            if(rule > 20): #Less than 20 is core parser stuff, greater than 20 is inherited class stuff
+                func = getattr(self, rule.name)
+                func.cache_clear()
+
     @cache
     def Alphabet_Upper(self, position: int, dummy = None):
         args = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -132,8 +139,8 @@ class Grammar_Parser(Parser):
         tup6 = (self._ORDERED_CHOICE, (tup3, tup4)) # <Alphabet_Lower>/<Alphabet_Upper>
         tup7 = (self._ORDERED_CHOICE, (tup6, tup5)) # <Alphabet_Lower>/<Alphabet_Upper>/"_"
         
-        tup8 = (self._SUBEXPR, tup6) # (<Alphabet_Lower>/<Alphabet_Upper>)
-        tup9 = (self._SUBEXPR, tup7) # (<Alphabet_Lower>/<Alphabet_Upper>/"_")
+        tup8 = (self._SUBEXPRESSION, tup6) # (<Alphabet_Lower>/<Alphabet_Upper>)
+        tup9 = (self._SUBEXPRESSION, tup7) # (<Alphabet_Lower>/<Alphabet_Upper>/"_")
         tup9 = (self._ZERO_OR_MORE, tup9) # (<Alphabet_Lower>/<Alphabet_Upper>/"_")*
 
         tup10 = (self._SEQUENCE, (tup1, tup8))
@@ -161,16 +168,16 @@ class Grammar_Parser(Parser):
 
         tup7 = (self._SEQUENCE, (tup1, tup2))
         tup8 = (self._SEQUENCE, (tup7, tup1))
-        tup9 = (self._SUBEXPR, tup8) #(<Apostrophe>,<ASCII>,<Apostrophe>)
+        tup9 = (self._SUBEXPRESSION, tup8) #(<Apostrophe>,<ASCII>,<Apostrophe>)
 
         tup10 = (self._SEQUENCE, (tup1, tup3)) #<Apostrophe>,"\"
         tup11 = (self._ORDERED_CHOICE,(tup4, tup5))
         tup12 = (self._ORDERED_CHOICE,(tup11, tup6)) #"n"/"r"/"t"
-        tup13 = (self._SUBEXPR, tup12)
+        tup13 = (self._SUBEXPRESSION, tup12)
 
         tup14 = (self._SEQUENCE, (tup10, tup13)) #<Apostrophe>,"\",("n"/"r"/"t")
         tup15 = (self._SEQUENCE, (tup14, tup1)) #<Apostrophe>,"\",("n"/"r"/"t"),<Apostrophe>
-        tup16 = (self._SUBEXPR, tup15) #(<Apostrophe>,"\",("n"/"r"/"t"),<Apostrophe>)
+        tup16 = (self._SUBEXPRESSION, tup15) #(<Apostrophe>,"\",("n"/"r"/"t"),<Apostrophe>)
         position, bool, node = self._ORDERED_CHOICE(position, (tup9, tup16))
         return position, bool, node
 
@@ -182,7 +189,7 @@ class Grammar_Parser(Parser):
         tup4 = (self._VAR_NAME, (self.Whitespace, dummy))
         tup5 = (self._ORDERED_CHOICE, (tup1, tup2))
         tup6 = (self._ORDERED_CHOICE, (tup5, tup3))
-        tup7 = (self._SUBEXPR, tup6)
+        tup7 = (self._SUBEXPRESSION, tup6)
         position, bool, node = self._SEQUENCE(position, (tup7, tup4))
         return position, bool, node
 
@@ -200,7 +207,7 @@ class Grammar_Parser(Parser):
         tup10 = (self._ORDERED_CHOICE, (tup9, tup4)) # <And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>
         tup11 = (self._ORDERED_CHOICE, (tup10, tup5)) # <And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>/<Optional>
         tup12 = (self._ORDERED_CHOICE, (tup11, tup6)) # <And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>/<Nucleus>
-        tup13 = (self._SUBEXPR, tup12) # (<And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>/<Nucleus>)
+        tup13 = (self._SUBEXPRESSION, tup12) # (<And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>/<Nucleus>)
         position, bool, node = self._SEQUENCE(position, (tup13, tup7)) # (<And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>/<Nucleus>), <Whitespace>
         return position, bool, node
     
@@ -226,7 +233,7 @@ class Grammar_Parser(Parser):
         
         tup4 = (self._SEQUENCE, (tup3, tup2))
         tup5 = (self._SEQUENCE, (tup4, tup1))
-        tup6 = (self._SUBEXPR, tup5)
+        tup6 = (self._SUBEXPRESSION, tup5)
         tup7 = (self._ZERO_OR_MORE, tup6) # (<Comma>, <Whitespace>, <Atom>)*
 
         tup8 = (self._SEQUENCE, (tup1, tup2))
@@ -244,7 +251,7 @@ class Grammar_Parser(Parser):
         
         tup4 = (self._SEQUENCE, (tup3, tup2))
         tup5 = (self._SEQUENCE, (tup4, tup1))
-        tup6 = (self._SUBEXPR, tup5)
+        tup6 = (self._SUBEXPRESSION, tup5)
         tup7 = (self._ZERO_OR_MORE, tup6) # (<Backslash>, <Whitespace>, <Atom>)*
 
         tup8 = (self._SEQUENCE, (tup1, tup2))
@@ -286,7 +293,7 @@ class Grammar_Parser(Parser):
         tup1 = (self._TERMINAL, " ")
         tup2 = (self._TERMINAL, "\n")
         tup3 = (self._ORDERED_CHOICE,(tup1, tup2))
-        tup4 = (self._SUBEXPR, tup3)
+        tup4 = (self._SUBEXPRESSION, tup3)
         position, bool, node = self._ZERO_OR_MORE(position, tup4)
         return position, bool, node
     

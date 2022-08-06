@@ -1,18 +1,20 @@
 
 
 from collections import deque
-from packratparsergenerator.parser.core_parser import Rules
+from packratparsergenerator.parser.rules import Rules
 
 
 
 class Parser_Pass_Two():
 
     def __init__(self):
-        self.delete_nodes = ("Whitespace", "Apostrophe", "Left_Angle_Bracket", "Right_Angle_Bracket", "Left_Bracket", 
-        "Right_Bracket", "Plus", "Star", "Question_Mark", "Backslash", "Comma", "End_Rule", "Assignment","Exclamation_Mark", "Ampersand")
-        self.passthrough_nodes = ("ASCII", "Alphabet_Upper", "Alphabet_Lower", "Atom", "Nucleus", "RHS", "Specials", "Num")
-        self.collect_nodes = ("Var_Name")
-
+        #self.delete_nodes = ("Whitespace", "Apostrophe", "Left_Angle_Bracket", "Right_Angle_Bracket", "Left_Bracket", 
+        #"Right_Bracket", "Plus", "Star", "Question_Mark", "Backslash", "Comma", "End_Rule", "Assignment","Exclamation_Mark", "Ampersand")
+        self.delete_nodes = (Rules.Whitespace, Rules.Apostrophe, Rules.Left_Angle_Bracket, Rules.Right_Angle_Bracket, Rules.Left_Bracket, 
+        Rules.Right_Bracket, Rules.Plus, Rules.Star, Rules.Question_Mark, Rules.Backslash, Rules.Comma, Rules.End_Rule, Rules.Assignment,Rules.Exclamation_Mark, Rules.Ampersand)
+        self.passthrough_nodes = (Rules.ASCII, Rules.Alphabet_Upper, Rules.Alphabet_Lower, Rules.Atom, Rules.Nucleus, Rules.RHS, Rules.Specials, Rules.Num)
+        self.collect_nodes = (Rules.Var_Name,)
+      
     def token_generator(self, node):
         yield node
         for child in node.children:
@@ -20,7 +22,7 @@ class Parser_Pass_Two():
             yield from self.token_generator(child)
 
     def delete_kernel(self, node):
-        if(node.content in self.delete_nodes):
+        if(node.type in self.delete_nodes):
             node.children = deque()
             node.parent.children.remove(node)
             del node
@@ -28,7 +30,7 @@ class Parser_Pass_Two():
             return node
 
     def passthrough_kernel(self, node):
-        if(node.content in self.passthrough_nodes):
+        if(node.type in self.passthrough_nodes):
             index = node.parent.children.index(node)
             for child in node.children:
                 node.parent.children.insert(index, child)
@@ -38,7 +40,7 @@ class Parser_Pass_Two():
             return node
 
     def collect_kernel(self, node):
-        if(node.content in self.collect_nodes and node.type is Rules._VAR): #Not sure why or is needed
+        if(node.type in self.collect_nodes): 
             for child in node.children:
                 if(child.type != Rules._TERMINAL):
                     raise ValueError(f"Cannot collect if there are non terminals in the nodes childrens. Node_Type: {node.type}, Child_Type: {child.type}")

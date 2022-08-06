@@ -1,19 +1,8 @@
 from enum import Enum
 from collections import deque
 from functools import lru_cache as cache
-from packratparsergenerator.parser import rules
-class Rules(Enum):
-    _ROOT = 0
-    _TERMINAL = 1
-    _SEQUENCE = 2
-    _ORDERED_CHOICE = 3
-    _NOT_PREDICATE = 4
-    _AND_PREDICATE = 5
-    _OPTIONAL = 6
-    _ZERO_OR_MORE = 7
-    _ONE_OR_MORE = 8
-    _SUBEXPRESSION = 10
-    _VAR = 11
+from packratparsergenerator.parser.rules import Rules
+
     
 
 class Node():
@@ -37,59 +26,31 @@ class Node():
             for child in node_deque:
                 self.appender(child)
 
+    def pretty_print(self):
+        self._pretty_print(self)
+
+    def _pretty_print(self, node, indent = 0):
+        indent_str = "  "
+        if(node != None):
+            print(indent_str*indent + f"Node: {node.type.name}, {node.content}")
+            for child in node.children:
+                self._pretty_print(child, indent+1)
+
 
 class Parser():
 
     def __init__(self):
         self.src = ""
-        self._rules_count = 20 # So it doesn't clash with enum, 20 so I have space for other stuff
-        self._rules_dict = {}
-        self._rules_dict_inverse = {}
     
     def _set_src(self, src: str):
         self.src = src
         # Ensures all caches are cleared on resetting the src
         # Resets state completely 
-        native_rules = [
-            Parser._token, 
-            Parser._TERMINAL,
-            Parser._VAR_NAME,
-            Parser._ORDERED_CHOICE,
-            Parser._SEQUENCE,
-            Parser._ZERO_OR_MORE,
-            Parser._ONE_OR_MORE, 
-            Parser._AND_PREDICATE,
-            Parser._NOT_PREDICATE,
-            Parser._NOT_PREDICATE,
-            Parser._SUBEXPR,
-            Parser._test,
-        ]
-        cache_info = []
-        for rule in native_rules:
-            cache_info.append(rule.cache_info())
-            rule.cache_clear()
-        for rule in self._rules_dict_inverse:
-            key, func = self._rules_dict_inverse[rule]
-            cache_info.append(func.cache_info())
-            print(key, func)
-            func.cache_clear()
-        self._rules_count = 20
-        self._rules_dict = {}
-        self._rules_dict_inverse = {}
-        return cache_info
+        for rule in Rules:
+            if(rule > 0 and rule < 20): #Less than 20 is core parser stuff, greater than 20 is inherited class stuff
+                func = getattr(self, rule.name)
+                func.cache_clear()
 
-    def pretty_print(self, node, indent = 0):
-        indent_str = "  "
-        if(node != None):
-            if(type(node.type) == int):
-                if(node.type < 20):
-                    print(indent_str*indent + f"Node: {self._rules_dict_inverse[node.type]}, {node.content}")
-                else:
-                    print(indent_str*indent + f"Node: {self._rules_dict_inverse[node.type]}, {node.content}")
-            else:
-                print(indent_str*indent + f"Node: {node.type}, {node.content}")
-            for child in node.children:
-                self.pretty_print(child, indent+1)
 
     def caller(self, position, func, arg = None):
         """Calls generated functions, ensures converted to node not nested deques, 
@@ -123,12 +84,7 @@ class Parser():
         position, bool, node = func(position, args)
         if(bool == True):
             key = func.__name__
-            if(key not in self._rules_dict):
-                self._rules_dict[key] = self._rules_count
-                self._rules_dict_inverse[self._rules_count] = (key, func)
-                self._rules_count += 1
-                #print(f"\nAdded Rule: {key} with int: {self._rules_count-1}")
-            var_node = Node(Rules._VAR, key)
+            var_node = Node(Rules[key], None)
             if(node != None):
                 var_node.appender(node)
                 return position, True, var_node
@@ -245,7 +201,7 @@ class Parser():
         return position, not bool, None
 
     @cache
-    def _SUBEXPR(self, position: int, args):
+    def _SUBEXPRESSION(self, position: int, args):
         """Subexpression is any expression inside a pair of () brackets
         SUBEXPR essentially does nothing but allows for order of precedent 
         more importantly order of precedence is very restricted because it made my life hard
@@ -265,3 +221,8 @@ class Parser():
         """For testing purposes, may be able to refactor somehow to test
         but not sure how"""
         return self._TERMINAL(position, args)
+
+
+if __name__ == "__main__":
+    p = Parser()
+    p._set_src("A")

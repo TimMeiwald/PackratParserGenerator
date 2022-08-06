@@ -8,7 +8,7 @@ class Test_Grammar():
     def test_Grammar(self, parser):
         path = join(getcwd(), "tests", "test_grammar_parser", "Grammar.txt")
         ret = parse(src_filepath=path)
-        parser.pretty_print(ret)
+        ret.pretty_print()
         assert 0 == 0 #Allows me to see output by switching this true or false
 
 
