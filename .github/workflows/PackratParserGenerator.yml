@@ -30,6 +30,6 @@ jobs:
           coverage run --branch -m pytest 
           coverage report -m --omit=tests/* --skip-empty
           coverage xml --skip-empty --omit=tests/* -o Coverage.xml
-      - uses: stefanzweifel/git-auto-commit-action@v4 # Commits any changes in this case commits the xml coverage file
-        with:
-          commit_message: Commit coverage file to repo
+      #- uses: stefanzweifel/git-auto-commit-action@v4 # Commits any changes in this case commits the xml coverage file
+      #  with:
+      #   commit_message: Commit coverage file to repo
