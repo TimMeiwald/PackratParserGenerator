@@ -21,4 +21,6 @@ class Test_Whitespace():
         # not needed on core parser tests because they're statically defined and always get cleared with _set_src
         ret = gparser._VAR_NAME(0, tup) 
         gparser._set_src("")
+        if(ret[2] != None):
+            ret[2].pretty_print()
         assert ret[:2] == (answer)

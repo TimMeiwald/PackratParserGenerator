@@ -62,5 +62,5 @@ if __name__ == "__main__":
 
     node.pretty_print()
 
-    #for rule in compiler.rules:
-    #    print(rule.comment + "\n")
+    for rule in compiler.rules:
+        print(rule.comment + "\n")
