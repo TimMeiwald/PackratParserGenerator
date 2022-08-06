@@ -32,7 +32,7 @@ class Node():
     def _pretty_print(self, node, indent = 0):
         indent_str = "  "
         if(node != None):
-            print(indent_str*indent + f"Node: {node.type}, {node.content}")
+            print(indent_str*indent + f"Node: {node.type.name}, {node.content}")
             for child in node.children:
                 self._pretty_print(child, indent+1)
 
