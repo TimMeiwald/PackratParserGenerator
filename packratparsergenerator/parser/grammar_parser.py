@@ -3,6 +3,13 @@ from functools import lru_cache as cache
 
 class Grammar_Parser(Parser):
 
+    def _set_src(self, src: str):
+        super()._set_src(src)
+        for rule in Rules:
+            if(rule > 20): #Less than 20 is core parser stuff, greater than 20 is inherited class stuff
+                func = getattr(self, rule.name)
+                func.cache_clear()
+
     @cache
     def Alphabet_Upper(self, position: int, dummy = None):
         args = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']

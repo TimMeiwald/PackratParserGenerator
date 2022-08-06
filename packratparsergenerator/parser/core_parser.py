@@ -41,42 +41,16 @@ class Parser():
 
     def __init__(self):
         self.src = ""
-        self._rules_count = 20 # So it doesn't clash with enum, 20 so I have space for other stuff
     
     def _set_src(self, src: str):
         self.src = src
         # Ensures all caches are cleared on resetting the src
         # Resets state completely 
         for rule in Rules:
-            if(rule > 0 and rule < 20):
+            if(rule > 0 and rule < 20): #Less than 20 is core parser stuff, greater than 20 is inherited class stuff
                 func = getattr(self, rule.name)
                 func.cache_clear()
-        """native_rules = [
-            Parser._token, 
-            Parser._TERMINAL,
-            Parser._VAR_NAME,
-            Parser._ORDERED_CHOICE,
-            Parser._SEQUENCE,
-            Parser._ZERO_OR_MORE,
-            Parser._ONE_OR_MORE, 
-            Parser._AND_PREDICATE,
-            Parser._NOT_PREDICATE,
-            Parser._NOT_PREDICATE,
-            Parser._SUBEXPR,
-            Parser._test,
-        ]
-        cache_info = []
-        for rule in native_rules:
-            cache_info.append(rule.cache_info())
-            rule.cache_clear()
-        for rule in self._rules_dict_inverse:
-            key, func = self._rules_dict_inverse[rule]
-            cache_info.append(func.cache_info())
-            func.cache_clear()
-        self._rules_count = 20
-        self._rules_dict = {}
-        self._rules_dict_inverse = {}"""
-        #return cache_info
+
 
     def caller(self, position, func, arg = None):
         """Calls generated functions, ensures converted to node not nested deques, 
