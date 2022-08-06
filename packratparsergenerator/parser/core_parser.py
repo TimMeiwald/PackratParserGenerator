@@ -1,7 +1,7 @@
 from enum import Enum
 from collections import deque
 from functools import lru_cache as cache
-
+from packratparsergenerator.parser import rules
 class Rules(Enum):
     _ROOT = 0
     _TERMINAL = 1

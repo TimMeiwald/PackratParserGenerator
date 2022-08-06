@@ -68,12 +68,14 @@ class Grammar_Compiler():
 if __name__ == "__main__":
     path = join(getcwd(),"packratparsergenerator", "parser", "Grammar.txt")
     print(path)
-    node = parse(src_filepath =path)
-    compiler = Grammar_Compiler()
-    compiler.compile(node)
+    import cProfile
+    cProfile.run("node = parse(src_filepath =path)")
+    #compiler = Grammar_Compiler()
+    #compiler.compile(node)
 
-    parser = Parser()
-    parser.pretty_print(node)
+    #parser = Parser()
+    
+    #parser.pretty_print(node)
 
-    for rule in compiler.rules:
-        print(rule.comment + "\n")
+    #for rule in compiler.rules:
+    #    print(rule.comment + "\n")
