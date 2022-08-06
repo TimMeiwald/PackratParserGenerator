@@ -31,8 +31,8 @@ jobs:
           coverage report -m --omit=tests/* --skip-empty
           coverage xml --skip-empty --omit=tests/* -o reports/coverage/coverage.xml
           genbadge coverage
-      #- uses: stefanzweifel/git-auto-commit-action@v4 # Commits any changes in this case commits the xml coverage file
-      #  with:
-      #    commit_message: Commit coverage file to repo
+      - uses: stefanzweifel/git-auto-commit-action@v4 # Commits any changes in this case commits the xml coverage file
+        with:
+          commit_message: Commit coverage file to repo
 
   
