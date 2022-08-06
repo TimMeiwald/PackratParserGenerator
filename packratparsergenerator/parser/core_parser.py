@@ -1,6 +1,7 @@
 from enum import Enum
 from collections import deque
 from functools import lru_cache as cache
+from turtle import pos
 from packratparsergenerator.parser.rules import Rules
 
     
@@ -32,7 +33,7 @@ class Node():
     def _pretty_print(self, node, indent = 0):
         indent_str = "  "
         if(node != None):
-            print(indent_str*indent + f"Node: {node.type.name}, {node.content}")
+            print(indent_str*indent + f"Node: {node.type.name}, '{node.content}'")
             for child in node.children:
                 self._pretty_print(child, indent+1)
 
@@ -70,6 +71,19 @@ class Parser():
         token = self._token(position)
         if(token == arg):
             position += 1
+            if(token == "\\"):
+                token = self._token(position)
+                if(token == "n"):
+                    position += 1
+                    token = "\\n"
+                elif(token == "r"):
+                    position += 1
+                    token = "\\r"
+                elif(token == "t"):
+                    position += 1
+                    token = "\\t"
+                else:
+                    token = "\\"
             node = Node(Rules._TERMINAL, token)
             return position, True, node
         else:
@@ -221,8 +235,3 @@ class Parser():
         """For testing purposes, may be able to refactor somehow to test
         but not sure how"""
         return self._TERMINAL(position, args)
-
-
-if __name__ == "__main__":
-    p = Parser()
-    p._set_src("A")

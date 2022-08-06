@@ -16,32 +16,34 @@ class Parser_Call_Maker():
         return p_string
     
     def selector(self, node):
-        if(node.content == "Sequence"):
+        if(node.type == Rules.Sequence):
             return self.p_sequence(node)
-        elif(node.content == "Ordered_Choice"):
+        elif(node.type == Rules.Ordered_Choice):
             return self.p_ordered_choice(node)
-        elif(node.content == "One_Or_More"):
+        elif(node.type == Rules.One_Or_More):
             return self.p_one_or_more(node)
-        elif(node.content == "Zero_Or_More"):
+        elif(node.type == Rules.Zero_Or_More):
             return self.p_zero_or_more(node)
-        elif(node.content == "Optional"):
+        elif(node.type == Rules.Optional):
             return self.p_optional(node)
-        elif(node.content == "And_Predicate"):
+        elif(node.type == Rules.And_Predicate):
             return self.p_and_predicate(node)
-        elif(node.content == "Not_Predicate"):
+        elif(node.type == Rules.Not_Predicate):
             return self.p_not_predicate(node)
-        elif(node.content == "Subexpression"):
+        elif(node.type == Rules.Subexpression):
             return self.p_subexpression(node)
-        elif(node.content == "Rule"):
+        elif(node.type == Rules.Rule):
             return self.p_rule(node)
-        elif(node.content == "LHS"):
+        elif(node.type == Rules.LHS):
             return self.p_lhs(node)
-        elif(node.content == "Terminal"):
+        elif(node.type == Rules.Terminal):
             return self.p_terminal(node)
         elif(node.type == Rules._TERMINAL):
             return self.p_TERMINAL(node)
-        else:
+        elif(node.type == Rules.Var_Name):
             return self.p_var_name(node)
+        else:
+            raise Exception(f"Unidentified node of type: {node.type.name}, content: {node.content}")
 
     def p_sequence(self, node):
         p_string = ""
@@ -118,34 +120,29 @@ class Parser_Call_Maker():
         if(node.content == '"'):
             p_string = "(self._TERMINAL, '" + node.content + "')"
         else:
-            p_string = "(self._TERMINAL, " + '"' + node.content + '"' + ")"
+            if(node.content == None):
+                p_string = "(self._TERMINAL, " + '"' + "\033[31mERROR: NONE\033[0m" + '"' + ")"
+            else:
+                p_string = "(self._TERMINAL, " + '"' + node.content + '"' + ")"
         return p_string
 
 if __name__ == "__main__":
-    src = '<ASCII> = &(<Alphabet_Lower>/<Alphabet_Upper>+),!(<Num>/<Spaces>*/<Specials>), <Specials>?;'
-    src = '<All> = "A","B","C","D","E";'
-    src = '<All> = "A"*;' 
-    node = parse(src = src)
-    node = node.children[0]
-    parser = Grammar_Parser()
-    parser.pretty_print(node)
+    from os import getcwd
+    from os.path import join
+    from packratparsergenerator.parser.grammar import parse
+    path = join(getcwd(),"packratparsergenerator", "parser", "Grammar.txt")
+    node = parse(src_filepath = path)
+    #node = parse(src='<Rule> = (<Terminal>/"A")*;')
     
-    x = Parser_Call_Maker(node)
-    print(x.parse_string)
-
-    position = 0
-    parser._set_src("ABCDE")
-    position, bool, node = parser._VAR_NAME(position, (parser._SEQUENCE, ((parser._SEQUENCE, ((parser._SEQUENCE, ((parser._SEQUENCE, ((parser._TERMINAL, "A"), (parser._TERMINAL, "B"))), (parser._TERMINAL, "C"))), (parser._TERMINAL, "D"))), (parser._TERMINAL, 
-"E"))))
-    print(position, bool)
-    parser.pretty_print(node)
-
-    position = 0
-    parser._set_src("AAAAAA")
-    position, bool, node = parser._VAR_NAME(position, (parser._ZERO_OR_MORE, (parser._TERMINAL, "A")))
-    print(position, bool)
-    parser.pretty_print(node)
+    for rule in node.children:
+        c = Parser_Call_Maker(rule)
+        print(c.parse_string + "\n")
     
+    #node.pretty_print()
+    p = Parser()
+    p._set_src("ABCD")
+    ret = p._VAR_NAME(0, (p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._TERMINAL, "0"), (p._TERMINAL, "1"))), (p._TERMINAL, "2"))), (p._TERMINAL, "3"))), (p._TERMINAL, "4"))), (p._TERMINAL, "5"))), (p._TERMINAL, "6"))), (p._TERMINAL, "7"))), (p._TERMINAL, "8"))), (p._TERMINAL, "9"))))
+    print(ret)
 
     
  

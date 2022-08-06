@@ -1,5 +1,6 @@
 from ast import Index
-from packratparsergenerator.parser.core_parser import Rules, Parser
+from packratparsergenerator.parser.core_parser import Parser
+from packratparsergenerator.parser.rules import Rules
 from packratparsergenerator.parser.grammar_parser import Grammar_Parser
 from packratparsergenerator.parser.grammar import parse
 
@@ -15,32 +16,34 @@ class Comment_Maker():
         return c_string
     
     def selector(self, node):
-        if(node.content == "Sequence"):
+        if(node.type == Rules.Sequence):
             return self.c_sequence(node)
-        elif(node.content == "Ordered_Choice"):
+        elif(node.type == Rules.Ordered_Choice):
             return self.c_ordered_choice(node)
-        elif(node.content == "One_Or_More"):
+        elif(node.type == Rules.One_Or_More):
             return self.c_one_or_more(node)
-        elif(node.content == "Zero_Or_More"):
+        elif(node.type == Rules.Zero_Or_More):
             return self.c_zero_or_more(node)
-        elif(node.content == "Optional"):
+        elif(node.type == Rules.Optional):
             return self.c_optional(node)
-        elif(node.content == "And_Predicate"):
+        elif(node.type == Rules.And_Predicate):
             return self.c_and_predicate(node)
-        elif(node.content == "Not_Predicate"):
+        elif(node.type == Rules.Not_Predicate):
             return self.c_not_predicate(node)
-        elif(node.content == "Subexpression"):
+        elif(node.type == Rules.Subexpression):
             return self.c_subexpression(node)
-        elif(node.content == "Rule"):
+        elif(node.type == Rules.Rule):
             return self.c_rule(node)
-        elif(node.content == "LHS"):
+        elif(node.type == Rules.LHS):
             return self.c_lhs(node)
-        elif(node.content == "Terminal"):
+        elif(node.type == Rules.Terminal):
             return self.c_terminal(node)
         elif(node.type == Rules._TERMINAL):
             return self.c_TERMINAL(node)
-        else:
+        elif(node.type == Rules.Var_Name):
             return self.c_var_name(node)
+        else:
+            raise Exception(f"Unidentified node of type: {node.type.name}, content: {node.content}")
 
     def c_sequence(self, node):
         c_string = ""
@@ -128,15 +131,15 @@ class Comment_Maker():
         return c_string
 
 if __name__ == "__main__":
-    src = '<ASCII> = &(<Alphabet_Lower>/<Alphabet_Upper>+),!(<Num>/<Spaces>*/<Specials>), <Specials>?;'
-    src = '<All> = "A";'
-    node = parse(src = src)
-    node = node.children[0]
-    parser = Parser()
-    parser.pretty_print(node)
-
-    x = Comment_Maker(node)
-    print(x.comment)
+    from os import getcwd
+    from os.path import join
+    from packratparsergenerator.parser.grammar import parse
+    path = join(getcwd(),"packratparsergenerator", "parser", "Grammar.txt")
+    node = parse(src_filepath = path)
+    
+    for rule in node.children:
+        c = Comment_Maker(rule)
+        print(c.comment)
     
  
     
