@@ -1,19 +1,8 @@
 from enum import Enum
 from collections import deque
 from functools import lru_cache as cache
-from packratparsergenerator.parser import rules
-class Rules(Enum):
-    _ROOT = 0
-    _TERMINAL = 1
-    _SEQUENCE = 2
-    _ORDERED_CHOICE = 3
-    _NOT_PREDICATE = 4
-    _AND_PREDICATE = 5
-    _OPTIONAL = 6
-    _ZERO_OR_MORE = 7
-    _ONE_OR_MORE = 8
-    _SUBEXPRESSION = 10
-    _VAR = 11
+from packratparsergenerator.parser.rules import Rules
+
     
 
 class Node():
@@ -83,11 +72,11 @@ class Parser():
         if(node != None):
             if(type(node.type) == int):
                 if(node.type < 20):
-                    print(indent_str*indent + f"Node: {self._rules_dict_inverse[node.type]}, {node.content}")
+                    print(indent_str*indent + f"Node: {node.type.name}, {node.content}")
                 else:
-                    print(indent_str*indent + f"Node: {self._rules_dict_inverse[node.type]}, {node.content}")
+                    print(indent_str*indent + f"Node: {node.type.name}, {node.content}")
             else:
-                print(indent_str*indent + f"Node: {node.type}, {node.content}")
+                print(indent_str*indent + f"Node: {node.type.name}, {node.content}")
             for child in node.children:
                 self.pretty_print(child, indent+1)
 
@@ -127,8 +116,7 @@ class Parser():
                 self._rules_dict[key] = self._rules_count
                 self._rules_dict_inverse[self._rules_count] = (key, func)
                 self._rules_count += 1
-                #print(f"\nAdded Rule: {key} with int: {self._rules_count-1}")
-            var_node = Node(Rules._VAR, key)
+            var_node = Node(Rules[key], None)
             if(node != None):
                 var_node.appender(node)
                 return position, True, var_node
@@ -265,3 +253,5 @@ class Parser():
         """For testing purposes, may be able to refactor somehow to test
         but not sure how"""
         return self._TERMINAL(position, args)
+
+
