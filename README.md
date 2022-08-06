@@ -10,4 +10,4 @@ TODO: Add Parse_Call_Maker Tests
 
 TODO: Generate ParserGenerators Parser with ParserGenerator and Test    
 DEFECT: Known issue between string inputs and string from file read. Unsure how to solve or what even the issue is.     
-  
+

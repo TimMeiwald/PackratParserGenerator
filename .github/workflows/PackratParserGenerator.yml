@@ -35,4 +35,3 @@ jobs:
         with:
           commit_message: Commit coverage file to repo
 
-  
