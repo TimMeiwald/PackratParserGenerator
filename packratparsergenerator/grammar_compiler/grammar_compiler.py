@@ -1,5 +1,4 @@
 from packratparsergenerator.parser.grammar import parse
-from packratparsergenerator.parser.core_parser import Parser
 from packratparsergenerator.grammar_compiler.comment_maker import Comment_Maker
 from packratparsergenerator.grammar_compiler.parser_call_maker import Parser_Call_Maker
 from packratparsergenerator.parser.rules import Rules
@@ -15,10 +14,9 @@ class Rule():
         self.name = ""
         self.get_rule_name(rule_node)
         core = self.get_core(rule_node)
-        rule_node.pretty_print()
-        print("\n")
         self.comment = Comment_Maker(rule_node).comment
         self.parse_string = Parser_Call_Maker(rule_node).parse_string
+        self.rule_function = self.generate_function()
 
     def get_rule_name(self, rule_node):
         # Could be done more general but probably slower too
@@ -31,6 +29,13 @@ class Rule():
     def get_core(self, rule_node):
         return rule_node.children[1]
 
+    def generate_function(self):
+        indent = "    "
+        string = indent + "@cache\n"
+        string += indent + f"def {self.name}(self, position: int, dummy = None):\n"
+        string += indent*2 + f'""" {self.comment} """' + "\n"
+        string += indent*2 + f"return {self.parse_string}\n"
+        return string
 
 class Grammar_Compiler():
 
@@ -54,13 +59,13 @@ if __name__ == "__main__":
     path = join(getcwd(),"packratparsergenerator", "parser", "Grammar.txt")
     print(path)
     import cProfile
-    cProfile.run("node = parse(src_filepath =path)")
+    #cProfile.run("node = parse(src_filepath =path)")
     node = parse(src_filepath = path)
-    node.pretty_print()
+    #node.pretty_print()
     compiler = Grammar_Compiler()
     compiler.compile(node)
 
-    node.pretty_print()
+    #node.pretty_print()
 
     for rule in compiler.rules:
-        print(rule.comment + "\n")
+        print(rule.rule_function)
