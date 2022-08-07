@@ -117,17 +117,17 @@ class Comment_Maker():
     
     def c_terminal(self, node):
         node = node.children[0]
-        if(node.content == '"'):
-            c_string = f"'{node.content}'"
-        else:
-            c_string = f'"{node.content}"'
+        c_string = self.c_TERMINAL(node)
         return c_string
 
     def c_TERMINAL(self, node):
         if(node.content == '"'):
             c_string = f"'{node.content}'"
+        elif(node.content == "\\"):
+            c_string = f'"\\\\"'
         else:
             c_string = f'"{node.content}"'
+        
         return c_string
 
 if __name__ == "__main__":

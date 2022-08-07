@@ -119,6 +119,8 @@ class Parser_Call_Maker():
     def p_TERMINAL(self, node):
         if(node.content == '"'):
             p_string = "(self._TERMINAL, '" + node.content + "')"
+        elif(node.content == "\\"):
+            p_string = "(self._TERMINAL, '" + "\\\\" + "')"
         else:
             if(node.content == None):
                 p_string = "(self._TERMINAL, " + '"' + "\033[31mERROR: NONE\033[0m" + '"' + ")"
