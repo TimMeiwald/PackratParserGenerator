@@ -79,7 +79,7 @@ class Parser_Call_Maker():
     def p_rule(self, node):
         try:
             p_string = self.selector(node.children[1])
-            p_string = "self._VAR_NAME(position, " + p_string + ")"
+            p_string = "self._SUBEXPRESSION(position, " + p_string + ")"
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string

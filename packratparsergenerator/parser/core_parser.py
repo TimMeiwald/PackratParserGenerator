@@ -57,6 +57,7 @@ class Parser():
         Useful for testing or calling specific subterminals"""
         return self._VAR_NAME(position, (func, arg))[2]
     
+    
     @cache
     def _token(self, position):
         if(position >= len(self.src)):

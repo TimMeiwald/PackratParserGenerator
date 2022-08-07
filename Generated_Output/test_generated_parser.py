@@ -9,7 +9,7 @@ if __name__ == "__main__":
     print(f"Length of File is : {len(src)}")
     parser = Grammar_Parser()
     parser._set_src(src)
-    position, bool, node = parser.Grammar(0)
+    position, bool, node = parser._VAR_NAME(0, (parser.Grammar, None))
     print(position, bool)
     assert (len(src), True) == (position, True), "Parsing has failed"
     #node.pretty_print()
