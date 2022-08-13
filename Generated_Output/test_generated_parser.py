@@ -25,8 +25,8 @@ if __name__ == "__main__":
     with open(path, "r") as fp:
         src = fp.read()
     print(f"Length of File is : {len(src)}")
-    old_parser = test_generated_parser(Grammar_Parser, src)
-    new_parser = test_generated_parser(Gen_Grammar_Parser, src)
+    old_parser = ntest_generated_parser(Grammar_Parser, src)
+    new_parser = ntest_generated_parser(Gen_Grammar_Parser, src)
     if(new_parser == old_parser):
         print("Output of New Parser is Identical to Output of Old parser for given source input")
     else:
