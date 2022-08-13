@@ -9,7 +9,7 @@ class Parser_Call_Maker():
         if(node == None):
             raise TypeError("Inputted node is None, maybe the rule failed when you expected success")
         self.parse_string = self.create_parse_string(node)
-        
+        self.semantic_instr = None
 
     def create_parse_string(self, node):
         p_string = self.selector(node)
@@ -87,6 +87,10 @@ class Parser_Call_Maker():
     def p_lhs(self, node):
         try:
             p_string = self.selector(node.children[0])
+            try:
+                self.semantic_instr = node.children[1].type
+            except IndexError:
+                pass
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string

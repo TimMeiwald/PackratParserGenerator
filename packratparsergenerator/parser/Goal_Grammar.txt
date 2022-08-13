@@ -1,4 +1,4 @@
-<Alphabet_Upper> PASSTHROUGH ="A"/"B"/"C"/"D"/"E"/"F"/"G"/"H"/"I"/"J"/"K"/"L"/"M"/"N"/"O"/"P"/"Q"/"R"/"S"/"T"/"U"/"V"/"W"/"X"/"Y"/"Z";
+<Alphabet_Upper> PASSTHROUGH ="A"/"B"/"C"/"D"/"E"/"F"/"G"/"H"/"I"/"J"/"K"/"L"/"M"/"N"/"O"/"P"/"Q"/"R"/"S"/"T"/"U"/"V"/"W"/"X"/"Y"/"Z"; 
 <Alphabet_Lower> PASSTHROUGH ="a"/"b"/"c"/"d"/"e"/"f"/"g"/"h"/"i"/"j"/"k"/"l"/"m"/"n"/"o"/"p"/"q"/"r"/"s"/"t"/"u"/"v"/"w"/"x"/"y"/"z";
 <Num> PASSTHROUGH = "0"/"1"/"2"/"3"/"4"/"5"/"6"/"7"/"8"/"9";
 <Spaces> PASSTHROUGH = "\n"/"\t"/"\r"/" ";
@@ -37,11 +37,11 @@
 <Whitespace> DELETE = (" "/"\n")*;
 <RHS> PASSTHROUGH = <Sequence>/<Ordered_Choice>/<Atom>;
 <LHS> = <Var_Name>, (<Whitespace>, <Semantic_Instructions>, <Whitespace>)?;
-<Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace>;
-<Grammar> = (<Rule>, <Comment>?)+;
-#Lemme just check comments work#
+<Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace>, <Comment>*;
+<Grammar> = <Rule>+, <Whitespace>;
+#Lemme just check comments work# #Double up dem comments#
 <Comment> DELETE = <Whitespace>, "#", (!"#",<ASCII>)*, "#", <Whitespace>;
 <Semantic_Instructions> COLLECT = <Delete>/<Passthrough>/<Collect>/<Pullup>;
 <Delete> PASSTHROUGH = "D","E","L","E","T","E";
 <Passthrough> PASSTHROUGH = "P", "A", "S", "S", "T", "H", "R", "O", "U", "G", "H";
-<Collect> PASSTHROUGH = "C", "O", "L", "L", "E", "C", "T";
+<Collect> PASSTHROUGH = "C", "O", "L", "L", "E", "C", "T"; #Comment#

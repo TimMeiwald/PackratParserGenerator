@@ -12,6 +12,7 @@ class Rule():
         if(rule_node.type != Rules.Rule):
             raise TypeError("This is not a valid rule for Rule")
         self.name = ""
+        self.user_comments = None
         self.get_rule_name(rule_node)
         core = self.get_core(rule_node)
         self.comment = Comment_Maker(rule_node).comment
@@ -26,13 +27,22 @@ class Rule():
             raise Exception("Something bad happened")
         Var_Name = LHS.children[0]
         self.name = Var_Name.content
+        try:
+            user_comment = rule_node.children[-1]
+            if(user_comment.type == Rules.Comment):
+                self.user_comments = user_comment
+        except IndexError:
+            pass
 
     def get_core(self, rule_node):
         return rule_node.children[1]
 
     def generate_function(self):
         indent = "    "
-        string = indent + "@cache\n"
+        string = "\n"
+        if(self.user_comments != None):
+            string += indent + self.user_comments.content + "\n"
+        string += indent + "@cache\n"
         string += indent + f"def {self.name}(self, position: int, dummy = None):\n"
         string += indent*2 + f'""" {self.comment} """' + "\n"
         string += indent*2 + f"return {self.parse_string}\n"

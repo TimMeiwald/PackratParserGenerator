@@ -42,6 +42,8 @@ class Comment_Maker():
             return self.c_TERMINAL(node)
         elif(node.type == Rules.Var_Name):
             return self.c_var_name(node)
+        elif(node.type == Rules.Comment):
+            raise Exception("Comment")
         else:
             raise Exception(f"Unidentified node of type: {node.type.name}, content: {node.content}")
 
