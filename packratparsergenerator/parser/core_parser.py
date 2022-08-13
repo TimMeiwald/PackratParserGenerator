@@ -1,4 +1,5 @@
 from packratparsergenerator.parser.rules import Rules #Must remain at top so it can be easily replaced
+from packratparsergenerator.parser.parser_pass_two import Parser_Pass_Two
 from collections import deque
 from functools import lru_cache as cache
     
@@ -84,6 +85,15 @@ class Parser():
         Useful for testing or calling specific subterminals"""
         return self._VAR_NAME(position, (func, arg))[2]
     
+    def parse(self, src, func, *, arg = None):
+        """Pass in the src and the function from the Grammar_Parser class you defined in the Grammar file
+        and it will parse it and return the position at which halting stopped, whether the parse succeeded
+        and the AST"""
+        self._set_src(src)
+        position, bool, node = self._VAR_NAME(0, (func, arg))
+        pass_two = Parser_Pass_Two()
+        pass_two.parse(node)
+        return position, bool, node
     
     @cache
     def _token(self, position):

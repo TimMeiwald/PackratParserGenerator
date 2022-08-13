@@ -54,6 +54,7 @@ class Grammar_Compiler():
             fp.readline()
             fp.readline()
             fp.readline() #Remove 4 imports I know it's brittle
+            fp.readline()
             core_parser = fp.read()
         
         #the parser pass two

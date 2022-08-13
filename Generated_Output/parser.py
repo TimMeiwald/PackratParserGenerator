@@ -134,6 +134,15 @@ class Parser():
         Useful for testing or calling specific subterminals"""
         return self._VAR_NAME(position, (func, arg))[2]
     
+    def parse(self, src, func, *, arg = None):
+        """Pass in the src and the function from the Grammar_Parser class you defined in the Grammar file
+        and it will parse it and return the position at which halting stopped, whether the parse succeeded
+        and the AST"""
+        self._set_src(src)
+        position, bool, node = self._VAR_NAME(0, (func, arg))
+        pass_two = Parser_Pass_Two()
+        pass_two.parse(node)
+        return position, bool, node
     
     @cache
     def _token(self, position):
@@ -315,11 +324,10 @@ class Parser():
 
 
 
+
 class Parser_Pass_Two():
 
     def __init__(self):
-        #self.delete_nodes = ("Whitespace", "Apostrophe", "Left_Angle_Bracket", "Right_Angle_Bracket", "Left_Bracket", 
-        #"Right_Bracket", "Plus", "Star", "Question_Mark", "Backslash", "Comma", "End_Rule", "Assignment","Exclamation_Mark", "Ampersand")
         self.delete_nodes = (Rules.Whitespace, Rules.Apostrophe, Rules.Left_Angle_Bracket, Rules.Right_Angle_Bracket, Rules.Left_Bracket, 
         Rules.Right_Bracket, Rules.Plus, Rules.Star, Rules.Question_Mark, Rules.Backslash, Rules.Comma, Rules.End_Rule, Rules.Assignment,Rules.Exclamation_Mark, Rules.Ampersand)
         self.passthrough_nodes = (Rules.ASCII, Rules.Alphabet_Upper, Rules.Alphabet_Lower, Rules.Atom, Rules.Nucleus, Rules.RHS, Rules.Specials, Rules.Num, Rules.Spaces)
@@ -539,3 +547,13 @@ class Grammar_Parser(Parser):
     def Grammar(self, position: int, dummy = None):
         """ <Grammar> = <Rule>+, <Whitespace> ; """
         return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._ONE_OR_MORE, (self._VAR_NAME, (self.Rule, None))), (self._VAR_NAME, (self.Whitespace, None)))))
+
+
+
+if __name__ == "__main__":
+    src = "<RuleIs> = <Thing>/<OrDifferentThing>;"
+    print(f"Length of File is : {len(src)}")
+    parser = Grammar_Parser()
+    position, bool, node = parser.parse(src, parser.Grammar)
+    print(position, bool)
+    node.pretty_print()
