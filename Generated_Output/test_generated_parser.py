@@ -5,7 +5,7 @@ from os.path import join
 from packratparsergenerator.parser.parser_pass_two import Parser_Pass_Two
 from time import time
 
-def test_generated_parser(parser_class, src):
+def ntest_generated_parser(parser_class, src): # Not a proper test yet so renamed to prevent pytest from running it
     parser = parser_class()
     parser._set_src(src)
     time_start = time()
