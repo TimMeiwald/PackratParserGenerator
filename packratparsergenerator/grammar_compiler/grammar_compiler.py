@@ -1,7 +1,8 @@
 from packratparsergenerator.parser.grammar import parse
 from packratparsergenerator.grammar_compiler.comment_maker import Comment_Maker
 from packratparsergenerator.grammar_compiler.parser_call_maker import Parser_Call_Maker
-from packratparsergenerator.parser.rules import Rules
+#from packratparsergenerator.parser.rules import Rules
+from Generated_Output.parser import Grammar_Parser, Rules
 from os import getcwd
 from os.path import join
 
@@ -11,10 +12,13 @@ class Rule():
         if(rule_node.type != Rules.Rule):
             raise TypeError("This is not a valid rule for Rule")
         self.name = ""
+        self.user_comments = None
         self.get_rule_name(rule_node)
         core = self.get_core(rule_node)
         self.comment = Comment_Maker(rule_node).comment
-        self.parse_string = Parser_Call_Maker(rule_node).parse_string
+        parser_call_maker = Parser_Call_Maker(rule_node)
+        self.parse_string = parser_call_maker.parse_string
+        self.semantic_instr = self.get_sem_instr(rule_node)
         self.rule_function = self.generate_function()
         self.rule_enum_stmt = f"{self.name} = "
 
@@ -25,13 +29,30 @@ class Rule():
             raise Exception("Something bad happened")
         Var_Name = LHS.children[0]
         self.name = Var_Name.content
+        try:
+            user_comment = rule_node.children[-1]
+            if(user_comment.type == Rules.Comment):
+                self.user_comments = user_comment
+        except IndexError:
+            pass
+    
+    def get_sem_instr(self, rule_node):
+        LHS = rule_node.children[0]
+        try:
+            sem_instr = LHS.children[1]
+            return sem_instr
+        except IndexError:
+            pass
 
     def get_core(self, rule_node):
         return rule_node.children[1]
 
     def generate_function(self):
         indent = "    "
-        string = indent + "@cache\n"
+        string = "\n"
+        if(self.user_comments != None):
+            string += indent + self.user_comments.content + "\n"
+        string += indent + "@cache\n"
         string += indent + f"def {self.name}(self, position: int, dummy = None):\n"
         string += indent*2 + f'""" {self.comment} """' + "\n"
         string += indent*2 + f"return {self.parse_string}\n"
@@ -59,19 +80,45 @@ class Grammar_Compiler():
             core_parser = fp.read()
         
         #the parser pass two
-        with open(join(getcwd(),"packratparsergenerator", "parser", "parser_pass_two.py")) as fp:
-            fp.readline()
-            fp.readline()
-            pass_two = fp.read()
+        pass_two = self.create_parser_pass_two()
 
         with open(join(dest_filepath, "parser.py"), "w") as fp:
             fp.write("from collections import deque\n")
             fp.write("from functools import lru_cache as cache\n")
-            fp.write(rules_enum)
-            fp.write(core_parser)
-            fp.write(pass_two)
+            fp.write(rules_enum + "\n")
+            fp.write(core_parser + "\n")
+            fp.write(pass_two + "\n")
             fp.write(grammar_parser)
         
+    def create_parser_pass_two(self):
+        with open(join(getcwd(),"packratparsergenerator", "parser", "parser_pass_two.py")) as fp:
+            for i in range(0,10):
+                fp.readline() #remove first 10 lines so I can construct it with different typles(based on grammar)
+            pass_two = fp.read()
+        indent = "    "
+        string = "class Parser_Pass_Two():\n\n"
+        string += indent + "def __init__(self):\n"
+        nodes = self.get_nodes(Rules.Delete)
+        string += 2*indent + f"self.delete_nodes = {nodes}\n"
+        nodes = self.get_nodes(Rules.Passthrough)
+        string += 2*indent + f"self.passthrough_nodes = {nodes}\n"
+        nodes = self.get_nodes(Rules.Collect)
+        string += 2*indent + f"self.collect_nodes = {nodes}\n"
+        string += pass_two
+        return string
+    
+    def get_nodes(self, type):
+        list = []
+        for rule in self.rules:
+            if(rule.semantic_instr == None):
+                continue
+            if(rule.semantic_instr.type == type):
+                list.append(rule.name)
+        str = "("
+        for sem_instr in list:
+            str += f"Rules.{sem_instr}, "
+        str += ")"
+        return str
 
 
     def split_by_rule(self, node):
@@ -111,14 +158,21 @@ class Grammar_Parser(Parser):
 
 
 if __name__ == "__main__":
-    path = join(getcwd(),"packratparsergenerator", "parser", "Grammar.txt")
+    path = join(getcwd(),"packratparsergenerator", "parser", "Goal_Grammar.txt")
     print(path)
     import cProfile
     #cProfile.run("node = parse(src_filepath =path)")
-    node = parse(src_filepath = path)
+    #node = parse(src_filepath = path)
+    #node.pretty_print()
+    parser = Grammar_Parser()
+    with open(path) as fp:
+        src = fp.read()
+    position, bool, node = parser.parse(src, parser.Grammar)
+    assert position == len(src)
+    assert bool == True
     #node.pretty_print()
     compiler = Grammar_Compiler()
-    path = join(getcwd(), "Generated_Output")
+    path = join(getcwd(), "Generated_Output2")
     compiler.compile(node, path)
 
 

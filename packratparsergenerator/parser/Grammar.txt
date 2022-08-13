@@ -1,22 +1,22 @@
-<Alphabet_Upper> ="A"/"B"/"C"/"D"/"E"/"F"/"G"/"H"/"I"/"J"/"K"/"L"/"M"/"N"/"O"/"P"/"Q"/"R"/"S"/"T"/"U"/"V"/"W"/"X"/"Y"/"Z";
-<Alphabet_Lower> ="a"/"b"/"c"/"d"/"e"/"f"/"g"/"h"/"i"/"j"/"k"/"l"/"m"/"n"/"o"/"p"/"q"/"r"/"s"/"t"/"u"/"v"/"w"/"x"/"y"/"z";
-<Num> = "0"/"1"/"2"/"3"/"4"/"5"/"6"/"7"/"8"/"9";
-<Specials> = "+"/"*"/"-"/"&"/"!"/"?"/"<"/">"/"""/"("/")"/"_"/","/"/"/";"/"="/"\"/"#"/":"/"|"/"."/"{"/"}"/"["/"]";
-<Spaces> = "\n"/"\t"/"\r"/" ";
-<ASCII> = <Alphabet_Lower>/<Alphabet_Upper>/<Num>/<Spaces>/<Specials>;
-<Apostrophe> = """;
-<Left_Angle_Bracket> = "<";
-<Right_Angle_Bracket> = ">";
-<Left_Bracket> = "(";
-<Right_Bracket> = ")";
-<Assignment> = "=";
-<End_Rule> = ";";
-<Ampersand> = "&";
-<Exclamation_Mark> = "!";
-<Plus> = "+";
-<Star> = "*";
-<Question_Mark> = "?";
-<Comma> = ",";
+<Alphabet_Upper>  ="A"/"B"/"C"/"D"/"E"/"F"/"G"/"H"/"I"/"J"/"K"/"L"/"M"/"N"/"O"/"P"/"Q"/"R"/"S"/"T"/"U"/"V"/"W"/"X"/"Y"/"Z";
+<Alphabet_Lower>  ="a"/"b"/"c"/"d"/"e"/"f"/"g"/"h"/"i"/"j"/"k"/"l"/"m"/"n"/"o"/"p"/"q"/"r"/"s"/"t"/"u"/"v"/"w"/"x"/"y"/"z";
+<Num>  = "0"/"1"/"2"/"3"/"4"/"5"/"6"/"7"/"8"/"9";
+<Spaces>  = "\n"/"\t"/"\r"/" ";
+<Specials>  = "+"/"*"/"-"/"&"/"!"/"?"/"<"/">"/"""/"("/")"/"_"/","/"/"/";"/"="/"\"/"#"/":"/"|"/"."/"{"/"}"/"["/"]";
+<ASCII>  = <Alphabet_Lower>/<Alphabet_Upper>/<Num>/<Spaces>/<Specials>;
+<Apostrophe>  = """;
+<Left_Angle_Bracket>  = "<";
+<Right_Angle_Bracket>  = ">";
+<Left_Bracket>  = "(";
+<Right_Bracket>  = ")";
+<Assignment>  = "=";
+<End_Rule>  = ";";
+<Ampersand>  = "&";
+<Exclamation_Mark>  = "!";
+<Plus>  = "+";
+<Star>  = "*";
+<Question_Mark>  = "?";
+<Comma>  = ",";
 <Backslash> = "/";
 
 
@@ -36,7 +36,12 @@
 
 <Whitespace> = (" "/"\n")*;
 <RHS> = <Sequence>/<Ordered_Choice>/<Atom>;
-<LHS> = <Var_Name>;
-<Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace>;
-<Grammar> = <Rule>+, <Whitespace>;
-
+<LHS> = <Var_Name>, (<Whitespace>, <Semantic_Instructions>, <Whitespace>)?;
+<Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace>, <Comment>*;
+<Grammar> = <Rule>+;
+<Comment> = <Whitespace>, "#", (!"#",<ASCII>)*, "#", <Whitespace>;
+<Semantic_Instructions> = <Delete>/<Passthrough>/<Collect>/<Pullup>;
+<Delete> = "D","E","L","E","T","E";
+<Passthrough> = "P", "A", "S", "S", "T", "H", "R", "O", "U", "G", "H";
+<Collect> = "C", "O", "L", "L", "E", "C", "T";
+<Pullup> = "P", "U", "L", "L", "U", "P";

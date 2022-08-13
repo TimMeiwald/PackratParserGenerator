@@ -1,6 +1,6 @@
-from ast import Index
 from packratparsergenerator.parser.core_parser import Parser
-from packratparsergenerator.parser.rules import Rules
+#from packratparsergenerator.parser.rules import Rules
+from Generated_Output.parser import Rules
 from packratparsergenerator.parser.grammar_parser import Grammar_Parser
 from packratparsergenerator.parser.grammar import parse
 
@@ -42,6 +42,8 @@ class Comment_Maker():
             return self.c_TERMINAL(node)
         elif(node.type == Rules.Var_Name):
             return self.c_var_name(node)
+        elif(node.type == Rules.Comment):
+            raise Exception("Comment")
         else:
             raise Exception(f"Unidentified node of type: {node.type.name}, content: {node.content}")
 
