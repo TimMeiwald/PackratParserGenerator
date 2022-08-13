@@ -1,6 +1,6 @@
 #MyStuff
 #No reports
-#reports/
+reports/
 poetry.lock
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -42,7 +42,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
-#htmlcov/
+htmlcov/
 .tox/
 .nox/
 .coverage
