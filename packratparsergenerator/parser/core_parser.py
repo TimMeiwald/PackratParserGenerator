@@ -88,7 +88,7 @@ class Parser():
     def parse(self, src, func, *, arg = None):
         """Pass in the src and the function from the Grammar_Parser class you defined in the Grammar file
         and it will parse it and return the position at which halting stopped, whether the parse succeeded
-        and the AST"""
+        and the AST."""
         self._set_src(src)
         position, bool, node = self._VAR_NAME(0, (func, arg))
         pass_two = Parser_Pass_Two()

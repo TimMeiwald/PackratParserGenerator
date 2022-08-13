@@ -11,12 +11,13 @@ class Parser_Pass_Two():
         Rules.Right_Bracket, Rules.Plus, Rules.Star, Rules.Question_Mark, Rules.Backslash, Rules.Comma, Rules.End_Rule, Rules.Assignment,Rules.Exclamation_Mark, Rules.Ampersand)
         self.passthrough_nodes = (Rules.ASCII, Rules.Alphabet_Upper, Rules.Alphabet_Lower, Rules.Atom, Rules.Nucleus, Rules.RHS, Rules.Specials, Rules.Num, Rules.Spaces)
         self.collect_nodes = (Rules.Var_Name,)
+        self.tokens = deque()
       
     def token_generator(self, node):
-        yield node
+        self.tokens.append(node)
         for child in node.children:
             child.parent = node
-            yield from self.token_generator(child)
+            self.token_generator(child)
 
     def delete_kernel(self, node):
         if(node.type in self.delete_nodes):
@@ -64,7 +65,8 @@ class Parser_Pass_Two():
 
 
     def parse(self, node):
-        nodes = deque(self.token_generator(node))
+        self.token_generator(node)
+        nodes = deque(self.tokens)
         nodes = self.__parse(nodes)
         return nodes
 

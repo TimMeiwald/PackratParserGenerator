@@ -334,4 +334,4 @@ class Grammar_Parser(Parser):
         position, bool, node =  self._ONE_OR_MORE(position, tup1)
         return position, bool, node
 
-    
+
