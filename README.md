@@ -3,13 +3,13 @@
 # PackratParserGenerator 
 TODO: QOL Feature Use uint[0-255] to get all ASCII chars as opposed to current solution              
 TODO: Implement Pylint/MyPy/Black         
-TODO: Error handling, halt start at top level rule and step in find longest match and then return associated error. Generate error framework      
-TODO: Implement Parser Generation       
+TODO: Error handling, halt start at top level rule and step in find longest match and then return associated error. Generate error framework       
 TODO: Add Commenter Tests    
 TODO: Add Parse_Call_Maker Tests     
+TODO: Have tests rerun with new parser too so that I can CI/CD any updates to the parser too.     
+TODO: Also implement automated tests for the entire compile process.    
+TODO: Basically more Tests.    
 
-TODO: Generate ParserGenerators Parser with ParserGenerator and Test       
 DEFECT: Known issue between string inputs and string from file read. Unsure how to solve or what even the issue is.     
-DEFECT: Need to fix renaming imports automatically based on src directory. Could not be arsed at the moment.
-DEFECT: Also need to reimplement Passthrough, Collect and Delete because I had simplified grammar for the time being but cba to do that rn.
+
 
