@@ -9,7 +9,6 @@ class Parser_Call_Maker():
         if(node == None):
             raise TypeError("Inputted node is None, maybe the rule failed when you expected success")
         self.parse_string = self.create_parse_string(node)
-        self.semantic_instr = None
 
     def create_parse_string(self, node):
         p_string = self.selector(node)
@@ -87,10 +86,6 @@ class Parser_Call_Maker():
     def p_lhs(self, node):
         try:
             p_string = self.selector(node.children[0])
-            try:
-                self.semantic_instr = node.children[1].type
-            except IndexError:
-                pass
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string
@@ -132,24 +127,6 @@ class Parser_Call_Maker():
                 p_string = "(self._TERMINAL, " + '"' + node.content + '"' + ")"
         return p_string
 
-if __name__ == "__main__":
-    from os import getcwd
-    from os.path import join
-    from packratparsergenerator.parser.grammar import parse
-    path = join(getcwd(),"packratparsergenerator", "parser", "Grammar.txt")
-    node = parse(src_filepath = path)
-    #node = parse(src='<Rule> = (<Terminal>/"A")*;')
-    
-    for rule in node.children:
-        c = Parser_Call_Maker(rule)
-        print(c.parse_string + "\n")
-    
-    #node.pretty_print()
-    p = Grammar_Parser()
-    p._set_src('<r>= "a"/"b"/("a", "b");')
-    self = p
-    position = 0
-    ret = self._VAR_NAME(position, (self._SEQUENCE, ((self._ONE_OR_MORE, (self._VAR_NAME, (self.Rule,None))), (self._VAR_NAME, (self.Whitespace,None)))))
 
     
  

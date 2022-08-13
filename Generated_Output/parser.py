@@ -337,8 +337,8 @@ class Parser_Pass_Two():
     def __init__(self):
         self.delete_nodes = (Rules.Whitespace, Rules.Apostrophe, Rules.Left_Angle_Bracket, Rules.Right_Angle_Bracket, Rules.Left_Bracket, 
         Rules.Right_Bracket, Rules.Plus, Rules.Star, Rules.Question_Mark, Rules.Backslash, Rules.Comma, Rules.End_Rule, Rules.Assignment,Rules.Exclamation_Mark, Rules.Ampersand)
-        self.passthrough_nodes = (Rules.ASCII, Rules.Alphabet_Upper, Rules.Alphabet_Lower, Rules.Atom, Rules.Nucleus, Rules.RHS, Rules.Specials, Rules.Num, Rules.Spaces)
-        self.collect_nodes = (Rules.Var_Name,Rules.Comment)
+        self.passthrough_nodes = (Rules.ASCII, Rules.Alphabet_Upper, Rules.Alphabet_Lower, Rules.Atom, Rules.Nucleus, Rules.RHS, Rules.Specials, Rules.Num, Rules.Spaces, Rules.Semantic_Instructions)
+        self.collect_nodes = (Rules.Var_Name,Rules.Comment, Rules.Collect, Rules.Passthrough, Rules.Delete)
         self.tokens = deque()
       
     def token_generator(self, node):

@@ -1,9 +1,9 @@
-from Generated_Output.parser import Grammar_Parser as Gen_Grammar_Parser
-from Generated_Output.parser import Parser_Pass_Two as Gen_Parser_Pass_Two
+from Generated_Output2.parser import Grammar_Parser as Gen_Grammar_Parser
+from Generated_Output2.parser import Parser_Pass_Two as Gen_Parser_Pass_Two
 from packratparsergenerator.parser.grammar_parser import Grammar_Parser as Grammar_Parser
+from packratparsergenerator.parser.parser_pass_two import Parser_Pass_Two
 from os import getcwd
 from os.path import join
-from packratparsergenerator.parser.parser_pass_two import Parser_Pass_Two
 from time import time
 
 def og_parser(src): # Not a proper test yet so renamed to prevent pytest from running it
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     with open(path, "r") as fp:
         src = fp.read()
     print(f"Length of File is : {len(src)}")
-    src = '<Rule> = "A";'
+    #src = '<Rule> = "A";'
     old_parser = og_parser(src)
     new_parser = new_parser(src)
     if(new_parser == old_parser):

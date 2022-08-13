@@ -59,6 +59,7 @@ class Rules(IntEnum):
     Passthrough = 60
     Collect = 61
 
+
 class Node():
     """Core data type"""
     def __init__(self, type: Rules | int, content: str = ""):
@@ -328,18 +329,15 @@ class Parser():
         but not sure how"""
         return self._TERMINAL(position, args)
 
-
-
-
 class Parser_Pass_Two():
 
     def __init__(self):
-        self.delete_nodes = (Rules.Whitespace, Rules.Apostrophe, Rules.Left_Angle_Bracket, Rules.Right_Angle_Bracket, Rules.Left_Bracket, 
-        Rules.Right_Bracket, Rules.Plus, Rules.Star, Rules.Question_Mark, Rules.Backslash, Rules.Comma, Rules.End_Rule, Rules.Assignment,Rules.Exclamation_Mark, Rules.Ampersand)
-        self.passthrough_nodes = (Rules.ASCII, Rules.Alphabet_Upper, Rules.Alphabet_Lower, Rules.Atom, Rules.Nucleus, Rules.RHS, Rules.Specials, Rules.Num, Rules.Spaces)
-        self.collect_nodes = (Rules.Var_Name,)
-        self.tokens = deque()
-      
+        self.delete_nodes = (Rules.Apostrophe, Rules.Left_Angle_Bracket, Rules.Right_Angle_Bracket, Rules.Left_Bracket, Rules.Right_Bracket, Rules.Assignment, Rules.End_Rule, Rules.Ampersand, Rules.Exclamation_Mark, Rules.Plus, Rules.Star, Rules.Question_Mark, Rules.Comma, Rules.Backslash, Rules.Whitespace, )
+        self.passthrough_nodes = (Rules.Alphabet_Upper, Rules.Alphabet_Lower, Rules.Num, Rules.Spaces, Rules.Specials, Rules.ASCII, Rules.Nucleus, Rules.Atom, Rules.RHS, Rules.Semantic_Instructions, )
+        self.collect_nodes = (Rules.Var_Name, Rules.Comment, Rules.Delete, Rules.Passthrough, Rules.Collect, )
+        self.tokens = deque()   #Anyone making modifications be aware everything after line 10 is automatically added to 
+        #generated parsers while everything before it isn't(so I can add the right stuff based on grammar)
+
     def token_generator(self, node):
         self.tokens.append(node)
         for child in node.children:
@@ -396,6 +394,7 @@ class Parser_Pass_Two():
         nodes = deque(self.tokens)
         nodes = self.__parse(nodes)
         return nodes
+
 
 
 
@@ -601,8 +600,8 @@ class Grammar_Parser(Parser):
 
     @cache
     def Semantic_Instructions(self, position: int, dummy = None):
-        """ <Semantic_Instructions> = <Delete>/<Passthrough>/<Collect>/<Pullup> ; """
-        return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._VAR_NAME, (self.Delete, None)), (self._VAR_NAME, (self.Passthrough, None)))), (self._VAR_NAME, (self.Collect, None)))), (self._VAR_NAME, (self.Pullup, None)))))
+        """ <Semantic_Instructions> = <Delete>/<Passthrough>/<Collect> ; """
+        return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._VAR_NAME, (self.Delete, None)), (self._VAR_NAME, (self.Passthrough, None)))), (self._VAR_NAME, (self.Collect, None)))))
 
     @cache
     def Delete(self, position: int, dummy = None):

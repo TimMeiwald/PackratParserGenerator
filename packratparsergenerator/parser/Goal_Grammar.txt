@@ -22,7 +22,7 @@
 
 <Var_Name> COLLECT =<Left_Angle_Bracket>,(<Alphabet_Lower>/<Alphabet_Upper>),(<Alphabet_Lower>/<Alphabet_Upper>/"_")*,<Right_Angle_Bracket>;
 <Subexpression> = <Left_Bracket>,<RHS>,<Right_Bracket>;
-<Terminal> PULLUP =(<Apostrophe>,<ASCII>,<Apostrophe>)/(<Apostrophe>,"\",("n"/"r"/"t"),<Apostrophe>);
+<Terminal> =(<Apostrophe>,<ASCII>,<Apostrophe>)/(<Apostrophe>,"\",("n"/"r"/"t"),<Apostrophe>);
 <Nucleus> PASSTHROUGH = (<Subexpression>/<Terminal>/<Var_Name>), <Whitespace>;
 <Atom> PASSTHROUGH = (<And_Predicate>/<Not_Predicate>/<One_Or_More>/<Zero_Or_More>/<Optional>/<Nucleus>), <Whitespace>;
 
@@ -40,8 +40,8 @@
 <Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace>, <Comment>*;
 <Grammar> = <Rule>+, <Whitespace>;
 #Lemme just check comments work# #Double up dem comments#
-<Comment> DELETE = <Whitespace>, "#", (!"#",<ASCII>)*, "#", <Whitespace>;
-<Semantic_Instructions> COLLECT = <Delete>/<Passthrough>/<Collect>/<Pullup>;
-<Delete> PASSTHROUGH = "D","E","L","E","T","E";
-<Passthrough> PASSTHROUGH = "P", "A", "S", "S", "T", "H", "R", "O", "U", "G", "H";
-<Collect> PASSTHROUGH = "C", "O", "L", "L", "E", "C", "T"; #Comment#
+<Comment> COLLECT = <Whitespace>, "#", (!"#",<ASCII>)*, "#", <Whitespace>;
+<Semantic_Instructions> PASSTHROUGH = <Delete>/<Passthrough>/<Collect>;
+<Delete> COLLECT = "D","E","L","E","T","E";
+<Passthrough> COLLECT = "P", "A", "S", "S", "T", "H", "R", "O", "U", "G", "H";
+<Collect> COLLECT = "C", "O", "L", "L", "E", "C", "T"; #Comment#
