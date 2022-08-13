@@ -73,13 +73,13 @@ class Parser_Call_Maker():
         return p_string
     
     def p_var_name(self, node):
-        p_string = "(self._VAR_NAME, (" + "self." + node.content + ",None))"
+        p_string = "(self._VAR_NAME, (" + "self." + node.content + ", None))"
         return p_string
     
     def p_rule(self, node):
         try:
             p_string = self.selector(node.children[1])
-            p_string = "self._VAR_NAME(position, " + p_string + ")"
+            p_string = "self._SUBEXPRESSION(position, " + p_string + ")"
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string
@@ -119,6 +119,8 @@ class Parser_Call_Maker():
     def p_TERMINAL(self, node):
         if(node.content == '"'):
             p_string = "(self._TERMINAL, '" + node.content + "')"
+        elif(node.content == "\\"):
+            p_string = "(self._TERMINAL, '" + "\\\\" + "')"
         else:
             if(node.content == None):
                 p_string = "(self._TERMINAL, " + '"' + "\033[31mERROR: NONE\033[0m" + '"' + ")"
@@ -139,10 +141,11 @@ if __name__ == "__main__":
         print(c.parse_string + "\n")
     
     #node.pretty_print()
-    p = Parser()
-    p._set_src("ABCD")
-    ret = p._VAR_NAME(0, (p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._ORDERED_CHOICE, ((p._TERMINAL, "0"), (p._TERMINAL, "1"))), (p._TERMINAL, "2"))), (p._TERMINAL, "3"))), (p._TERMINAL, "4"))), (p._TERMINAL, "5"))), (p._TERMINAL, "6"))), (p._TERMINAL, "7"))), (p._TERMINAL, "8"))), (p._TERMINAL, "9"))))
-    print(ret)
+    p = Grammar_Parser()
+    p._set_src('<r>= "a"/"b"/("a", "b");')
+    self = p
+    position = 0
+    ret = self._VAR_NAME(position, (self._SEQUENCE, ((self._ONE_OR_MORE, (self._VAR_NAME, (self.Rule,None))), (self._VAR_NAME, (self.Whitespace,None)))))
 
     
  

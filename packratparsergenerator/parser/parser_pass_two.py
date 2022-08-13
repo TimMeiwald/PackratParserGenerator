@@ -43,7 +43,7 @@ class Parser_Pass_Two():
         if(node.type in self.collect_nodes): 
             for child in node.children:
                 if(child.type != Rules._TERMINAL):
-                    raise ValueError(f"Cannot collect if there are non terminals in the nodes childrens. Node_Type: {node.type}, Child_Type: {child.type}")
+                    raise ValueError(f"Cannot collect if there are non terminals in the nodes childrens. Node_Type: {node.type.name}, Child_Type: {child.type.name}")
             node.content = ""
             for child in node.children:
                 node.content += child.content

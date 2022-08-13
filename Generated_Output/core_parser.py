@@ -25,33 +25,6 @@ class Node():
         else:
             for child in node_deque:
                 self.appender(child)
-    
-    def __equals(self, __o: object) -> bool:
-        if(__o is None):
-            return False
-        if(self.content == __o.content and self.type == __o.type):
-            return True
-        else:
-            return False
-    
-    def __eq__(self, __o: object) -> bool:
-        return self.__subtree_equals(__o)
-    
-    def __subtree_equals(self, __o: object) -> bool:
-        if(self.__equals(__o) is False):
-            return False
-        else:
-            count = 0
-            for index, child in enumerate(self.children):
-                try:
-                    bool = child.__subtree_equals(__o.children[index])
-                    count += bool
-                except IndexError:
-                    return False
-            if(count != len(self.children)):
-                return False
-            else:
-                return True
 
     def pretty_print(self):
         self._pretty_print(self)
