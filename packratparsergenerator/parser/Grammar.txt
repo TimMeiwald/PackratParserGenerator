@@ -37,8 +37,8 @@
 <Whitespace> = (" "/"\n")*;
 <RHS> = <Sequence>/<Ordered_Choice>/<Atom>;
 <LHS> = <Var_Name>, (<Whitespace>, <Semantic_Instructions>, <Whitespace>)?;
-<Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace>;
-<Grammar> = (<Rule>, <Comment>?)+;
+<Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace>, <Comment>*;
+<Grammar> = <Rule>+;
 <Comment> = <Whitespace>, "#", (!"#",<ASCII>)*, "#", <Whitespace>;
 <Semantic_Instructions> = <Delete>/<Passthrough>/<Collect>/<Pullup>;
 <Delete> = "D","E","L","E","T","E";

@@ -58,7 +58,6 @@ class Rules(IntEnum):
     Delete = 59
     Passthrough = 60
     Collect = 61
-    Pullup = 62
 
 class Node():
     """Core data type"""
@@ -550,12 +549,12 @@ class Grammar_Parser(Parser):
         return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._VAR_NAME, (self.Var_Name, None)), (self._OPTIONAL, (self._SUBEXPRESSION, (self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Whitespace, None)), (self._VAR_NAME, (self.Semantic_Instructions, None)))), (self._VAR_NAME, (self.Whitespace, None)))))))))
     @cache
     def Rule(self, position: int, dummy = None):
-        """ <Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace>, <Comment>* ; """
-        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.LHS, None)), (self._VAR_NAME, (self.Whitespace, None)))), (self._VAR_NAME, (self.Assignment, None)))), (self._VAR_NAME, (self.Whitespace, None)))), (self._VAR_NAME, (self.RHS, None)))), (self._VAR_NAME, (self.Whitespace, None)))), (self._VAR_NAME, (self.End_Rule, None)))), (self._VAR_NAME, (self.Whitespace, None)))), (self._ZERO_OR_MORE, (self._VAR_NAME, (self.Comment, None))))))
+        """ <Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace> ; """
+        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.LHS, None)), (self._VAR_NAME, (self.Whitespace, None)))), (self._VAR_NAME, (self.Assignment, None)))), (self._VAR_NAME, (self.Whitespace, None)))), (self._VAR_NAME, (self.RHS, None)))), (self._VAR_NAME, (self.Whitespace, None)))), (self._VAR_NAME, (self.End_Rule, None)))), (self._VAR_NAME, (self.Whitespace, None)))))
     @cache
     def Grammar(self, position: int, dummy = None):
-        """ <Grammar> = <Rule>+ ; """
-        return self._SUBEXPRESSION(position, (self._ONE_OR_MORE, (self._VAR_NAME, (self.Rule, None))))
+        """ <Grammar> = (<Rule>, <Comment>?)+ ; """
+        return self._SUBEXPRESSION(position, (self._ONE_OR_MORE, (self._SUBEXPRESSION, (self._SEQUENCE, ((self._VAR_NAME, (self.Rule, None)), (self._OPTIONAL, (self._VAR_NAME, (self.Comment, None))))))))
     @cache
     def Comment(self, position: int, dummy = None):
         """ <Comment> = <Whitespace>, "#", (!"#", <ASCII>)*, "#", <Whitespace> ; """
@@ -576,7 +575,3 @@ class Grammar_Parser(Parser):
     def Collect(self, position: int, dummy = None):
         """ <Collect> = "C", "O", "L", "L", "E", "C", "T" ; """
         return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._TERMINAL, "C"), (self._TERMINAL, "O"))), (self._TERMINAL, "L"))), (self._TERMINAL, "L"))), (self._TERMINAL, "E"))), (self._TERMINAL, "C"))), (self._TERMINAL, "T"))))
-    @cache
-    def Pullup(self, position: int, dummy = None):
-        """ <Pullup> = "P", "U", "L", "L", "U", "P" ; """
-        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._TERMINAL, "P"), (self._TERMINAL, "U"))), (self._TERMINAL, "L"))), (self._TERMINAL, "L"))), (self._TERMINAL, "U"))), (self._TERMINAL, "P"))))
