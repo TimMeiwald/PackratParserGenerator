@@ -11,4 +11,5 @@ TODO: Add Parse_Call_Maker Tests
 TODO: Generate ParserGenerators Parser with ParserGenerator and Test       
 DEFECT: Known issue between string inputs and string from file read. Unsure how to solve or what even the issue is.     
 DEFECT: Need to fix renaming imports automatically based on src directory. Could not be arsed at the moment.
+DEFECT: Also need to reimplement Passthrough, Collect and Delete because I had simplified grammar for the time being but cba to do that rn.
 
