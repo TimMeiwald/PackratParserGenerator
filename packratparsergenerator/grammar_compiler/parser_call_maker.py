@@ -1,5 +1,5 @@
-from ast import Index
-from packratparsergenerator.parser.core_parser import Rules, Parser
+#from packratparsergenerator.parser.core_parser import Rules, Parser
+from Generated_Output.parser import Rules
 from packratparsergenerator.parser.grammar_parser import Grammar_Parser
 from packratparsergenerator.parser.grammar import parse
 

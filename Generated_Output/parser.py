@@ -19,8 +19,8 @@ class Rules(IntEnum):
     Alphabet_Upper = 20
     Alphabet_Lower = 21
     Num = 22
-    Specials = 23
-    Spaces = 24
+    Spaces = 23
+    Specials = 24
     ASCII = 25
     Apostrophe = 26
     Left_Angle_Bracket = 27
@@ -53,6 +53,12 @@ class Rules(IntEnum):
     LHS = 54
     Rule = 55
     Grammar = 56
+    Comment = 57
+    Semantic_Instructions = 58
+    Delete = 59
+    Passthrough = 60
+    Collect = 61
+    Pullup = 62
 
 class Node():
     """Core data type"""
@@ -331,8 +337,8 @@ class Parser_Pass_Two():
     def __init__(self):
         self.delete_nodes = (Rules.Whitespace, Rules.Apostrophe, Rules.Left_Angle_Bracket, Rules.Right_Angle_Bracket, Rules.Left_Bracket, 
         Rules.Right_Bracket, Rules.Plus, Rules.Star, Rules.Question_Mark, Rules.Backslash, Rules.Comma, Rules.End_Rule, Rules.Assignment,Rules.Exclamation_Mark, Rules.Ampersand)
-        self.passthrough_nodes = (Rules.ASCII, Rules.Alphabet_Upper, Rules.Alphabet_Lower, Rules.Atom, Rules.Nucleus, Rules.RHS, Rules.Specials, Rules.Num, Rules.Spaces)
-        self.collect_nodes = (Rules.Var_Name,)
+        self.passthrough_nodes = (Rules.Semantic_Instructions, Rules.ASCII, Rules.Alphabet_Upper, Rules.Alphabet_Lower, Rules.Atom, Rules.Nucleus, Rules.RHS, Rules.Specials, Rules.Num, Rules.Spaces,)
+        self.collect_nodes = (Rules.Var_Name, Rules.Comment, Rules.Collect, Rules.Passthrough, Rules.Delete)
         self.tokens = deque()
       
     def token_generator(self, node):
@@ -363,7 +369,10 @@ class Parser_Pass_Two():
         if(node.type in self.collect_nodes): 
             for child in node.children:
                 if(child.type != Rules._TERMINAL):
-                    raise ValueError(f"Cannot collect if there are non terminals in the nodes childrens. Node_Type: {node.type.name}, Child_Type: {child.type.name}")
+                    err = f"Cannot collect if there are non terminals in the nodes childrens. Node_Type: {node.type.name}, Child_Type: {child.type.name}\n"
+                    for child in node.children:
+                        err += f"Child Type: {child.type.name}, Child Content: {child.content}"
+                    raise ValueError(err)
             node.content = ""
             for child in node.children:
                 node.content += child.content
@@ -415,13 +424,13 @@ class Grammar_Parser(Parser):
         """ <Num> = "0"/"1"/"2"/"3"/"4"/"5"/"6"/"7"/"8"/"9" ; """
         return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._TERMINAL, "0"), (self._TERMINAL, "1"))), (self._TERMINAL, "2"))), (self._TERMINAL, "3"))), (self._TERMINAL, "4"))), (self._TERMINAL, "5"))), (self._TERMINAL, "6"))), (self._TERMINAL, "7"))), (self._TERMINAL, "8"))), (self._TERMINAL, "9"))))
     @cache
-    def Specials(self, position: int, dummy = None):
-        """ <Specials> = "+"/"*"/"-"/"&"/"!"/"?"/"<"/">"/'"'/"("/")"/"_"/","/"/"/";"/"="/"\\"/"#"/":"/"|"/"."/"{"/"}"/"["/"]" ; """
-        return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._TERMINAL, "+"), (self._TERMINAL, "*"))), (self._TERMINAL, "-"))), (self._TERMINAL, "&"))), (self._TERMINAL, "!"))), (self._TERMINAL, "?"))), (self._TERMINAL, "<"))), (self._TERMINAL, ">"))), (self._TERMINAL, '"'))), (self._TERMINAL, "("))), (self._TERMINAL, ")"))), (self._TERMINAL, "_"))), (self._TERMINAL, ","))), (self._TERMINAL, "/"))), (self._TERMINAL, ";"))), (self._TERMINAL, "="))), (self._TERMINAL, '\\'))), (self._TERMINAL, "#"))), (self._TERMINAL, ":"))), (self._TERMINAL, "|"))), (self._TERMINAL, "."))), (self._TERMINAL, "{"))), (self._TERMINAL, "}"))), (self._TERMINAL, "["))), (self._TERMINAL, "]"))))
-    @cache
     def Spaces(self, position: int, dummy = None):
         """ <Spaces> = "\n"/"\t"/"\r"/" " ; """
         return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._TERMINAL, "\n"), (self._TERMINAL, "\t"))), (self._TERMINAL, "\r"))), (self._TERMINAL, " "))))
+    @cache
+    def Specials(self, position: int, dummy = None):
+        """ <Specials> = "+"/"*"/"-"/"&"/"!"/"?"/"<"/">"/'"'/"("/")"/"_"/","/"/"/";"/"="/"\\"/"#"/":"/"|"/"."/"{"/"}"/"["/"]" ; """
+        return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._TERMINAL, "+"), (self._TERMINAL, "*"))), (self._TERMINAL, "-"))), (self._TERMINAL, "&"))), (self._TERMINAL, "!"))), (self._TERMINAL, "?"))), (self._TERMINAL, "<"))), (self._TERMINAL, ">"))), (self._TERMINAL, '"'))), (self._TERMINAL, "("))), (self._TERMINAL, ")"))), (self._TERMINAL, "_"))), (self._TERMINAL, ","))), (self._TERMINAL, "/"))), (self._TERMINAL, ";"))), (self._TERMINAL, "="))), (self._TERMINAL, '\\'))), (self._TERMINAL, "#"))), (self._TERMINAL, ":"))), (self._TERMINAL, "|"))), (self._TERMINAL, "."))), (self._TERMINAL, "{"))), (self._TERMINAL, "}"))), (self._TERMINAL, "["))), (self._TERMINAL, "]"))))
     @cache
     def ASCII(self, position: int, dummy = None):
         """ <ASCII> = <Alphabet_Lower>/<Alphabet_Upper>/<Num>/<Spaces>/<Specials> ; """
@@ -540,13 +549,37 @@ class Grammar_Parser(Parser):
         return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._VAR_NAME, (self.Sequence, None)), (self._VAR_NAME, (self.Ordered_Choice, None)))), (self._VAR_NAME, (self.Atom, None)))))
     @cache
     def LHS(self, position: int, dummy = None):
-        """ <LHS> = <Var_Name> ; """
-        return self._SUBEXPRESSION(position, (self._VAR_NAME, (self.Var_Name, None)))
+        """ <LHS> = <Var_Name>, (<Whitespace>, <Semantic_Instructions>, <Whitespace>)? ; """
+        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._VAR_NAME, (self.Var_Name, None)), (self._OPTIONAL, (self._SUBEXPRESSION, (self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Whitespace, None)), (self._VAR_NAME, (self.Semantic_Instructions, None)))), (self._VAR_NAME, (self.Whitespace, None)))))))))
     @cache
     def Rule(self, position: int, dummy = None):
         """ <Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace> ; """
         return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.LHS, None)), (self._VAR_NAME, (self.Whitespace, None)))), (self._VAR_NAME, (self.Assignment, None)))), (self._VAR_NAME, (self.Whitespace, None)))), (self._VAR_NAME, (self.RHS, None)))), (self._VAR_NAME, (self.Whitespace, None)))), (self._VAR_NAME, (self.End_Rule, None)))), (self._VAR_NAME, (self.Whitespace, None)))))
     @cache
     def Grammar(self, position: int, dummy = None):
-        """ <Grammar> = <Rule>+, <Whitespace> ; """
-        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._ONE_OR_MORE, (self._VAR_NAME, (self.Rule, None))), (self._VAR_NAME, (self.Whitespace, None)))))
+        """ <Grammar> = (<Rule>, <Comment>?)+ ; """
+        return self._SUBEXPRESSION(position, (self._ONE_OR_MORE, (self._SUBEXPRESSION, (self._SEQUENCE, ((self._VAR_NAME, (self.Rule, None)), (self._OPTIONAL, (self._VAR_NAME, (self.Comment, None))))))))
+    @cache
+    def Comment(self, position: int, dummy = None):
+        """ <Comment> = <Whitespace>, "#", (!"#", <ASCII>)*, "#", <Whitespace> ; """
+        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Whitespace, None)), (self._TERMINAL, "#"))), (self._ZERO_OR_MORE, (self._SUBEXPRESSION, (self._SEQUENCE, ((self._NOT_PREDICATE, (self._TERMINAL, "#")), (self._VAR_NAME, (self.ASCII, None)))))))), (self._TERMINAL, "#"))), (self._VAR_NAME, (self.Whitespace, None)))))
+    @cache
+    def Semantic_Instructions(self, position: int, dummy = None):
+        """ <Semantic_Instructions> = <Delete>/<Passthrough>/<Collect>/<Pullup> ; """
+        return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._VAR_NAME, (self.Delete, None)), (self._VAR_NAME, (self.Passthrough, None)))), (self._VAR_NAME, (self.Collect, None)))), (self._VAR_NAME, (self.Pullup, None)))))
+    @cache
+    def Delete(self, position: int, dummy = None):
+        """ <Delete> = "D", "E", "L", "E", "T", "E" ; """
+        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._TERMINAL, "D"), (self._TERMINAL, "E"))), (self._TERMINAL, "L"))), (self._TERMINAL, "E"))), (self._TERMINAL, "T"))), (self._TERMINAL, "E"))))
+    @cache
+    def Passthrough(self, position: int, dummy = None):
+        """ <Passthrough> = "P", "A", "S", "S", "T", "H", "R", "O", "U", "G", "H" ; """
+        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._TERMINAL, "P"), (self._TERMINAL, "A"))), (self._TERMINAL, "S"))), (self._TERMINAL, "S"))), (self._TERMINAL, "T"))), (self._TERMINAL, "H"))), (self._TERMINAL, "R"))), (self._TERMINAL, "O"))), (self._TERMINAL, "U"))), (self._TERMINAL, "G"))), (self._TERMINAL, "H"))))
+    @cache
+    def Collect(self, position: int, dummy = None):
+        """ <Collect> = "C", "O", "L", "L", "E", "C", "T" ; """
+        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._TERMINAL, "C"), (self._TERMINAL, "O"))), (self._TERMINAL, "L"))), (self._TERMINAL, "L"))), (self._TERMINAL, "E"))), (self._TERMINAL, "C"))), (self._TERMINAL, "T"))))
+    @cache
+    def Pullup(self, position: int, dummy = None):
+        """ <Pullup> = "P", "U", "L", "L", "U", "P" ; """
+        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._TERMINAL, "P"), (self._TERMINAL, "U"))), (self._TERMINAL, "L"))), (self._TERMINAL, "L"))), (self._TERMINAL, "U"))), (self._TERMINAL, "P"))))

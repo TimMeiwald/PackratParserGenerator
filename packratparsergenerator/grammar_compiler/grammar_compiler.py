@@ -1,7 +1,8 @@
 from packratparsergenerator.parser.grammar import parse
 from packratparsergenerator.grammar_compiler.comment_maker import Comment_Maker
 from packratparsergenerator.grammar_compiler.parser_call_maker import Parser_Call_Maker
-from packratparsergenerator.parser.rules import Rules
+#from packratparsergenerator.parser.rules import Rules
+from Generated_Output.parser import Grammar_Parser, Rules
 from os import getcwd
 from os.path import join
 
@@ -111,14 +112,21 @@ class Grammar_Parser(Parser):
 
 
 if __name__ == "__main__":
-    path = join(getcwd(),"packratparsergenerator", "parser", "Grammar.txt")
+    path = join(getcwd(),"packratparsergenerator", "parser", "Goal_Grammar.txt")
     print(path)
     import cProfile
     #cProfile.run("node = parse(src_filepath =path)")
-    node = parse(src_filepath = path)
+    #node = parse(src_filepath = path)
     #node.pretty_print()
+    parser = Grammar_Parser()
+    with open(path) as fp:
+        src = fp.read()
+    position, bool, node = parser.parse(src, parser.Grammar)
+    assert position == len(src)
+    assert bool == True
+    node.pretty_print()
     compiler = Grammar_Compiler()
-    path = join(getcwd(), "Generated_Output")
+    path = join(getcwd(), "Generated_Output2")
     compiler.compile(node, path)
 
 
