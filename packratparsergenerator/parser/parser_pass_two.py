@@ -1,5 +1,3 @@
-
-
 from collections import deque
 from packratparsergenerator.parser.rules import Rules
 

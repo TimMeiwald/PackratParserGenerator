@@ -5,7 +5,6 @@ from packratparsergenerator.parser.rules import Rules
 from os import getcwd
 from os.path import join
 
-
 class Rule():
 
     def __init__(self, rule_node):
@@ -51,14 +50,25 @@ class Grammar_Compiler():
         grammar_parser = self.make_grammar_parser()
         rules_enum = self.make_rules_enum()
         with open(join(getcwd(),"packratparsergenerator", "parser", "core_parser.py")) as fp:
+            fp.readline() #Removes import so I can replace it correctly
+            fp.readline()
+            fp.readline()
+            fp.readline() #Remove 4 imports I know it's brittle
             core_parser = fp.read()
         
-        with open(join(dest_filepath, "grammar_parser.py"), "w") as fp:
-            fp.write(grammar_parser)
-        with open(join(dest_filepath, "core_parser.py"), "w") as fp:
-            fp.write(core_parser)
-        with open(join(dest_filepath, "rules.py"), "w") as fp:
+        #the parser pass two
+        with open(join(getcwd(),"packratparsergenerator", "parser", "parser_pass_two.py")) as fp:
+            fp.readline()
+            fp.readline()
+            pass_two = fp.read()
+
+        with open(join(dest_filepath, "parser.py"), "w") as fp:
+            fp.write("from collections import deque\n")
+            fp.write("from functools import lru_cache as cache\n")
             fp.write(rules_enum)
+            fp.write(core_parser)
+            fp.write(pass_two)
+            fp.write(grammar_parser)
         
 
 
@@ -69,9 +79,7 @@ class Grammar_Compiler():
     
     def make_grammar_parser(self):
         indent = "    "
-        string = """
-from packratparsergenerator.parser.core_parser import Parser, Node, Rules
-from functools import lru_cache as cache
+        string = f"""
 
 class Grammar_Parser(Parser):
 
@@ -104,7 +112,7 @@ if __name__ == "__main__":
     import cProfile
     #cProfile.run("node = parse(src_filepath =path)")
     node = parse(src_filepath = path)
-    node.pretty_print()
+    #node.pretty_print()
     compiler = Grammar_Compiler()
     path = join(getcwd(), "Generated_Output")
     compiler.compile(node, path)
