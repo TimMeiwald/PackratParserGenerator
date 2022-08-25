@@ -1,6 +1,6 @@
 from argparse import PARSER
 import pytest
-from . import GRAMMAR_PARSER, PARSER, TEST_RUN_COUNT
+from . import TEST_RUN_COUNT
 
 @pytest.fixture(autouse = True)
 def parser():
