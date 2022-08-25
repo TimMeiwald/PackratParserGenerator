@@ -36,6 +36,7 @@ def new_parser(src): # Not a proper test yet so renamed to prevent pytest from r
 
 
 if __name__ == "__main__":
+    #Tests the old parser grammar since the old parser does not have the new rules yet necessarily.
     path = join(getcwd(), "packratparsergenerator", "parser", "Grammar.txt")
     with open(path, "r") as fp:
         src = fp.read()

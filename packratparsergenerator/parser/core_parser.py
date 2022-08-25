@@ -36,6 +36,7 @@ class Node():
             return False
     
     def __eq__(self, __o: object) -> bool:
+        """Two Nodes are considered equal if they and all their subchildren have identical types and contents in order"""
         return self.__subtree_equals(__o)
     
     def __subtree_equals(self, __o: object) -> bool:

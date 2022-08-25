@@ -1,4 +1,3 @@
-from packratparsergenerator.parser.grammar import parse
 from packratparsergenerator.grammar_compiler.comment_maker import Comment_Maker
 from packratparsergenerator.grammar_compiler.parser_call_maker import Parser_Call_Maker
 #from packratparsergenerator.parser.rules import Rules
