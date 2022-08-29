@@ -84,7 +84,7 @@ class Parser():
     def caller(self, position, func, arg = None):
         """Calls generated functions, ensures converted to node not nested deques, 
         Useful for testing or calling specific subterminals"""
-        return self._VAR_NAME(position, (func, arg))[2]
+        return self._VAR_NAME(position, (func, arg))
     
     def parse(self, src, func, *, arg = None):
         """Pass in the src and the function from the Grammar_Parser class you defined in the Grammar file

@@ -18,7 +18,7 @@ def gparser():
 
 def gparser_dynamic_load(test_run_count):
     if(test_run_count == 1):
-        from Generated_Output2.parser import Grammar_Parser
+        from Generated_Output3.parser import Grammar_Parser
         return Grammar_Parser
     else:
         from packratparsergenerator.parser.grammar_parser import Grammar_Parser
@@ -26,7 +26,7 @@ def gparser_dynamic_load(test_run_count):
 
 def parser_dynamic_load(test_run_count):
     if(test_run_count == 1):
-        from Generated_Output2.parser import Parser
+        from Generated_Output3.parser import Parser
         return Parser
     else:
         from packratparsergenerator.parser.core_parser import Parser

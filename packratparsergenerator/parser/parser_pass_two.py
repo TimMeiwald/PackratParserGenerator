@@ -4,10 +4,9 @@ from packratparsergenerator.parser.rules import Rules
 class Parser_Pass_Two():
 
     def __init__(self):
-        self.delete_nodes = (Rules.Whitespace, Rules.Apostrophe, Rules.Left_Angle_Bracket, Rules.Right_Angle_Bracket, Rules.Left_Bracket, 
-        Rules.Right_Bracket, Rules.Plus, Rules.Star, Rules.Question_Mark, Rules.Backslash, Rules.Comma, Rules.End_Rule, Rules.Assignment,Rules.Exclamation_Mark, Rules.Ampersand)
-        self.passthrough_nodes = (Rules.ASCII, Rules.Alphabet_Upper, Rules.Alphabet_Lower, Rules.Atom, Rules.Nucleus, Rules.RHS, Rules.Specials, Rules.Num, Rules.Spaces)
-        self.collect_nodes = (Rules.Var_Name,)
+        self.delete_nodes = (Rules.Apostrophe, Rules.Left_Angle_Bracket, Rules.Right_Angle_Bracket, Rules.Left_Bracket, Rules.Right_Bracket, Rules.Assignment, Rules.End_Rule, Rules.Ampersand, Rules.Exclamation_Mark, Rules.Plus, Rules.Star, Rules.Question_Mark, Rules.Comma, Rules.Backslash, Rules.Whitespace, )
+        self.passthrough_nodes = (Rules.Alphabet_Upper, Rules.Alphabet_Lower, Rules.Num, Rules.Spaces, Rules.Specials, Rules.ASCII, Rules.Nucleus, Rules.Atom, Rules.RHS, Rules.Semantic_Instructions, )
+        self.collect_nodes = (Rules.Var_Name, Rules.Comment, Rules.Delete, Rules.Passthrough, Rules.Collect, )
         self.tokens = deque()   #Anyone making modifications be aware everything after line 10 is automatically added to 
         #generated parsers while everything before it isn't(so I can add the right stuff based on grammar)
 
