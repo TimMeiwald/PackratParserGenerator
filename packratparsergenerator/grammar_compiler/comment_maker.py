@@ -1,6 +1,5 @@
 from packratparsergenerator.parser.core_parser import Parser
-#from packratparsergenerator.parser.rules import Rules
-from Generated_Output.parser import Rules
+from packratparsergenerator.parser.rules import Rules
 from packratparsergenerator.parser.grammar_parser import Grammar_Parser
 from packratparsergenerator.parser.grammar import parse
 

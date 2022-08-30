@@ -1,7 +1,7 @@
 from packratparsergenerator.grammar_compiler.comment_maker import Comment_Maker
 from packratparsergenerator.grammar_compiler.parser_call_maker import Parser_Call_Maker
-#from packratparsergenerator.parser.rules import Rules
-from Generated_Output.parser import Grammar_Parser, Rules
+from packratparsergenerator.parser.core_parser import Node
+from packratparsergenerator.parser.rules import Rules
 from os import getcwd
 from os.path import join
 
@@ -66,7 +66,7 @@ class Grammar_Compiler():
     def __init__(self):
         self.rules = []
 
-    def compile(self, node, dest_filepath):
+    def compile(self, node: Node) -> str:
         """Sets what the source to compile is
         Must be a tree of nodes as defined in core_parser.py
         and then compiles
@@ -85,13 +85,14 @@ class Grammar_Compiler():
         #the parser pass two
         pass_two = self.create_parser_pass_two()
 
-        with open(join(dest_filepath, "parser.py"), "w") as fp:
-            fp.write("from collections import deque\n")
-            fp.write("from functools import lru_cache as cache\n")
-            fp.write(rules_enum + "\n")
-            fp.write(core_parser + "\n")
-            fp.write(pass_two + "\n")
-            fp.write(grammar_parser)
+        ret_string = "from collections import deque\n"
+        ret_string += "from functools import lru_cache as cache\n"
+        ret_string += rules_enum + "\n"
+        ret_string += core_parser + "\n"
+        ret_string += pass_two + "\n"
+        ret_string += grammar_parser
+        return ret_string
+
         
     def create_parser_pass_two(self):
         with open(join(getcwd(),"packratparsergenerator", "parser", "parser_pass_two.py")) as fp:
@@ -160,23 +161,3 @@ class Grammar_Parser(Parser):
 
 
 
-if __name__ == "__main__":
-    path = join(getcwd(),"packratparsergenerator", "parser", "Goal_Grammar.txt")
-    print(path)
-    import cProfile
-    #cProfile.run("node = parse(src_filepath =path)")
-    #node = parse(src_filepath = path)
-    #node.pretty_print()
-    parser = Grammar_Parser()
-    with open(path) as fp:
-        src = fp.read()
-    position, bool, node = parser.parse(src, parser.Grammar)
-    assert position == len(src)
-    assert bool == True
-    #node.pretty_print()
-    compiler = Grammar_Compiler()
-    path = join(getcwd(), "Generated_Output2")
-    compiler.compile(node, path)
-
-
-    

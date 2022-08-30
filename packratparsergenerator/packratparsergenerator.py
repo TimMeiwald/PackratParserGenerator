@@ -3,7 +3,7 @@ from packratparsergenerator.parser.parser_pass_two import Parser_Pass_Two
 from packratparsergenerator.grammar_compiler.grammar_compiler import Grammar_Compiler
 from os import PathLike, getcwd
 import os.path
-from time import time
+
 
 class Packrat_Parser_Generator():
 
@@ -47,16 +47,16 @@ class Packrat_Parser_Generator():
         if(dryrun):
             return None
         # Compiles
+        ret_string = self.compiler.compile(node)
+        if(verbose):
+            print(ret_string, "\n")
         if(self._dest_filepath == None):
-            # TODO: Rework Grammar_Compiler to return string so that this class can choose what to do with it
             raise ValueError("You must set dest_filepath with it's method set_dest_filepath")
-        self.compiler.compile(node, self._dest_filepath)
-        if(print):
-            with open(self._dest_filepath + "\\parser.py", "r") as fp:
-                parser = fp.read()
-                print(parser)
+        else:
+            with open(self._dest_filepath, "w") as fp:
+                fp.write(ret_string)
         if(pytest):
-            retcode = pytest.main([])
+            retcode = pytest.main()
         else:
             print("pytest is configured as off by default, set pytest path using associated set_pytest_path method\n and pass pytest=True as an argument to generate and automatically run pytest afterwards.")
 
@@ -69,7 +69,7 @@ class Packrat_Parser_Generator():
         if(self._src != None):
             raise ValueError("src_filepath and src cannot both be defined. Please only set src or src_filepath")
         if(os.path.exists(src_filepath) and override == False):
-            raise FileExistsError("This folder already exists, please set override to true if you want it to overwrite the existing file.")
+            raise FileExistsError("This file already exists, please set override to true if you want it to overwrite the existing file.")
         if(relative_path):
             rel_path = getcwd()
             self._src_filepath = os.path.join(rel_path, src_filepath)
@@ -77,10 +77,8 @@ class Packrat_Parser_Generator():
             self._src_filepath = src_filepath
 
     def set_dest_filepath(self, dest_filepath: str | PathLike, relative_path: bool = False, override: bool = False):
-        if(self._src != None):
-            raise ValueError("src_filepath and src cannot both be defined. Please only set src or src_filepath")
         if(os.path.exists(dest_filepath) and override == False):
-            raise FileExistsError("This folder already exists, please set override to true if you want it to overwrite the existing file.")
+            raise FileExistsError("This file already exists, please set override to true if you want it to overwrite the existing file.")
         if(relative_path):
             rel_path = getcwd()
             self._dest_filepath = os.path.join(rel_path, dest_filepath)
