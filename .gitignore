@@ -1,4 +1,5 @@
-#MyStuff
+#VS
+.vscode
 #No reports
 reports/
 poetry.lock
