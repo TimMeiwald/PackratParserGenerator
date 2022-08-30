@@ -411,6 +411,8 @@ class Grammar_Parser(Parser):
     def Alphabet_Upper(self, position: int, dummy = None):
         """
         <Alphabet_Upper> = "A"/"B"/"C"/"D"/"E"/"F"/"G"/"H"/"I"/"J"/"K"/"L"/"M"/"N"/"O"/"P"/"Q"/"R"/"S"/"T"/"U"/"V"/"W"/"X"/"Y"/"Z" ;
+        
+        We all love commments
         """
         return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._TERMINAL, "A"), (self._TERMINAL, "B"))), (self._TERMINAL, "C"))), (self._TERMINAL, "D"))), (self._TERMINAL, "E"))), (self._TERMINAL, "F"))), (self._TERMINAL, "G"))), (self._TERMINAL, "H"))), (self._TERMINAL, "I"))), (self._TERMINAL, "J"))), (self._TERMINAL, "K"))), (self._TERMINAL, "L"))), (self._TERMINAL, "M"))), (self._TERMINAL, "N"))), (self._TERMINAL, "O"))), (self._TERMINAL, "P"))), (self._TERMINAL, "Q"))), (self._TERMINAL, "R"))), (self._TERMINAL, "S"))), (self._TERMINAL, "T"))), (self._TERMINAL, "U"))), (self._TERMINAL, "V"))), (self._TERMINAL, "W"))), (self._TERMINAL, "X"))), (self._TERMINAL, "Y"))), (self._TERMINAL, "Z"))))
 
