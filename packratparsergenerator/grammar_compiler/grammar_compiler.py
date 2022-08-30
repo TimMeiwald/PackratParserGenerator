@@ -31,6 +31,7 @@ class Rule():
         try:
             user_comment = rule_node.children[-1]
             if(user_comment.type == Rules.Comment):
+                user_comment.content = user_comment.content[1:-1] #strips comment symbols
                 self.user_comments = user_comment
         except IndexError:
             pass
@@ -49,11 +50,14 @@ class Rule():
     def generate_function(self):
         indent = "    "
         string = "\n"
-        if(self.user_comments != None):
-            string += indent + self.user_comments.content + "\n"
         string += indent + "@cache\n"
         string += indent + f"def {self.name}(self, position: int, dummy = None):\n"
-        string += indent*2 + f'""" {self.comment} """' + "\n"
+        string += indent*2 + f'"""\n' 
+        string += indent*2 + f'{self.comment}\n'
+        if(self.user_comments != None):
+            string += indent*2 + "\n"
+            string += indent*2 + self.user_comments.content + "\n"
+        string += indent*2 + '"""\n'
         string += indent*2 + f"return {self.parse_string}\n"
         return string
 
