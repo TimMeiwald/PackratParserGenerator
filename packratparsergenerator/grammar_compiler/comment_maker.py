@@ -1,7 +1,6 @@
 from packratparsergenerator.parser.core_parser import Parser
 from packratparsergenerator.parser.rules import Rules
 from packratparsergenerator.parser.grammar_parser import Grammar_Parser
-from packratparsergenerator.parser.grammar import parse
 
 class Comment_Maker():
 
@@ -130,17 +129,3 @@ class Comment_Maker():
             c_string = f'"{node.content}"'
         
         return c_string
-
-if __name__ == "__main__":
-    from os import getcwd
-    from os.path import join
-    from packratparsergenerator.parser.grammar import parse
-    path = join(getcwd(),"packratparsergenerator", "parser", "Grammar.txt")
-    node = parse(src_filepath = path)
-    
-    for rule in node.children:
-        c = Comment_Maker(rule)
-        print(c.comment)
-    
- 
-    
