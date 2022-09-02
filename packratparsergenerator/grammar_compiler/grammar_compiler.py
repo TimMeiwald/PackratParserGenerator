@@ -96,7 +96,7 @@ class Grammar_Compiler():
         
     def create_parser_pass_two(self):
         with open(join(getcwd(),"packratparsergenerator", "parser", "parser_pass_two.py")) as fp:
-            for i in range(0,10):
+            for i in range(0,9):
                 fp.readline() #remove first 10 lines so I can construct it with different typles(based on grammar)
             pass_two = fp.read()
         indent = "    "
