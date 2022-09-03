@@ -3,7 +3,8 @@ name = "PackratParserGenerator"
 version = "0.5.1"
 description = "A packrat PEG(Parsing Expression Grammar) parser generator"
 authors = ["Tim Meiwald <tim.meiwald@gmail.com>"]
-
+license = "MIT"
+repository = "https://github.com/TimMeiwald/PackratParserGenerator"
 [tool.poetry.dependencies]
 python = "^3.10"
 pytest = {version = "^7.1.2", optional = true}
