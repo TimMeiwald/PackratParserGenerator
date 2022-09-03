@@ -5,7 +5,7 @@ from os import PathLike, getcwd
 import os.path
 
 
-class Packrat_Parser_Generator():
+class PackratParserGenerator():
 
     def __init__(self):
         self._src_filepath = None
