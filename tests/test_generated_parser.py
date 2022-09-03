@@ -1,5 +1,5 @@
-from Generated_Output.parser import Grammar_Parser as Gen_Grammar_Parser
-from Generated_Output.parser import Parser_Pass_Two as Gen_Parser_Pass_Two
+from packratparsergenerator.Generated_Output.parser import Grammar_Parser as Gen_Grammar_Parser
+from packratparsergenerator.Generated_Output.parser import Parser_Pass_Two as Gen_Parser_Pass_Two
 from packratparsergenerator.parser.grammar_parser import Grammar_Parser as Grammar_Parser
 from packratparsergenerator.parser.parser_pass_two import Parser_Pass_Two
 from os import getcwd
