@@ -1,5 +1,6 @@
 from enum import IntEnum
 
+
 class Rules(IntEnum):
     _ROOT = 0
     _TERMINAL = 1

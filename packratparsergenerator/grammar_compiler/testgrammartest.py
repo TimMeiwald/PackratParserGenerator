@@ -6,6 +6,3 @@ a = Grammar_Parser()
 b = a.parse("1234", a.int)
 print(b[0:1])
 b[2].pretty_print()
-
-
-

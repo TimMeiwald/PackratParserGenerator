@@ -6,11 +6,13 @@ from os import getcwd
 from os.path import join
 from time import time
 
-def og_parser(src): # Not a proper test yet so renamed to prevent pytest from running it
+
+def og_parser(src):  # Not a proper test yet so renamed to prevent pytest from running it
     parser = Grammar_Parser()
     parser._set_src(src)
     time_start = time()
-    position, bool, node = parser._VAR_NAME(0, (parser.Grammar, None)) #var_name, Needed to ensure correct handling of deques
+    # var_name, Needed to ensure correct handling of deques
+    position, bool, node = parser._VAR_NAME(0, (parser.Grammar, None))
     time_end = time()
     print(f"{Grammar_Parser} time to parse is {time_end - time_start}")
     assert (len(src), True) == (position, True), "Parsing has failed"
@@ -20,11 +22,13 @@ def og_parser(src): # Not a proper test yet so renamed to prevent pytest from ru
     node.pretty_print()
     return node
 
-def new_parser(src): # Not a proper test yet so renamed to prevent pytest from running it
+
+def new_parser(src):  # Not a proper test yet so renamed to prevent pytest from running it
     parser = Gen_Grammar_Parser()
     parser._set_src(src)
     time_start = time()
-    position, bool, node = parser._VAR_NAME(0, (parser.Grammar, None)) #var_name, Needed to ensure correct handling of deques
+    # var_name, Needed to ensure correct handling of deques
+    position, bool, node = parser._VAR_NAME(0, (parser.Grammar, None))
     time_end = time()
     print(f"{Gen_Grammar_Parser} time to parse is {time_end - time_start}")
     assert (len(src), True) == (position, True), "Parsing has failed"
@@ -36,7 +40,8 @@ def new_parser(src): # Not a proper test yet so renamed to prevent pytest from r
 
 
 if __name__ == "__main__":
-    #Tests the old parser grammar since the old parser does not have the new rules yet necessarily.
+    # Tests the old parser grammar since the old parser does not have the new
+    # rules yet necessarily.
     path = join(getcwd(), "packratparsergenerator", "parser", "Grammar.txt")
     with open(path, "r") as fp:
         src = fp.read()
@@ -44,7 +49,7 @@ if __name__ == "__main__":
     #src = '<Rule> = "A";'
     old_parser = og_parser(src)
     new_parser = new_parser(src)
-    if(new_parser == old_parser):
+    if (new_parser == old_parser):
         print("Output of New Parser is Identical to Output of Old parser for given source input")
     else:
         print("DOHHH: Your New Parser does not have the same output as old parser, Is this expected? E.g Rule change? or Not")

@@ -15,6 +15,7 @@ genbadge = {extras = ["coverage"], version = "^1.1.0", optional = true}
 pytest = "^7.1.2"
 coverage = "^6.4.2"
 genbadge = "^1.1.0"
+autopep8 = "^1.7.0"
 
 [tool.poetry.extras]
 test = ["pytest", "coverage", "genbadge"]
