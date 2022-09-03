@@ -3,6 +3,7 @@
 #No reports
 reports/
 poetry.lock
+Generated_Output/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
