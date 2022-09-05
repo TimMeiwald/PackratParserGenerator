@@ -101,8 +101,7 @@ class Parser():
         and the AST."""
         self._set_src(src)
         position, bool, node = self._VAR_NAME(0, (func, arg))
-        if(bool):
-            print("TRUE BUT NO NODE?!?")
+        if(node is not None):
             pass_two = Parser_Pass_Two()
             pass_two.parse(node)
             return position, bool, node
