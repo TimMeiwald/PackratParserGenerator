@@ -158,7 +158,7 @@ class Parser():
         and the AST."""
         self._set_src(src)
         position, bool, node = self._VAR_NAME(0, (func, arg))
-        if(bool):
+        if(node is not None):
             pass_two = Parser_Pass_Two()
             pass_two.parse(node)
             return position, bool, node
@@ -366,17 +366,19 @@ class Parser_Pass_Two():
     def delete_kernel(self, node):
         if (node.type in self.delete_nodes):
             node.children = deque()
-            node.parent.children.remove(node)
+            if(node.parent is not None):
+                node.parent.children.remove(node)
             del node
         else:
             return node
 
     def passthrough_kernel(self, node):
         if (node.type in self.passthrough_nodes):
-            index = node.parent.children.index(node)
-            for child in node.children:
-                node.parent.children.insert(index, child)
-            node.parent.children.remove(node)
+            if(node.parent is not None):
+                index = node.parent.children.index(node)
+                for child in node.children:
+                    node.parent.children.insert(index, child)
+                node.parent.children.remove(node)
             del node
         else:
             return node
