@@ -8,13 +8,18 @@ from functools import lru_cache as cache
 class Node():
     """Core data type"""
 
-    def __init__(self, type: Rules | int, content: str = ""):
+    def __init__(self, type: int, content: str = ""):
+        """Constructor
+
+        Args:
+            type (int): int that corresponds to Rules IntEnum telling you what type of Node it is.
+            content (str, optional): Content of Node. Defaults to "".
+        """
         self.type = type
         self.content = content
         self.children = deque()
         self.parent = None
 
-    # Appends nested deque if needed
     def appender(self, node_deque):
         if (isinstance(node_deque, tuple)):
             print("Tuple apparently: ", node_deque)
