@@ -40,7 +40,7 @@ class PackratParserGenerator():
             node.pretty_print()
             print("\n\n\n\n")
         if (position != len(src) or bool != True):
-            line_number = len(src.splitlines) # Num lines of src
+            line_number = len(src.splitlines()) # Num lines of src
             raise Exception(
                 f"Failed to Parse Grammar, Reached character: {position}, At probably line: {line_number}")
 
