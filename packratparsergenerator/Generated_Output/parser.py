@@ -158,9 +158,12 @@ class Parser():
         and the AST."""
         self._set_src(src)
         position, bool, node = self._VAR_NAME(0, (func, arg))
-        pass_two = Parser_Pass_Two()
-        pass_two.parse(node)
-        return position, bool, node
+        if(bool):
+            pass_two = Parser_Pass_Two()
+            pass_two.parse(node)
+            return position, bool, node
+        else:
+            return position, bool, None
 
     @cache
     def _token(self, position):
