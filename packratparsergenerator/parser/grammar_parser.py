@@ -387,42 +387,12 @@ class Grammar_Parser(Parser):
     @cache
     def Terminal(self, position: int, dummy=None):
         """ <Terminal> = (<Apostrophe>, <ASCII>, <Apostrophe>)/(<Apostrophe>, "\\", ("n"/"r"/"t"), <Apostrophe>) ; """
-        return self._SUBEXPRESSION(
-            position,
-            (self._ORDERED_CHOICE,
-             ((self._SUBEXPRESSION,
-               (self._SEQUENCE,
-                ((self._SEQUENCE,
-                  ((self._VAR_NAME,
-                    (self.Apostrophe,
-                     None)),
-                      (self._VAR_NAME,
-                       (self.ASCII,
-                        None)))),
-                    (self._VAR_NAME,
-                     (self.Apostrophe,
-                      None))))),
-                 (self._SUBEXPRESSION,
-                  (self._SEQUENCE,
-                   ((self._SEQUENCE,
-                     ((self._SEQUENCE,
-                       ((self._VAR_NAME,
-                         (self.Apostrophe,
-                          None)),
-                           (self._TERMINAL,
-                            '\\'))),
-                         (self._SUBEXPRESSION,
-                          (self._ORDERED_CHOICE,
-                           ((self._ORDERED_CHOICE,
-                            ((self._TERMINAL,
-                              "n"),
-                             (self._TERMINAL,
-                                "r"))),
-                               (self._TERMINAL,
-                                "t")))))),
-                       (self._VAR_NAME,
-                        (self.Apostrophe,
-                         None))))))))
+        return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._SUBEXPRESSION, (self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Apostrophe, None)), (self._VAR_NAME, (self.ASCII, None)))), (self._VAR_NAME, (self.Apostrophe, None))))), (self._SUBEXPRESSION, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Apostrophe, None)), (self._TERMINAL, '\\'))), (self._SUBEXPRESSION, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._TERMINAL, "n"), (self._TERMINAL, "r"))), (self._TERMINAL, "t")))))), (self._VAR_NAME, (self.Apostrophe, None))))))), (self._VAR_NAME, (self.Epsilon, None)))))
+    
+    @cache
+    def Epsilon(self, position: int, dummy=None):
+        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._VAR_NAME, (self.Apostrophe, None)), (self._VAR_NAME, (self.Apostrophe, None)))))
+
 
     @cache
     def Nucleus(self, position: int, dummy=None):

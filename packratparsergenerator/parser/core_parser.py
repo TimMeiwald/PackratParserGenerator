@@ -118,6 +118,8 @@ class Parser():
     def _TERMINAL(self, position: int, arg: str):
         #assert type(position) == int
         #assert type(Arg) == str
+        if(arg == ""):
+            return position, True, None
         token = self._token(position)
         if (token == arg):
             position += 1

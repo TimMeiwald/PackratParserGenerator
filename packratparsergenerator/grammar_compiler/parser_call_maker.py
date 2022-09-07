@@ -41,9 +41,14 @@ class Parser_Call_Maker():
             return self.p_TERMINAL(node)
         elif (node.type == Rules.Var_Name):
             return self.p_var_name(node)
+        elif(node.type == Rules.Epsilon):
+            return self.p_epsilon(node)
         else:
             raise Exception(
                 f"Unidentified node of type: {node.type.name}, content: {node.content}")
+
+    def p_epsilon(self, node):
+        return "(self._TERMINAL, '""')"
 
     def p_sequence(self, node):
         p_string = ""

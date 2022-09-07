@@ -37,28 +37,30 @@ class Rules(IntEnum):
     Question_Mark = 37
     Comma = 38
     Backslash = 39
-    Var_Name = 40
-    Subexpression = 41
-    Terminal = 42
-    Nucleus = 43
-    Atom = 44
-    And_Predicate = 45
-    Not_Predicate = 46
-    Sequence = 47
-    Ordered_Choice = 48
-    One_Or_More = 49
-    Zero_Or_More = 50
-    Optional = 51
-    Whitespace = 52
-    RHS = 53
-    LHS = 54
-    Rule = 55
-    Grammar = 56
-    Comment = 57
-    Semantic_Instructions = 58
-    Delete = 59
-    Passthrough = 60
-    Collect = 61
+    HAHA = 40
+    Var_Name = 41
+    Subexpression = 42
+    Epsilon = 43
+    Terminal = 44
+    Nucleus = 45
+    Atom = 46
+    And_Predicate = 47
+    Not_Predicate = 48
+    Sequence = 49
+    Ordered_Choice = 50
+    One_Or_More = 51
+    Zero_Or_More = 52
+    Optional = 53
+    Whitespace = 54
+    RHS = 55
+    LHS = 56
+    Rule = 57
+    Grammar = 58
+    Comment = 59
+    Semantic_Instructions = 60
+    Delete = 61
+    Passthrough = 62
+    Collect = 63
 
 
 
@@ -175,6 +177,8 @@ class Parser():
     def _TERMINAL(self, position: int, arg: str):
         #assert type(position) == int
         #assert type(Arg) == str
+        if(arg == ""):
+            return position, True, None
         token = self._token(position)
         if (token == arg):
             position += 1
@@ -570,6 +574,13 @@ class Grammar_Parser(Parser):
         return self._SUBEXPRESSION(position, (self._TERMINAL, "/"))
 
     @cache
+    def HAHA(self, position: int, dummy = None):
+        """
+        <HAHA> = "" ;
+        """
+        return self._SUBEXPRESSION(position, (self._TERMINAL, ''))
+
+    @cache
     def Var_Name(self, position: int, dummy = None):
         """
         <Var_Name> = <Left_Angle_Bracket>, (<Alphabet_Lower>/<Alphabet_Upper>), (<Alphabet_Lower>/<Alphabet_Upper>/"_")*, <Right_Angle_Bracket> ;
@@ -584,11 +595,18 @@ class Grammar_Parser(Parser):
         return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Left_Bracket, None)), (self._VAR_NAME, (self.RHS, None)))), (self._VAR_NAME, (self.Right_Bracket, None)))))
 
     @cache
+    def Epsilon(self, position: int, dummy = None):
+        """
+        <Epsilon> = <Apostrophe>, <Apostrophe> ;
+        """
+        return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._VAR_NAME, (self.Apostrophe, None)), (self._VAR_NAME, (self.Apostrophe, None)))))
+
+    @cache
     def Terminal(self, position: int, dummy = None):
         """
-        <Terminal> = (<Apostrophe>, <ASCII>, <Apostrophe>)/(<Apostrophe>, "\\", ("n"/"r"/"t"), <Apostrophe>) ;
+        <Terminal> = (<Apostrophe>, <ASCII>, <Apostrophe>)/(<Apostrophe>, "\\", ("n"/"r"/"t"), <Apostrophe>)/<Epsilon> ;
         """
-        return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._SUBEXPRESSION, (self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Apostrophe, None)), (self._VAR_NAME, (self.ASCII, None)))), (self._VAR_NAME, (self.Apostrophe, None))))), (self._SUBEXPRESSION, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Apostrophe, None)), (self._TERMINAL, '\\'))), (self._SUBEXPRESSION, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._TERMINAL, "n"), (self._TERMINAL, "r"))), (self._TERMINAL, "t")))))), (self._VAR_NAME, (self.Apostrophe, None))))))))
+        return self._SUBEXPRESSION(position, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._SUBEXPRESSION, (self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Apostrophe, None)), (self._VAR_NAME, (self.ASCII, None)))), (self._VAR_NAME, (self.Apostrophe, None))))), (self._SUBEXPRESSION, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Apostrophe, None)), (self._TERMINAL, '\\'))), (self._SUBEXPRESSION, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._TERMINAL, "n"), (self._TERMINAL, "r"))), (self._TERMINAL, "t")))))), (self._VAR_NAME, (self.Apostrophe, None))))))), (self._VAR_NAME, (self.Epsilon, None)))))
 
     @cache
     def Nucleus(self, position: int, dummy = None):

@@ -120,6 +120,8 @@ class Comment_Maker():
 
     def c_terminal(self, node):
         node = node.children[0]
+        if(node.type == Rules.Epsilon):
+            return '""'
         c_string = self.c_TERMINAL(node)
         return c_string
 
