@@ -119,7 +119,8 @@ class Parser():
         #assert type(position) == int
         #assert type(Arg) == str
         if(arg == ""):
-            return position, True, None
+            node = Node(Rules._TERMINAL, None)
+            return position, True, node
         token = self._token(position)
         if (token == arg):
             position += 1
