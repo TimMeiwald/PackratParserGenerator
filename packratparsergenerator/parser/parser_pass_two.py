@@ -61,6 +61,7 @@ class Parser_Pass_Two():
             node = self.delete_kernel(node)
             if (node is not None):
                 node = self.passthrough_kernel(node)
+                node.children = node.children[::-1]
             if (node is not None):
                 node = self.collect_kernel(node)
             if (node is not None):
