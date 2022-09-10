@@ -57,7 +57,7 @@ class Parser_Pass_Two():
     def __parse(self, nodes):
         new_deq = deque()
         for index in range(0, len(nodes)):
-            node = nodes.popleft()
+            node = nodes.pop()
             node = self.delete_kernel(node)
             if (node is not None):
                 node = self.passthrough_kernel(node)
