@@ -1,6 +1,7 @@
 [![Tests](https://github.com/TimMeiwald/PackratParserGenerator/actions/workflows/PackratParserGenerator.yml/badge.svg)](https://github.com/TimMeiwald/PackratParserGenerator/actions/workflows/PackratParserGenerator.yml)
 [![Coverage Status](coverage-badge.svg?dummy=8484744)](./reports/coverage/index.html)
 # PackratParserGenerator 
+TODO: Add DROPTERM to semantic instructions so that you can keep a node but remove it's terminals e.g where the nodes existence matters but not the characters themselves.
 TODO: QOL Feature Use uint[0-255] to get all ASCII chars as opposed to current solution              
 TODO: Implement Pylint/MyPy/Black         
 TODO: Error handling, halt start at top level rule and step in find longest match and then return associated error. Generate error framework       
