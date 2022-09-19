@@ -29,7 +29,8 @@ class PackratParserGenerator():
         else:
             raise ValueError(
                 "You must provide either src or src_filepath via their respective methods set_src_filepath or set_src")
-        print(f"src is \n{src}")
+        if(verbose):
+            print(f"src is \n{src}")
         # Parses
         self.parser._set_src(src)
         position, bool, node = self.parser.caller(0, self.parser.Grammar)
