@@ -33,6 +33,7 @@ class Parser_Pass_Two():
         if (node.type in self.passthrough_nodes):
             if(node.parent is not None):
                 index = node.parent.children.index(node)
+                node.children.reverse()
                 for child in node.children:
                     node.parent.children.insert(index, child)
                 node.parent.children.remove(node)
