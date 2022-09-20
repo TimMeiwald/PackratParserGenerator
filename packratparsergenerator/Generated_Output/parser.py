@@ -37,30 +37,29 @@ class Rules(IntEnum):
     Question_Mark = 37
     Comma = 38
     Backslash = 39
-    HAHA = 40
-    Var_Name = 41
-    Subexpression = 42
-    Epsilon = 43
-    Terminal = 44
-    Nucleus = 45
-    Atom = 46
-    And_Predicate = 47
-    Not_Predicate = 48
-    Sequence = 49
-    Ordered_Choice = 50
-    One_Or_More = 51
-    Zero_Or_More = 52
-    Optional = 53
-    Whitespace = 54
-    RHS = 55
-    LHS = 56
-    Rule = 57
-    Grammar = 58
-    Comment = 59
-    Semantic_Instructions = 60
-    Delete = 61
-    Passthrough = 62
-    Collect = 63
+    Var_Name = 40
+    Subexpression = 41
+    Epsilon = 42
+    Terminal = 43
+    Nucleus = 44
+    Atom = 45
+    And_Predicate = 46
+    Not_Predicate = 47
+    Sequence = 48
+    Ordered_Choice = 49
+    One_Or_More = 50
+    Zero_Or_More = 51
+    Optional = 52
+    Whitespace = 53
+    RHS = 54
+    LHS = 55
+    Rule = 56
+    Grammar = 57
+    Comment = 58
+    Semantic_Instructions = 59
+    Delete = 60
+    Passthrough = 61
+    Collect = 62
 
 
 
@@ -576,16 +575,11 @@ class Grammar_Parser(Parser):
         return self._SUBEXPRESSION(position, (self._TERMINAL, "/"))
 
     @cache
-    def HAHA(self, position: int, dummy = None):
-        """
-        <HAHA> = "" ;
-        """
-        return self._SUBEXPRESSION(position, (self._TERMINAL, ''))
-
-    @cache
     def Var_Name(self, position: int, dummy = None):
         """
         <Var_Name> = <Left_Angle_Bracket>, (<Alphabet_Lower>/<Alphabet_Upper>), (<Alphabet_Lower>/<Alphabet_Upper>/"_")*, <Right_Angle_Bracket> ;
+        
+        Not whitespace dependent, feel free to use multiple lines for readability
         """
         return self._SUBEXPRESSION(position, (self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Left_Angle_Bracket, None)), (self._SUBEXPRESSION, (self._ORDERED_CHOICE, ((self._VAR_NAME, (self.Alphabet_Lower, None)), (self._VAR_NAME, (self.Alphabet_Upper, None))))))), (self._ZERO_OR_MORE, (self._SUBEXPRESSION, (self._ORDERED_CHOICE, ((self._ORDERED_CHOICE, ((self._VAR_NAME, (self.Alphabet_Lower, None)), (self._VAR_NAME, (self.Alphabet_Upper, None)))), (self._TERMINAL, "_"))))))), (self._VAR_NAME, (self.Right_Angle_Bracket, None)))))
 

@@ -13,7 +13,7 @@ class Rule():
         self.name = ""
         self.user_comments = None
         self.get_rule_name(rule_node)
-        core = self.get_core(rule_node)
+        self.core = self.get_core(rule_node)
         self.comment = Comment_Maker(rule_node).comment
         parser_call_maker = Parser_Call_Maker(rule_node)
         self.parse_string = parser_call_maker.parse_string

@@ -19,8 +19,12 @@
 <Comma> DELETE = ",";
 <Backslash> DELETE = "/";
 
-<HAHA> = "";
-<Var_Name> COLLECT =<Left_Angle_Bracket>,(<Alphabet_Lower>/<Alphabet_Upper>),(<Alphabet_Lower>/<Alphabet_Upper>/"_")*,<Right_Angle_Bracket>;
+<Var_Name> COLLECT =<Left_Angle_Bracket>,
+                    (<Alphabet_Lower>/<Alphabet_Upper>),
+                    (<Alphabet_Lower>/<Alphabet_Upper>/"_")*,
+                    <Right_Angle_Bracket>; 
+                    #Not whitespace dependent, feel free to use multiple lines for readability#
+
 <Subexpression> = <Left_Bracket>,<RHS>,<Right_Bracket>;
 <Epsilon> = <Apostrophe>, <Apostrophe>;
 <Terminal> = (<Apostrophe>,<ASCII>,<Apostrophe>)/(<Apostrophe>,"\",("n"/"r"/"t"),<Apostrophe>)/<Epsilon>;
