@@ -64,7 +64,7 @@ This matches any digit
 This matches any valid python variable name. It first matches one letter or underscore and then matches as many zero or more underscores, letters or numbers. Since python restricts digits to not being the first character of the variable name(probably to ease the interpreters lexing.)  
 ```
 <Variable> = (<Alphabet_Lower>/<Alphabet_Upper>/"_"), 
-            (<Alphabet_Lower>/<Alphabet_Upper>/"_"/<Num>*;
+            (<Alphabet_Lower>/<Alphabet_Upper>/"_"/<Num>)*;
 ```
 As one can imagine because it's possible to combine rules together one can make very complex parsers. 
 
