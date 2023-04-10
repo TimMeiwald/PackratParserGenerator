@@ -2,7 +2,7 @@
 from packratparsergenerator.parser.rules import Rules
 from packratparsergenerator.parser.parser_pass_two import Parser_Pass_Two
 from collections import deque
-from functools import lru_cache as cache
+from functools import cache
 
 
 class Node():

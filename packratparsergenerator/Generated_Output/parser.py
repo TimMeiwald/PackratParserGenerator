@@ -1,5 +1,5 @@
 from collections import deque
-from functools import lru_cache as cache
+from functools import cache
 from enum import IntEnum
 
 

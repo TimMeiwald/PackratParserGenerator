@@ -92,7 +92,7 @@ class Grammar_Compiler():
         pass_two = self.create_parser_pass_two()
 
         ret_string = "from collections import deque\n"
-        ret_string += "from functools import lru_cache as cache\n"
+        ret_string += "from functools import cache\n"
         ret_string += rules_enum + "\n"
         ret_string += core_parser + "\n"
         ret_string += pass_two + "\n"
