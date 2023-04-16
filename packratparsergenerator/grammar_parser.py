@@ -271,25 +271,25 @@ class Grammar_Parser(Core):
 
         bool = self.LHS()
         if(bool):
-            print("LHS")
+            #print("LHS")
             bool = self.Whitespace()
             if(bool):
-                print("Whitespace")
+                #print("Whitespace")
                 bool = self.Assignment()
                 if(bool):
-                    print("Assignment")
+                    #print("Assignment")
                     bool = self.Whitespace()
                     if(bool):
-                        print("Whitespace")
+                        #print("Whitespace")
                         bool = self.RHS()
                         if(bool):
-                            print("RHS")
+                            #print("RHS")
                             bool = self.Whitespace()
                             if(bool):
-                                print("Whitespace")
+                                #print("Whitespace")
                                 bool = self.End_Rule()
                                 if(bool):
-                                    print("End Rule")
+                                    #print("End Rule")
                                     self.Whitespace()
                                     bool = self._ZERO_OR_MORE((self.Comment, None))
                                     return True
@@ -307,7 +307,9 @@ class Grammar_Parser(Core):
         
         Double up dem comments
         """
-        return self._SUBEXPRESSION((self._SEQUENCE, ((self._ONE_OR_MORE, (self._VAR_NAME, (self.Rule, None))), (self._VAR_NAME, (self.Whitespace, None)))))
+        bool = self._SUBEXPRESSION((self._SEQUENCE, ((self._ONE_OR_MORE, (self._VAR_NAME, (self.Rule, None))), (self._VAR_NAME, (self.Whitespace, None)))))
+        print("Finished Grammar")
+        return bool
 
     @cache
     def Comment(self,  dummy = None):

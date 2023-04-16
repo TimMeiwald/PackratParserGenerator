@@ -13,17 +13,27 @@ def cache(func):
             bool, pos = obj.cache.get(name, position, args)
             if bool:
                 obj.position = pos
+            #print("CACHE HIT")
+            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence"] and bool == True):
+                print(f"Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
             return bool
         except KeyError:
             bool = func(obj, *args)
             obj.cache.set(name, position, args, (bool, obj.position))
+            
+            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence"] and bool == True):
+                print(f"Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
             return bool
 
     return kernel
 
 
 class Core:
-    """Core PEG Class"""
+    """Core PEG Class
+    
+    It seems that caching everything just slows things down
+    caching at higher levels is much more valuable. So have disabled caching 
+    at the intrinsic level."""
 
     def __init__(self):
         self.position = 0
@@ -40,7 +50,7 @@ class Core:
             return ""
         return self.src[self.position]
 
-    @cache
+    #@cache
     def _TERMINAL(self, arg: str):
         if arg == self._token():
             self.position += 1
@@ -48,7 +58,7 @@ class Core:
         else:
             return False
 
-    @cache
+    #@cache
     def _SEQUENCE(self, args):
         """True if all expressions match, then updates position, else false, no positional update"""
         LHS_func, LHS_arg = args[0]
@@ -62,7 +72,7 @@ class Core:
         self.position = tmp_pos
         return False
 
-    @cache
+    #@cache
     def _ORDERED_CHOICE(self, args):
         """True if one expression matches, then updates position, else false, no positional update"""
         LHS_func, LHS_arg = args[0]
@@ -78,7 +88,7 @@ class Core:
         self.position = tmp_pos
         return False
 
-    @cache
+    #@cache
     def _ZERO_OR_MORE(self, args):
         """Always True, increments position each time the expression matches else continues without doing anything"""
         temp_position = self.position
@@ -93,7 +103,7 @@ class Core:
                 break
         return True
 
-    @cache
+    #@cache
     def _ONE_OR_MORE(self, args):
         """True if matches at least once, increments position each time the expression matches"""
         temp_position = self.position
@@ -114,7 +124,7 @@ class Core:
                 break
         return True
 
-    @cache
+    #@cache
     def _OPTIONAL(self, args):
         """True if matches, False if not. Increments position on a match"""
         func, arg = args
@@ -126,7 +136,7 @@ class Core:
             self.position = temp_position
             return False
 
-    @cache
+    #@cache
     def _AND_PREDICATE(self, args):
         """True if the function results in True, never increments position"""
         func, arg = args
@@ -139,13 +149,13 @@ class Core:
             self.position = temp_position
             return False
 
-    @cache
+    #@cache
     def _NOT_PREDICATE(self, args):
         """True if the function results in False, never increments position"""
         bool = self._AND_PREDICATE(args)
         return not bool
 
-    @cache
+    #@cache
     def _SUBEXPRESSION(self, args):
         """Subexpression is any expression inside a pair of () brackets
         SUBEXPR essentially does nothing but allows for order of precedent
@@ -161,7 +171,7 @@ class Core:
             self.position = temp_position
             return False
 
-    @cache
+    #@cache
     def _VAR_NAME(self, args):
         """True if called function evaluates to true else false, Is used to call other functions."""
         # where func is a grammar rule
@@ -169,7 +179,6 @@ class Core:
         func, args = args
         bool = func(args)
         if bool:
-            print(f"Token: {func.__name__} -> '{self.src[temp_position:self.position]}'")
             return True
         else:
             self.position = temp_position
