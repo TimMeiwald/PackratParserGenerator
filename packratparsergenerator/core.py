@@ -4,20 +4,20 @@ from functools import wraps
 
 def cache(func):
     name = func.__name__
-
+    @wraps(func)
     def kernel(*args):
         obj = args[0]
         args = args[1:]
         position = obj.position
         try:
-            s = obj.cache.get(name, position, args)
-            print("USED CACHE", position, s)
-            return s
+            bool, pos = obj.cache.get(name, position, args)
+            if bool:
+                obj.position = pos
+            return bool
         except KeyError:
-            print("NO CACHE", position)
-            ans = func(obj, *args)
-            obj.cache.set(name, position, args, ans)
-            return ans
+            bool = func(obj, *args)
+            obj.cache.set(name, position, args, (bool, obj.position))
+            return bool
 
     return kernel
 
@@ -42,7 +42,6 @@ class Core:
 
     @cache
     def _TERMINAL(self, arg: str):
-        print(self.position)
         if arg == self._token():
             self.position += 1
             return True
@@ -146,7 +145,6 @@ class Core:
         bool = self._AND_PREDICATE(args)
         return not bool
 
-
     @cache
     def _SUBEXPRESSION(self, args):
         """Subexpression is any expression inside a pair of () brackets
@@ -157,13 +155,12 @@ class Core:
         func, arg = args
         temp_position = self.position
         bool = func(arg)
-        if (bool):
+        if bool:
             return True
         else:
             self.position = temp_position
             return False
-        
-    
+
     @cache
     def _VAR_NAME(self, args):
         """True if called function evaluates to true else false, Is used to call other functions."""
@@ -171,7 +168,8 @@ class Core:
         temp_position = self.position
         func, args = args
         bool = func(args)
-        if (bool):
+        if bool:
+            #print(f"Token: {func.__name__} -> '{self.src[temp_position:self.position]}'")
             return True
         else:
             self.position = temp_position
