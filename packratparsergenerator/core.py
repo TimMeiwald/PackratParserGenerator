@@ -145,3 +145,20 @@ class Core:
         """True if the function results in False, never increments position"""
         bool = self._AND_PREDICATE(args)
         return not bool
+
+
+    @cache
+    def _SUBEXPRESSION(self, args):
+        """Subexpression is any expression inside a pair of () brackets
+        SUBEXPR essentially does nothing but allows for order of precedent
+        more importantly order of precedence is very restricted because it made my life hard
+        (mostly because I can't find a good definition of what order of precedence is in PEG) so use SUBEXPR
+        to make more complicated rules"""
+        func, arg = args
+        temp_position = self.position
+        bool = func(arg)
+        if (bool):
+            return True
+        else:
+            self.position = temp_position
+            return False
