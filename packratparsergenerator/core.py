@@ -169,7 +169,7 @@ class Core:
         func, args = args
         bool = func(args)
         if bool:
-            #print(f"Token: {func.__name__} -> '{self.src[temp_position:self.position]}'")
+            print(f"Token: {func.__name__} -> '{self.src[temp_position:self.position]}'")
             return True
         else:
             self.position = temp_position

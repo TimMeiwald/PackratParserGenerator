@@ -255,18 +255,23 @@ class Grammar_Parser(Core):
     def LHS(self,  dummy = None):
         """
         <LHS> = <Var_Name>, (<Whitespace>, <Semantic_Instructions>, <Whitespace>)? ;
-        """
-        return self._SUBEXPRESSION((self._SEQUENCE, ((self._VAR_NAME, (self.Var_Name, None)), (self._OPTIONAL, (self._SUBEXPRESSION, (self._SEQUENCE, ((self._SEQUENCE, ((self._VAR_NAME, (self.Whitespace, None)), (self._VAR_NAME, (self.Semantic_Instructions, None)))), (self._VAR_NAME, (self.Whitespace, None)))))))))
 
+        """
+        bool = self.Var_Name()
+        self.Whitespace()
+        self._OPTIONAL((self.Semantic_Instructions, None))
+        self.Whitespace()
+        return bool
+    
     @cache
     def Rule(self,  dummy = None):
         """
         <Rule> = <LHS>, <Whitespace>, <Assignment>, <Whitespace>, <RHS>, <Whitespace>, <End_Rule>, <Whitespace>, <Comment>* ;
         """   
 
-        bool = self.Var_Name()
+        bool = self.LHS()
         if(bool):
-            print("VarName")
+            print("LHS")
             bool = self.Whitespace()
             if(bool):
                 print("Whitespace")
@@ -285,8 +290,8 @@ class Grammar_Parser(Core):
                                 bool = self.End_Rule()
                                 if(bool):
                                     print("End Rule")
+                                    self.Whitespace()
                                     bool = self._ZERO_OR_MORE((self.Comment, None))
-                                    print(bool)
                                     return True
                                 else: 
                                     raise Exception("Missing ;")
@@ -356,13 +361,26 @@ if __name__ == "__main__":
     # print(c.Comment())
     # assert len(src) == c.position+1, f"Source Length {len(src)}, Position: {c.position}"
 
-    src =  "<LHS> = <Var_Name>, (<Whitespace>, <Semantic_Instructions>,<Whitespace>)?"
+    # src =  "<LHS> = <Var_Name>, (<Whitespace>, <Semantic_Instructions>,<Whitespace>)?;"
+    # c = Grammar_Parser()
+    # c._set_src(src)
+    # c.Grammar()
+    # assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
+
+    # src = '<Num> PASSTHROUGH = "0"/"1"/"2"/"3"/"4"/"5"/"6"/"7"/"8"/"9";'
+    # c = Grammar_Parser()
+    # c._set_src(src)
+    # c.Grammar()
+    # assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
+
+    from os import getcwd
+    from os.path import join
+    with open(join(getcwd(), "packratparsergenerator", "Grammar.txt"), "r") as fp:
+        src = fp.read()
     c = Grammar_Parser()
     c._set_src(src)
-    c.Rule()
+    c.Grammar()
     assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
-
-
 
 
 
