@@ -162,3 +162,17 @@ class Core:
         else:
             self.position = temp_position
             return False
+        
+    
+    @cache
+    def _VAR_NAME(self, args):
+        """True if called function evaluates to true else false, Is used to call other functions."""
+        # where func is a grammar rule
+        temp_position = self.position
+        func, args = args
+        bool = func(args)
+        if (bool):
+            return True
+        else:
+            self.position = temp_position
+            return False
