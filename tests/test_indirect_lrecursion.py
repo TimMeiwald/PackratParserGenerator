@@ -3,7 +3,7 @@ from packratparsergenerator.grammar_parser import Grammar_Parser
 
 
 def test_indirect_correct():
-    src = "ababab"
+    src = "ababab "
     c = Grammar_Parser()
     c._set_src(src)
     b = c.B(None)
@@ -12,6 +12,15 @@ def test_indirect_correct():
 
 def test_indirect_incorrect():
     src = "abababaaaaa"
+    c = Grammar_Parser()
+    c._set_src(src)
+    b = c.B(None)
+    print(c.position, b)
+    assert 0 == c.position, f"Source Length {len(src)}, Position: {c.position}"
+    assert b == False
+
+def test_indirect_incorrect():
+    src = "ababab aaaaa"
     c = Grammar_Parser()
     c._set_src(src)
     b = c.B(None)
