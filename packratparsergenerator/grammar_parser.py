@@ -351,7 +351,7 @@ class Grammar_Parser(Core):
     @cache 
     def many_A(self, dummy = None):
         """Left recursive test"""
-        return self._SEQUENCE(((self.many_A, None),(self._TERMINAL, "A")))
+        return self._SEQUENCE(((self.many_A, None),(self._TERMINAL, "a")))
 
 
 if __name__ == "__main__":
@@ -381,14 +381,29 @@ if __name__ == "__main__":
     # c.Grammar()
     # assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
 
-    from os import getcwd
-    from os.path import join
-    with open(join(getcwd(), "packratparsergenerator", "Grammar.txt"), "r") as fp:
-        src = fp.read()
+    # from os import getcwd
+    # from os.path import join
+    # with open(join(getcwd(), "packratparsergenerator", "Grammar.txt"), "r") as fp:
+    #     src = fp.read()
+    # c = Grammar_Parser()
+    # c._set_src(src)
+    # c.Grammar()
+    # assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
+
+
+
+    src = 'aaaabaa'
     c = Grammar_Parser()
     c._set_src(src)
-    c.Grammar()
+    b = c.many_A()
+    print(c.position, b)
+    assert 3 == c.position, f"Source Position {3}, Position: {c.position}"
+    assert b == True
+
+    src = 'aaaaaa'
+    c = Grammar_Parser()
+    c._set_src(src)
+    b = c.many_A()
+    print(c.position, b)
     assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
-
-
-
+    assert b == True

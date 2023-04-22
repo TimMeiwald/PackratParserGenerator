@@ -2,6 +2,22 @@ from packratparsergenerator.cache import Cache
 from functools import wraps
 
 
+def handle_direct_left_recursion(name, obj, func, *args):
+    """Loop that keeps trying the function until the position doesn't change"""
+    position = obj.position 
+    while True:
+        obj.cache.set(name, position, args, (True, obj.position))
+        bool = func(obj, *args)
+        obj.cache.set(name, position, args, (bool, obj.position))
+        print("a", bool, obj.position, position)
+        if(obj.position > position and bool == True):
+            position = obj.position
+            continue
+        else:
+            break
+        
+    return bool
+
 def cache(func):
     name = func.__name__
     @wraps(func)
@@ -11,20 +27,25 @@ def cache(func):
         position = obj.position
         try:
             bool, pos = obj.cache.get(name, position, args)
+            if(bool == None):
+                # None is only ever set in cache(afterKeyError) to prevent left recursion
+                #print(name, obj, func, *args)
+                bool = handle_direct_left_recursion(name, obj, func, *args)
+                bool, pos = obj.cache.get(name, position, args)
             if bool:
                 obj.position = pos
             #print("CACHE HIT")
-            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name"] and bool == True):
+            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name","_TERMINAL"] and bool == True):
                 print(f"Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
             return bool
         except KeyError:
-            # Set cache to False to prevent direct left recursion
-            obj.cache.set(name, position, args, (False, obj.position))
+            # Set cache to None so can check if it's left recursive
+            obj.cache.set(name, position, args, (None, obj.position))
 
             bool = func(obj, *args)
             obj.cache.set(name, position, args, (bool, obj.position))
             
-            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name"] and bool == True):
+            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name", "_TERMINAL"] and bool == True):
                 print(f"Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
             return bool
 

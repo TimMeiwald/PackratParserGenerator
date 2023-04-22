@@ -12,5 +12,3 @@ def test_read_grammar():
     c.Grammar() 
     assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
     
-
-    assert 0 == 1
