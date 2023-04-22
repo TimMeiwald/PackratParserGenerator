@@ -14,14 +14,14 @@ def cache(func):
             if bool:
                 obj.position = pos
             #print("CACHE HIT")
-            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence"] and bool == True):
+            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name"] and bool == True):
                 print(f"Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
             return bool
         except KeyError:
             bool = func(obj, *args)
             obj.cache.set(name, position, args, (bool, obj.position))
             
-            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence"] and bool == True):
+            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name"] and bool == True):
                 print(f"Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
             return bool
 

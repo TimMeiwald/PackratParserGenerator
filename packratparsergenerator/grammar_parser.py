@@ -348,6 +348,12 @@ class Grammar_Parser(Core):
         """
         return self._SUBEXPRESSION((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._TERMINAL, "C"), (self._TERMINAL, "O"))), (self._TERMINAL, "L"))), (self._TERMINAL, "L"))), (self._TERMINAL, "E"))), (self._TERMINAL, "C"))), (self._TERMINAL, "T"))))
     
+    @cache 
+    def many_A(self, dummy = None):
+        """Left recursive test"""
+        return self._SEQUENCE(((self.many_A, None),(self._TERMINAL, "A")))
+
+
 if __name__ == "__main__":
 
     
