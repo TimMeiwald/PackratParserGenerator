@@ -1,4 +1,4 @@
-from packratparsergenerator.core import Core, cache
+from packratparsergenerator.core import Core, cache, direct_left_recursion
 
 class Grammar_Parser(Core):
 
@@ -348,10 +348,10 @@ class Grammar_Parser(Core):
         """
         return self._SUBEXPRESSION((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._TERMINAL, "C"), (self._TERMINAL, "O"))), (self._TERMINAL, "L"))), (self._TERMINAL, "L"))), (self._TERMINAL, "E"))), (self._TERMINAL, "C"))), (self._TERMINAL, "T"))))
     
-    @cache 
+    @direct_left_recursion 
     def many_A(self, dummy = None):
         """Left recursive test"""
-        return self._SEQUENCE(((self.many_A, None),(self._TERMINAL, "a")))
+        return self._SEQUENCE(((self.many_A, dummy),(self._TERMINAL, "a")))
 
 
 if __name__ == "__main__":
@@ -395,15 +395,15 @@ if __name__ == "__main__":
     src = 'aaaabaa'
     c = Grammar_Parser()
     c._set_src(src)
-    b = c.many_A()
+    b = c.many_A(None)
     print(c.position, b)
-    assert 3 == c.position, f"Source Position {3}, Position: {c.position}"
+    assert 4 == c.position, f"Source Position {3}, Position: {c.position}"
     assert b == True
 
     src = 'aaaaaa'
     c = Grammar_Parser()
     c._set_src(src)
-    b = c.many_A()
+    b = c.many_A(None)
     print(c.position, b)
     assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
     assert b == True

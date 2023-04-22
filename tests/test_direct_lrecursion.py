@@ -7,6 +7,6 @@ def test_direct_left_recursion():
     src = "aaaa"
     c = Grammar_Parser()
     c._set_src(src)
-    bool = c.many_A()
+    bool = c.many_A(None)
     assert bool == True
     assert c.position == 4
