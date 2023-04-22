@@ -356,28 +356,28 @@ class Grammar_Parser(Core):
         """Left recursive test, equivalent to a* in terms of what it matches but not the same in terms of it's AST"""
         return self._SEQUENCE(((self.many_A, None),(self._TERMINAL, "a")))
 
-    @direct_left_recursion 
-    def A1(self, dummy = None):
+    @direct_left_recursion
+    def A(self, dummy = None):
         """Indirect recursive test
         
-        A1 ⇒ A2 A3
-        A2 ⇒ A3 A1 | b
-        A3 ⇒ A1 A1 | a 
-        Where A1, A2, A3 are non terminals and a, b are terminals."""
-        return self._SEQUENCE(((self.A2, None),(self.A3, None)))
-    
-    @direct_left_recursion 
-    def A2(self, dummy = None):
-        choice1 = (self._SEQUENCE, ((self.A3, None),(self.A2, None)))
+        A := B "a" | "a"
+        B := A "b" | "b"
+
+        Calling B should allow
+        'b'
+        'ab'
+        'abab'
+        'abab...
+        """
+        choice1 = (self._SEQUENCE, ((self.B, None),(self._TERMINAL, "a")))
         choice2 = (self._TERMINAL, "a")
         return self._ORDERED_CHOICE((choice1, choice2))
-    
-    @direct_left_recursion 
-    def A3(self, dummy = None):
-        choice1 = (self._SEQUENCE, ((self.A1, None),(self.A1, None)))
+    @direct_left_recursion
+    def B(self, dummy = None):
+        choice1 = (self._SEQUENCE, ((self.A, None),(self._TERMINAL, "b")))
         choice2 = (self._TERMINAL, "b")
         return self._ORDERED_CHOICE((choice1, choice2))
-
+    
 
 if __name__ == "__main__":
 
@@ -434,10 +434,10 @@ if __name__ == "__main__":
     # assert b == True
 
 
-    src = "aaaaaa"
+    src = "abab"
     c = Grammar_Parser()
     c._set_src(src)
-    b = c.A3(None)
+    b = c.B(None)
     print(c.position, b)
     assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
     assert b == True

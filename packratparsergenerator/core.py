@@ -6,10 +6,11 @@ def handle_direct_left_recursion(name, obj, func, *args):
     """Loop that keeps trying the function until the position doesn't change"""
     position = obj.position # Start of looping
     loop_position = obj.position
-    
+    print("HERE")
     while True:
         obj.cache.set(name, loop_position, args, (True, loop_position)) 
         bool = func(obj, *args)
+        print(bool, loop_position, obj.position)
         if(obj.position > loop_position):
             obj.cache.set(name, loop_position, args, (True, loop_position))
             loop_position = obj.position
