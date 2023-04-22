@@ -7,8 +7,7 @@ def test_indirect_correct():
     c = Grammar_Parser()
     c._set_src(src)
     b = c.B(None)
-    print(c.position, b)
-    assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
+    assert 6 == c.position
     assert b == True
 
 def test_indirect_incorrect():
@@ -17,5 +16,15 @@ def test_indirect_incorrect():
     c._set_src(src)
     b = c.B(None)
     print(c.position, b)
-    assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
+    assert 6 == c.position, f"Source Length {len(src)}, Position: {c.position}"
     assert b == True
+
+
+def test_indirect_incorrect2():
+    src = "cccccccccc"
+    c = Grammar_Parser()
+    c._set_src(src)
+    b = c.B(None)
+    print(c.position, b)
+    assert 0 == c.position, f"Source Length {len(src)}, Position: {c.position}"
+    assert b == False

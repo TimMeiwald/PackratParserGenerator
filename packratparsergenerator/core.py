@@ -10,14 +10,17 @@ def handle_direct_left_recursion(name, obj, func, *args):
     while True:
         obj.cache.set(name, loop_position, args, (True, loop_position)) 
         bool = func(obj, *args)
+        obj.cache.set(name, loop_position, args, (bool, loop_position)) 
+        if(bool == False):
+            break
         print(bool, loop_position, obj.position)
         if(obj.position > loop_position):
-            obj.cache.set(name, loop_position, args, (True, loop_position))
             loop_position = obj.position
             obj.cache.set(name, position, args, (bool, loop_position))
             continue
         else:
             break
+    print("Result at end: ", bool)
     bool, pos = obj.cache.get(name, position, args)
     obj.position = pos
     return bool, pos
@@ -34,13 +37,13 @@ def direct_left_recursion(func):
             bool, pos = obj.cache.get(name, position, args)
             if bool:
                 obj.position = pos
-            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name","_TERMINAL", "many_A"] and bool == True):
+            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name","_TERMINAL", "many_A","A", "B"] and bool == True):
                 print(f"k: Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
             return bool
         except KeyError:
             bool, pos = handle_direct_left_recursion(name, obj, func, *args)
             obj.cache.set(name, pos, args, (bool, obj.position))
-            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name", "_TERMINAL", "many_A"] and bool == True):
+            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name", "_TERMINAL", "many_A", "A", "B"] and bool == True):
                 print(f"nk: Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
             return bool
     return kernel
