@@ -348,10 +348,28 @@ class Grammar_Parser(Core):
         """
         return self._SUBEXPRESSION((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._SEQUENCE, ((self._TERMINAL, "C"), (self._TERMINAL, "O"))), (self._TERMINAL, "L"))), (self._TERMINAL, "L"))), (self._TERMINAL, "E"))), (self._TERMINAL, "C"))), (self._TERMINAL, "T"))))
     
+
+
+
     @direct_left_recursion 
     def many_A(self, dummy = None):
-        """Left recursive test"""
-        return self._SEQUENCE(((self.many_A, dummy),(self._TERMINAL, "a")))
+        """Left recursive test, equivalent to a* in terms of what it matches but not the same in terms of it's AST"""
+        return self._SEQUENCE(((self.many_A, None),(self._TERMINAL, "a")))
+
+    def A1(self, dummy = None):
+        """Indirect recursive test
+        
+        A1 ⇒ A2 A3
+        A2 ⇒ A3 A1 | b
+        A3 ⇒ A1 A1 | a 
+        Where A1, A2, A3 are non terminals and a, b are terminals."""
+        return self._SEQUENCE(((self.A2, None),(self.A3, None)))
+
+    def A2(self, dummy = None):
+        return self._ORDERED_CHOICE(((self._SEQUENCE(((self.A3, None),(self.A2, None)))), (self._TERMINAL, "a")))
+    
+    def A3(self, dummy = None):
+        return self._ORDERED_CHOICE(((self._SEQUENCE(((self.A1, None),(self.A1, None)))), (self._TERMINAL, "b")))
 
 
 if __name__ == "__main__":
@@ -392,18 +410,27 @@ if __name__ == "__main__":
 
 
 
-    src = 'aaaabaa'
-    c = Grammar_Parser()
-    c._set_src(src)
-    b = c.many_A(None)
-    print(c.position, b)
-    assert 4 == c.position, f"Source Position {3}, Position: {c.position}"
-    assert b == True
+    # src = 'aaaabaa'
+    # c = Grammar_Parser()
+    # c._set_src(src)
+    # b = c.many_A(None)
+    # print(c.position, b)
+    # assert 4 == c.position, f"Source Position {3}, Position: {c.position}"
+    # assert b == True
 
-    src = 'aaaaaa'
+    # src = 'aaaaaa'
+    # c = Grammar_Parser()
+    # c._set_src(src)
+    # b = c.many_A(None)
+    # print(c.position, b)
+    # assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
+    # assert b == True
+
+
+    src = "aaaaaa"
     c = Grammar_Parser()
     c._set_src(src)
-    b = c.many_A(None)
+    b = c.A3(None)
     print(c.position, b)
     assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
     assert b == True

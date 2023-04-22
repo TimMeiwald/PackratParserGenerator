@@ -8,7 +8,7 @@ def handle_direct_left_recursion(name, obj, func, *args):
     loop_position = obj.position
     
     while True:
-        obj.cache.set( name, loop_position, args, (True, loop_position)) 
+        obj.cache.set(name, loop_position, args, (True, loop_position)) 
         bool = func(obj, *args)
         if(obj.position > loop_position):
             obj.cache.set(name, loop_position, args, (True, loop_position))
