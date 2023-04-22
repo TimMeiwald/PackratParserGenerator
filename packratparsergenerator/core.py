@@ -18,6 +18,9 @@ def cache(func):
                 print(f"Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
             return bool
         except KeyError:
+            # Set cache to False to prevent direct left recursion
+            obj.cache.set(name, position, args, (False, obj.position))
+
             bool = func(obj, *args)
             obj.cache.set(name, position, args, (bool, obj.position))
             
