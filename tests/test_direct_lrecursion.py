@@ -10,3 +10,13 @@ def test_direct_left_recursion():
     bool = c.many_A(None)
     assert bool == True
     assert c.position == 4
+
+
+def test_direct_left_recursion_incorrect():
+
+    src = "aabb"
+    c = Grammar_Parser()
+    c._set_src(src)
+    bool = c.many_A(None)
+    assert bool == True
+    assert c.position == 2

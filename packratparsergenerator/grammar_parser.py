@@ -434,7 +434,15 @@ if __name__ == "__main__":
     # assert b == True
 
 
-    src = "abab"
+    src = "ababab"
+    c = Grammar_Parser()
+    c._set_src(src)
+    b = c.B(None)
+    print(c.position, b)
+    assert len(src) == c.position, f"Source Length {len(src)}, Position: {c.position}"
+    assert b == True
+
+    src = "abababaaaaa"
     c = Grammar_Parser()
     c._set_src(src)
     b = c.B(None)
