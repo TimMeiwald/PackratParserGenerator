@@ -356,6 +356,7 @@ class Grammar_Parser(Core):
         """Left recursive test, equivalent to a* in terms of what it matches but not the same in terms of it's AST"""
         return self._SEQUENCE(((self.many_A, None),(self._TERMINAL, "a")))
 
+    @direct_left_recursion 
     def A1(self, dummy = None):
         """Indirect recursive test
         
@@ -364,12 +365,18 @@ class Grammar_Parser(Core):
         A3 ⇒ A1 A1 | a 
         Where A1, A2, A3 are non terminals and a, b are terminals."""
         return self._SEQUENCE(((self.A2, None),(self.A3, None)))
-
-    def A2(self, dummy = None):
-        return self._ORDERED_CHOICE(((self._SEQUENCE(((self.A3, None),(self.A2, None)))), (self._TERMINAL, "a")))
     
+    @direct_left_recursion 
+    def A2(self, dummy = None):
+        choice1 = (self._SEQUENCE, ((self.A3, None),(self.A2, None)))
+        choice2 = (self._TERMINAL, "a")
+        return self._ORDERED_CHOICE((choice1, choice2))
+    
+    @direct_left_recursion 
     def A3(self, dummy = None):
-        return self._ORDERED_CHOICE(((self._SEQUENCE(((self.A1, None),(self.A1, None)))), (self._TERMINAL, "b")))
+        choice1 = (self._SEQUENCE, ((self.A1, None),(self.A1, None)))
+        choice2 = (self._TERMINAL, "b")
+        return self._ORDERED_CHOICE((choice1, choice2))
 
 
 if __name__ == "__main__":
