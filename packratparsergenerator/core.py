@@ -4,63 +4,25 @@ from functools import wraps
 
 def handle_direct_left_recursion(name, obj, func, *args):
     """Loop that keeps trying the function until the position doesn't change"""
-    print("HERE")
     position = obj.position # Start of looping
     loop_position = obj.position
     
     while True:
         obj.cache.set( name, loop_position, args, (True, loop_position)) 
-        print("c1",obj.cache.get(name, loop_position, args))
-        print("func: ", func)
         bool = func(obj, *args)
-        print("a", bool, obj.position, loop_position)
         if(obj.position > loop_position):
             obj.cache.set(name, loop_position, args, (True, loop_position))
-            print("c2", obj.cache.get(name, loop_position, args))
             loop_position = obj.position
-            print("Setting: ", name, position, args, (bool, loop_position))
             obj.cache.set(name, position, args, (bool, loop_position))
             continue
         else:
             break
     bool, pos = obj.cache.get(name, position, args)
     obj.position = pos
-    print("c3", obj.cache.get(name, position, args))
     return bool, pos
 
 def direct_left_recursion(func):
-    name = func.__name__
-    def kernel(*args):
-        obj = args[0]
-        args = args[1:]
-        position = obj.position
-        try:
-            bool, pos = obj.cache.get(name, position, args)
-            if bool:
-                obj.position = pos
-            #print("CACHE HIT")
-            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name","_TERMINAL", "many_A"] and bool == True):
-                print(f"k: Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
-            return bool
-        except KeyError:
-            # Set cache to None so can check if it's left recursive
-
-            bool, position = handle_direct_left_recursion(name, obj, func, *args)
-            print("nk: Setting: ", name, position, args, (bool, obj.position))
-            obj.cache.set(name, position, args, (bool, obj.position))
-
-            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name", "_TERMINAL", "many_A"] and bool == True):
-                print(f"nk: Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
-            return bool
-
-    return kernel
-
-
-
-
-
-
-def cache(func):
+    "Handles direct left recursion"
     name = func.__name__
     @wraps(func)
     def kernel(*args):
@@ -71,17 +33,41 @@ def cache(func):
             bool, pos = obj.cache.get(name, position, args)
             if bool:
                 obj.position = pos
-            #print("CACHE HIT")
             if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name","_TERMINAL", "many_A"] and bool == True):
                 print(f"k: Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
             return bool
         except KeyError:
-            # Set cache to None so can check if it's left recursive
-            obj.cache.set(name, position, args, (None, obj.position))
+            bool, pos = handle_direct_left_recursion(name, obj, func, *args)
+            obj.cache.set(name, pos, args, (bool, obj.position))
+            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name", "_TERMINAL", "many_A"] and bool == True):
+                print(f"nk: Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
+            return bool
+    return kernel
 
+
+
+
+
+
+def cache(func):
+    """Handles regular PEG"""
+    name = func.__name__
+    @wraps(func)
+    def kernel(*args):
+        obj = args[0]
+        args = args[1:]
+        position = obj.position
+        try:
+            bool, pos = obj.cache.get(name, position, args)
+            bool, pos = obj.cache.get(name, position, args)
+            if bool:
+                obj.position = pos
+            if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name","_TERMINAL", "many_A"] and bool == True):
+                print(f"k: Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
+            return bool
+        except KeyError:
             bool = func(obj, *args)
             obj.cache.set(name, position, args, (bool, obj.position))
-            
             if(func.__name__ in ["And_Predicate", "Not_Predicate", "Optional", "Ordered_Choice", "Sequence", "Var_Name", "_TERMINAL", "many_A"] and bool == True):
                 print(f"nk: Token: {position}, {func.__name__} -> '{obj.src[position:obj.position]}'")
             return bool
