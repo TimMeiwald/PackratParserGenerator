@@ -19,7 +19,7 @@ class Rule():
         self.parse_string = parser_call_maker.parse_string
         self.semantic_instr = self.get_sem_instr(rule_node)
         self.rule_function = self.generate_function()
-        self.rule_enum_stmt = f"{self.name} = "
+        self.rule_enum_stmt = f"{self.name}"
 
     def get_rule_name(self, rule_node):
         # Could be done more general but probably slower too
