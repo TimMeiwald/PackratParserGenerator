@@ -48,47 +48,47 @@ class Parser_Call_Maker():
                 f"Unidentified node of type: {node.type.name}, content: {node.content}")
 
     def p_epsilon(self, node):
-        return "(self._TERMINAL, '""')"
+        return "(&c_terminal, '""')"
 
     def p_sequence(self, node):
         p_string = ""
         for index in range(0, len(node.children) - 1):
             if (index == 0):
-                p_string = "(self._SEQUENCE, (" + self.selector(
-                    node.children[index]) + ", " + self.selector(node.children[index + 1]) + "))"
+                p_string = "(&c_sequence, " + self.selector(
+                    node.children[index]) + ", " + self.selector(node.children[index + 1]) + ")"
             else:
-                p_string = "(self._SEQUENCE, (" + p_string + ", " + \
-                    self.selector(node.children[index + 1]) + "))"
+                p_string = "(&c_sequence, " + p_string + ", " + \
+                    self.selector(node.children[index + 1]) + ")"
         return p_string
 
     def p_ordered_choice(self, node):
         p_string = ""
         for index in range(0, len(node.children) - 1):
             if (index == 0):
-                p_string = "(self._ORDERED_CHOICE, (" + self.selector(
-                    node.children[index]) + ", " + self.selector(node.children[index + 1]) + "))"
+                p_string = "(&c_ordered_choice, " + self.selector(
+                    node.children[index]) + ", " + self.selector(node.children[index + 1]) + ")"
             else:
-                p_string = "(self._ORDERED_CHOICE, (" + p_string + \
-                    ", " + self.selector(node.children[index + 1]) + "))"
+                p_string = "(&c_ordered_choice, " + p_string + \
+                    ", " + self.selector(node.children[index + 1]) + ")"
         return p_string
 
     def p_subexpression(self, node):
         try:
             child = node.children[0]
             child_str = self.selector(child)
-            p_string = "(self._SUBEXPRESSION, " + child_str + ")"
+            p_string = "(&c_subexpression, " + child_str + ")"
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string
 
     def p_var_name(self, node):
-        p_string = "(self._VAR_NAME, (" + "self." + node.content + ", None))"
+        p_string = "(&c_var_name, ("  + "&" + node.content + ", 0))"
         return p_string
 
     def p_rule(self, node):
         try:
             p_string = self.selector(node.children[1])
-            p_string = "self._SUBEXPRESSION(position, " + p_string + ")"
+            p_string = "c_subexpression(position, " + p_string + ")"
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string
@@ -101,26 +101,26 @@ class Parser_Call_Maker():
         return p_string
 
     def p_and_predicate(self, node):
-        p_string = "(self._AND_PREDICATE, " + \
+        p_string = "(&c_and, " + \
             self.selector(node.children[0]) + ")"
         return p_string
 
     def p_not_predicate(self, node):
-        p_string = "(self._NOT_PREDICATE, " + \
+        p_string = "(&c_not, " + \
             self.selector(node.children[0]) + ")"
         return p_string
 
     def p_optional(self, node):
-        p_string = "(self._OPTIONAL, " + self.selector(node.children[0]) + ")"
+        p_string = "(&c_optional, " + self.selector(node.children[0]) + ")"
         return p_string
 
     def p_one_or_more(self, node):
-        p_string = "(self._ONE_OR_MORE, " + \
+        p_string = "(&c_one_or_more, " + \
             self.selector(node.children[0]) + ")"
         return p_string
 
     def p_zero_or_more(self, node):
-        p_string = "(self._ZERO_OR_MORE, " + \
+        p_string = "(&c_zero_or_more, " + \
             self.selector(node.children[0]) + ")"
         return p_string
 
@@ -131,13 +131,13 @@ class Parser_Call_Maker():
 
     def p_TERMINAL(self, node):
         if (node.content == '"'):
-            p_string = "(self._TERMINAL, '" + node.content + "')"
+            p_string = "(&c_terminal, '" + node.content + "')"
         elif (node.content == "\\"):
-            p_string = "(self._TERMINAL, '" + "\\\\" + "')"
+            p_string = "(&c_terminal, '" + "\\\\" + "')"
         else:
             if (node.content is None):
-                p_string = "(self._TERMINAL, " + '"' + \
+                p_string = "(&c_terminal, " + '"' + \
                     "\033[31mERROR: NONE\033[0m" + '"' + ")"
             else:
-                p_string = "(self._TERMINAL, " + '"' + node.content + '"' + ")"
+                p_string = "(&c_terminal, " + '"' + node.content + '"' + ")"
         return p_string
