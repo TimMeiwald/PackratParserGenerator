@@ -59,7 +59,7 @@ enum Rules{
     Delete,
     Passthrough,
     Collect,
-}}
+}
 #[derive(Debug)]
 #[derive(PartialEq)]
 struct ParserObject{
