@@ -82,13 +82,14 @@ class Parser_Call_Maker():
         return p_string
 
     def p_var_name(self, node):
+        print(node.content)
         p_string = "(&c_var_name, ("  + "&" + node.content + ", 0))"
         return p_string
 
     def p_rule(self, node):
         try:
             p_string = self.selector(node.children[1])
-            p_string = "c_subexpression(position, " + p_string + ")"
+            p_string = "c_subexpression(&mut po, " + p_string + ")"
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string
@@ -130,14 +131,24 @@ class Parser_Call_Maker():
         return p_string
 
     def p_TERMINAL(self, node):
+                
+        if(node.content == "\\"):
+            p_string = "(&c_terminal, '" + "92" + "')"
+            return p_string
+        if(node.content[0] == "\\"):
+            if(node.content[1] == "n"):
+                node.content = "\n"
+            elif(node.content[1] == "r"):
+                node.content = "\r"
+            elif(node.content[1] == "t"):
+                node.content = "\t"
+
         if (node.content == '"'):
-            p_string = "(&c_terminal, '" + node.content + "')"
-        elif (node.content == "\\"):
-            p_string = "(&c_terminal, '" + "\\\\" + "')"
+            p_string = "(&c_terminal, '" + str(ord(node.content)) + "')"
         else:
             if (node.content is None):
                 p_string = "(&c_terminal, " + '"' + \
                     "\033[31mERROR: NONE\033[0m" + '"' + ")"
             else:
-                p_string = "(&c_terminal, " + '"' + node.content + '"' + ")"
+                p_string = "(&c_terminal, " +  str(ord(node.content))  + ")"
         return p_string
