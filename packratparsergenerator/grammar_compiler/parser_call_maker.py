@@ -54,22 +54,22 @@ class Parser_Call_Maker():
         p_string = ""
         for index in range(0, len(node.children) - 1):
             if (index == 0):
-                p_string = "(&c_sequence, " + self.selector(
-                    node.children[index]) + ", " + self.selector(node.children[index + 1]) + ")"
+                p_string = "(&c_sequence, (" + self.selector(
+                    node.children[index]) + ", " + self.selector(node.children[index + 1]) + "))"
             else:
-                p_string = "(&c_sequence, " + p_string + ", " + \
-                    self.selector(node.children[index + 1]) + ")"
+                p_string = "(&c_sequence, (" + p_string + ", " + \
+                    self.selector(node.children[index + 1]) + "))"
         return p_string
 
     def p_ordered_choice(self, node):
         p_string = ""
         for index in range(0, len(node.children) - 1):
             if (index == 0):
-                p_string = "(&c_ordered_choice, " + self.selector(
-                    node.children[index]) + ", " + self.selector(node.children[index + 1]) + ")"
+                p_string = "(&c_ordered_choice, (" + self.selector(
+                    node.children[index]) + ", " + self.selector(node.children[index + 1]) + "))"
             else:
-                p_string = "(&c_ordered_choice, " + p_string + \
-                    ", " + self.selector(node.children[index + 1]) + ")"
+                p_string = "(&c_ordered_choice, (" + p_string + \
+                    ", " + self.selector(node.children[index + 1]) + "))"
         return p_string
 
     def p_subexpression(self, node):
@@ -83,13 +83,13 @@ class Parser_Call_Maker():
 
     def p_var_name(self, node):
         print(node.content)
-        p_string = "(&c_var_name, ("  + "&" + node.content + ", 0))"
+        p_string = "(&c_var_name, ("  + "&" + node.content.lower() + ", 0))"
         return p_string
 
     def p_rule(self, node):
         try:
             p_string = self.selector(node.children[1])
-            p_string = "c_subexpression(&mut po, " + p_string + ")"
+            p_string = "c_subexpression(&mut po, " + p_string + ");"
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string
@@ -133,7 +133,7 @@ class Parser_Call_Maker():
     def p_TERMINAL(self, node):
                 
         if(node.content == "\\"):
-            p_string = "(&c_terminal, '" + "92" + "')"
+            p_string = "(&c_terminal, " + "92" + ")"
             return p_string
         if(node.content[0] == "\\"):
             if(node.content[1] == "n"):
@@ -144,7 +144,7 @@ class Parser_Call_Maker():
                 node.content = "\t"
 
         if (node.content == '"'):
-            p_string = "(&c_terminal, '" + str(ord(node.content)) + "')"
+            p_string = '(&c_terminal, "' + str(ord(node.content)) + '")'
         else:
             if (node.content is None):
                 p_string = "(&c_terminal, " + '"' + \

@@ -27,7 +27,7 @@ class Rule():
         if (LHS.type != Rules.LHS):
             raise Exception("Something bad happened")
         Var_Name = LHS.children[0]
-        self.name = Var_Name.content
+        self.name = Var_Name.content.lower()
         try:
             user_comment = rule_node.children[-1]
             if (user_comment.type == Rules.Comment):
@@ -52,7 +52,7 @@ class Rule():
         indent = "    "
         string = "\n"
         #string += indent + "@cache\n"
-        string += f"fn {self.name}(po: &ParserObject) -> bool {{\n"
+        string += f"fn {self.name}(po: &mut ParserObject) -> bool {{\n"
         string += indent * 1 + f'/*\n'
         string += indent * 1 + f'{self.comment}\n'
         if (self.user_comments is not None):
