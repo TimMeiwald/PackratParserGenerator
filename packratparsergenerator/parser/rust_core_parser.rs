@@ -29,7 +29,7 @@ fn c_terminal(po: &mut ParserObject, arg: u8) -> bool {
     }
 }
 
-fn c_optional<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObject, T) -> bool, T))-> bool {
+fn c_optional<T: Copy>(po: &mut ParserObject, pair: (fn(&mut ParserObject, T) -> bool, T))-> bool {
     /* True if matches, False if not. Increments position on a match */
 
     // Fn(&u8), u8
@@ -48,7 +48,7 @@ fn c_optional<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObject, 
 }
 
 
-fn c_sequence<T: Copy, U: Copy>(po: &mut ParserObject, pair: ((&dyn Fn(&mut ParserObject, T) -> bool,T), (&dyn Fn(&mut ParserObject, U) -> bool,U))) -> bool{
+fn c_sequence<T: Copy, U: Copy>(po: &mut ParserObject, pair: ((fn(&mut ParserObject, T) -> bool,T), (fn(&mut ParserObject, U) -> bool,U))) -> bool{
 //fn c_sequence<T: Copy, U: Copy>(po: &mut ParserObject, lhs: (&dyn Fn(&mut ParserObject, T) -> bool, T), rhs:(&dyn Fn(&mut ParserObject, U) -> bool, U)) -> bool {
     /* True if all expressions match, then updates position, else false, no positional update */
 
@@ -69,7 +69,7 @@ fn c_sequence<T: Copy, U: Copy>(po: &mut ParserObject, pair: ((&dyn Fn(&mut Pars
     }
 }
 
-fn c_ordered_choice<T: Copy, U: Copy>(po: &mut ParserObject, pair: ((&dyn Fn(&mut ParserObject, T) -> bool,T), (&dyn Fn(&mut ParserObject, U) -> bool,U))) -> bool{
+fn c_ordered_choice<T: Copy, U: Copy>(po: &mut ParserObject, pair: ((fn(&mut ParserObject, T) -> bool,T), (fn(&mut ParserObject, U) -> bool,U))) -> bool{
     /* True if one expression matches, then updates position, else false, no positional update */
 
     let tmp_pos = po.position;
@@ -92,7 +92,7 @@ fn c_ordered_choice<T: Copy, U: Copy>(po: &mut ParserObject, pair: ((&dyn Fn(&mu
     return false;
 }
 
-fn c_zero_or_more<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObject, T) -> bool, T))-> bool {
+fn c_zero_or_more<T: Copy>(po: &mut ParserObject, pair: (fn(&mut ParserObject, T) -> bool, T))-> bool {
     /* Always True, increments position each time the expression matches else continues without doing anything */
 
     let mut temp_position = po.position;
@@ -115,7 +115,7 @@ fn c_zero_or_more<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObje
     return true;
 }
 
-fn c_one_or_more<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObject, T) -> bool, T)) -> bool {
+fn c_one_or_more<T: Copy>(po: &mut ParserObject, pair: (fn(&mut ParserObject, T) -> bool, T)) -> bool {
     /* True if matches at least once, increments position each time the expression matches */
 
     let mut temp_position = po.position;
@@ -143,7 +143,7 @@ fn c_one_or_more<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObjec
     return true;
 }
 
-fn c_and<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObject, T) -> bool, T)) -> bool {
+fn c_and<T: Copy>(po: &mut ParserObject, pair: (fn(&mut ParserObject, T) -> bool, T)) -> bool {
     /* True if the function results in True, never increments position */
 
     let temp_position = po.position;
@@ -159,13 +159,13 @@ fn c_and<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObject, T) ->
     }
 }
 
-fn c_not<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObject, T) -> bool, T)) -> bool {
+fn c_not<T: Copy>(po: &mut ParserObject, pair: (fn(&mut ParserObject, T) -> bool, T)) -> bool {
     /* True if the function results in False, never increments position */
 
     return !c_and(po, pair);
 }
 
-fn c_subexpression<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObject, T) -> bool, T)) -> bool {
+fn c_subexpression<T: Copy>(po: &mut ParserObject, pair: (fn(&mut ParserObject, T) -> bool, T)) -> bool {
     /* Subexpression is any expression inside a pair of () brackets
     SUBEXPR essentially does nothing but allows for order of precedent
     more importantly order of precedence is very restricted because it made my life hard
@@ -185,7 +185,7 @@ fn c_subexpression<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObj
 }
 
 
-fn c_var_name<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObject, T) -> bool, T)) -> bool{
+fn c_var_name<T: Copy>(po: &mut ParserObject, pair: (fn(&mut ParserObject, T) -> bool, T)) -> bool{
     /* True if called function evaluates to true else false, Is used to call other functions*/
 
     let (func, arg) = pair;
@@ -200,3 +200,4 @@ fn c_var_name<T: Copy>(po: &mut ParserObject, pair: (&dyn Fn(&mut ParserObject, 
         return false;
     }
 }
+

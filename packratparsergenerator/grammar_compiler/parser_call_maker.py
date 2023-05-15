@@ -48,16 +48,16 @@ class Parser_Call_Maker():
                 f"Unidentified node of type: {node.type.name}, content: {node.content}")
 
     def p_epsilon(self, node):
-        return "(&c_terminal, '""')"
+        return "(c_terminal, '""')"
 
     def p_sequence(self, node):
         p_string = ""
         for index in range(0, len(node.children) - 1):
             if (index == 0):
-                p_string = "(&c_sequence, (" + self.selector(
+                p_string = "(c_sequence, (" + self.selector(
                     node.children[index]) + ", " + self.selector(node.children[index + 1]) + "))"
             else:
-                p_string = "(&c_sequence, (" + p_string + ", " + \
+                p_string = "(c_sequence, (" + p_string + ", " + \
                     self.selector(node.children[index + 1]) + "))"
         return p_string
 
@@ -65,10 +65,10 @@ class Parser_Call_Maker():
         p_string = ""
         for index in range(0, len(node.children) - 1):
             if (index == 0):
-                p_string = "(&c_ordered_choice, (" + self.selector(
+                p_string = "(c_ordered_choice, (" + self.selector(
                     node.children[index]) + ", " + self.selector(node.children[index + 1]) + "))"
             else:
-                p_string = "(&c_ordered_choice, (" + p_string + \
+                p_string = "(c_ordered_choice, (" + p_string + \
                     ", " + self.selector(node.children[index + 1]) + "))"
         return p_string
 
@@ -76,20 +76,20 @@ class Parser_Call_Maker():
         try:
             child = node.children[0]
             child_str = self.selector(child)
-            p_string = "(&c_subexpression, " + child_str + ")"
+            p_string = "(c_subexpression, " + child_str + ")"
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string
 
     def p_var_name(self, node):
         print(node.content)
-        p_string = "(&c_var_name, ("  + "&" + node.content.lower() + ", 0))"
+        p_string = "(c_var_name, ("  + "&" + node.content.lower() + ", 0))"
         return p_string
 
     def p_rule(self, node):
         try:
             p_string = self.selector(node.children[1])
-            p_string = "c_subexpression(&mut po, " + p_string + ");"
+            p_string = "c_subexpression(po, " + p_string + ");"
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string
@@ -102,26 +102,26 @@ class Parser_Call_Maker():
         return p_string
 
     def p_and_predicate(self, node):
-        p_string = "(&c_and, " + \
+        p_string = "(c_and, " + \
             self.selector(node.children[0]) + ")"
         return p_string
 
     def p_not_predicate(self, node):
-        p_string = "(&c_not, " + \
+        p_string = "(c_not, " + \
             self.selector(node.children[0]) + ")"
         return p_string
 
     def p_optional(self, node):
-        p_string = "(&c_optional, " + self.selector(node.children[0]) + ")"
+        p_string = "(c_optional, " + self.selector(node.children[0]) + ")"
         return p_string
 
     def p_one_or_more(self, node):
-        p_string = "(&c_one_or_more, " + \
+        p_string = "(c_one_or_more, " + \
             self.selector(node.children[0]) + ")"
         return p_string
 
     def p_zero_or_more(self, node):
-        p_string = "(&c_zero_or_more, " + \
+        p_string = "(c_zero_or_more, " + \
             self.selector(node.children[0]) + ")"
         return p_string
 
@@ -144,11 +144,11 @@ class Parser_Call_Maker():
                 node.content = "\t"
 
         if (node.content == '"'):
-            p_string = '(&c_terminal, "' + str(ord(node.content)) + '")'
+            p_string = '(c_terminal, "' + str(ord(node.content)) + '")'
         else:
             if (node.content is None):
                 p_string = "(&c_terminal, " + '"' + \
                     "\033[31mERROR: NONE\033[0m" + '"' + ")"
             else:
-                p_string = "(&c_terminal, " +  str(ord(node.content))  + ")"
+                p_string = "(c_terminal, " +  str(ord(node.content))  + ")"
         return p_string
