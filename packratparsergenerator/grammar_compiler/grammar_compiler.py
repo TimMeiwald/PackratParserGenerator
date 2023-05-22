@@ -75,7 +75,7 @@ class Grammar_Compiler():
         """
         self.split_by_rule(node)
         grammar_parser = self.make_grammar_parser()
-        rules_enum = self.make_rules_enum()
+        #rules_enum = self.make_rules_enum()
         # with open(join(getcwd(),"packratparsergenerator", "parser",
         # "core_parser.py")) as fp:
         fp = importlib.resources.open_text(
@@ -92,8 +92,8 @@ class Grammar_Compiler():
 
         # ret_string = "from collections import deque\n"
         # ret_string += "from functools import cache\n"
-        ret_string = rules_enum + "\n"
-        ret_string += core_parser + "\n"
+        #ret_string = rules_enum + "\n"
+        ret_string = core_parser + "\n"
         # ret_string += pass_two + "\n"
         ret_string += grammar_parser
         return ret_string
