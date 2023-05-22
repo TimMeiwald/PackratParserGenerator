@@ -1,3 +1,9 @@
+#[derive(Debug)]
+#[derive(PartialEq)]
+struct ParserObject{
+    position: u32,
+    source: String,
+}
 
 fn c_token(po: &ParserObject) -> Option<u8> {
     if po.position >= po.source.chars().count() as u32 {
@@ -38,7 +44,7 @@ fn c_optional<T>(po: &mut ParserObject, pair: (Box<fn(&mut ParserObject, T) -> b
 }
 
 
-fn c_ordered_choice<T: Copy, U: Copy>(po: &mut ParserObject, pair: ((Box<fn(&mut ParserObject, T) -> bool>,T), (Box<fn(&mut ParserObject, U) -> bool>,U))) -> bool{
+fn c_ordered_choice<T, U>(po: &mut ParserObject, pair: ((Box<fn(&mut ParserObject, T) -> bool>,T), (Box<fn(&mut ParserObject, U) -> bool>,U))) -> bool{
     /* True if one expression matches, then updates position, else false, no positional update */
 
     let tmp_pos = po.position;
@@ -63,7 +69,7 @@ fn c_ordered_choice<T: Copy, U: Copy>(po: &mut ParserObject, pair: ((Box<fn(&mut
 
 
 
-fn c_subexpression<T: Copy>(po: &mut ParserObject, pair: (Box<fn(&mut ParserObject, T) -> bool>, T)) -> bool {
+fn c_subexpression<T>(po: &mut ParserObject, pair: (Box<fn(&mut ParserObject, T) -> bool>, T)) -> bool {
     /* Subexpression is any expression inside a pair of () brackets
     SUBEXPR essentially does nothing but allows for order of precedent
     more importantly order of precedence is very restricted because it made my life hard
@@ -113,7 +119,7 @@ fn specials(po: &mut ParserObject) -> bool {
     /*
     <Specials> = "+"/"*"/"-"/"&"/"!"/"?"/"<"/">"/'"'/"("/")"/"_"/","/"/"/";"/"="/"\\"/"#"/":"/"|"/"."/"{"/"}"/"["/"]"/"%"/"'"/"^"/"~" ;
     */
-    return c_subexpression(po, (Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_terminal), 43), (Box::new(c_terminal), 42))), (Box::new(c_terminal), 45))), (Box::new(c_terminal), 38))), (Box::new(c_terminal), 33))), (Box::new(c_terminal), 63))), (Box::new(c_terminal), 60))), (Box::new(c_terminal), 62))), (Box::new(c_terminal), "34"))), (Box::new(c_terminal), 40))), (Box::new(c_terminal), 41))), (Box::new(c_terminal), 95))), (Box::new(c_terminal), 44))), (Box::new(c_terminal), 47))), (Box::new(c_terminal), 59))), (Box::new(c_terminal), 61))), (Box::new(c_terminal), 92))), (Box::new(c_terminal), 35))), (Box::new(c_terminal), 58))), (Box::new(c_terminal), 124))), (Box::new(c_terminal), 46))), (Box::new(c_terminal), 123))), (Box::new(c_terminal), 125))), (Box::new(c_terminal), 91))), (Box::new(c_terminal), 93))), (Box::new(c_terminal), 37))), (Box::new(c_terminal), 39))), (Box::new(c_terminal), 94))), (Box::new(c_terminal), 126))));
+    return c_subexpression(po, (Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_ordered_choice), ((Box::new(c_terminal), 43), (Box::new(c_terminal), 42))), (Box::new(c_terminal), 45))), (Box::new(c_terminal), 38))), (Box::new(c_terminal), 33))), (Box::new(c_terminal), 63))), (Box::new(c_terminal), 60))), (Box::new(c_terminal), 62))), (Box::new(c_terminal), 34))), (Box::new(c_terminal), 40))), (Box::new(c_terminal), 41))), (Box::new(c_terminal), 95))), (Box::new(c_terminal), 44))), (Box::new(c_terminal), 47))), (Box::new(c_terminal), 59))), (Box::new(c_terminal), 61))), (Box::new(c_terminal), 92))), (Box::new(c_terminal), 35))), (Box::new(c_terminal), 58))), (Box::new(c_terminal), 124))), (Box::new(c_terminal), 46))), (Box::new(c_terminal), 123))), (Box::new(c_terminal), 125))), (Box::new(c_terminal), 91))), (Box::new(c_terminal), 93))), (Box::new(c_terminal), 37))), (Box::new(c_terminal), 39))), (Box::new(c_terminal), 94))), (Box::new(c_terminal), 126))));
 }
 fn ascii(po: &mut ParserObject) -> bool {
     /*
@@ -125,7 +131,7 @@ fn apostrophe(po: &mut ParserObject) -> bool {
     /*
     <Apostrophe> = '"' ;
     */
-    return c_subexpression(po, (Box::new(c_terminal), "34"));
+    return c_subexpression(po, (Box::new(c_terminal), 34));
 }
 fn left_angle_bracket(po: &mut ParserObject) -> bool {
     /*

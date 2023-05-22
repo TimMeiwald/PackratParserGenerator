@@ -144,7 +144,7 @@ class Parser_Call_Maker():
                 node.content = "\t"
 
         if (node.content == '"'):
-            p_string = '(Box::new(c_terminal), "' + str(ord(node.content)) + '")'
+            p_string = '(Box::new(c_terminal), ' + str(ord(node.content)) + ')'
         else:
             if (node.content is None):
                 p_string = "(&c_terminal, " + '"' + \
