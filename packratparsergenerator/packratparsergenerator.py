@@ -29,17 +29,17 @@ class PackratParserGenerator():
         else:
             raise ValueError(
                 "You must provide either src or src_filepath via their respective methods set_src_filepath or set_src")
-        if(verbose):
-            print(f"src is \n{src}")
+        #if(verbose):
+            #print(f"src is \n{src}")
         # Parses
         self.parser._set_src(src)
         position, bool, node = self.parser.caller(0, self.parser.Grammar)
-        if (verbose):
-            print(f"Reached position: {position}")
-            print(f"With Boolean result: {bool}")
-            print("With Node before second_pass: \n")
-            node.pretty_print()
-            print("\n\n\n\n")
+        #if (verbose):
+            #print(f"Reached position: {position}")
+            #print(f"With Boolean result: {bool}")
+            #print("With Node before second_pass: \n")
+            #node.pretty_print()
+            #print("\n\n\n\n")
         if (position != len(src) or bool != True):
             line_number = len(src[0:position+1].splitlines()) # Num lines of src
             raise Exception(
@@ -47,10 +47,10 @@ class PackratParserGenerator():
 
         # Parser Pass Two
         self.parser_pass_two.parse(node)
-        if (verbose):
-            print("With Node after second_pass: \n")
-            node.pretty_print()
-            print("\n\n\n\n")
+        # if (verbose):
+        #     print("With Node after second_pass: \n")
+        #     node.pretty_print()
+        #     print("\n\n\n\n")
 
         if (dryrun):
             return None
