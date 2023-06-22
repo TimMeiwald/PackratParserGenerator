@@ -1,6 +1,13 @@
 from packratparsergenerator.parser.core_parser import Rules, Parser
 from packratparsergenerator.parser.grammar_parser import Grammar_Parser
 
+def make_camelcase(content):
+    c= content.split("_")
+    camelcase = ""
+    for i in c:
+        camelcase += i.title()
+    return camelcase
+
 
 class Parser_Call_Maker():
 
@@ -48,16 +55,16 @@ class Parser_Call_Maker():
                 f"Unidentified node of type: {node.type.name}, content: {node.content}")
 
     def p_epsilon(self, node):
-        return "Terminal{arg:'""'.to_string().as_bytes()[0]}"
+        return "_Terminal{arg:'""'.to_string().as_bytes()[0]}"
 
     def p_sequence(self, node):
         p_string = ""
         for index in range(0, len(node.children) - 1):
             if (index == 0):
-                p_string = "Sequence{arg_lhs:" + self.selector(
+                p_string = "_Sequence{arg_lhs:" + self.selector(
                     node.children[index]) + ", arg_rhs:" + self.selector(node.children[index + 1]) + "}"
             else:
-                p_string = "Sequence{arg_lhs:"  + p_string + ", arg_rhs:" + \
+                p_string = "_Sequence{arg_lhs:"  + p_string + ", arg_rhs:" + \
                     self.selector(node.children[index + 1]) + "}"
         return p_string
 
@@ -65,10 +72,10 @@ class Parser_Call_Maker():
         p_string = ""
         for index in range(0, len(node.children) - 1):
             if (index == 0):
-                p_string = "OrderedChoice{arg_lhs:" + self.selector(
+                p_string = "_OrderedChoice{arg_lhs:" + self.selector(
                     node.children[index]) + ", arg_rhs:" + self.selector(node.children[index + 1]) + "}"
             else:
-                p_string = "OrderedChoice{arg_lhs:" + p_string + \
+                p_string = "_OrderedChoice{arg_lhs:" + p_string + \
                     ", arg_rhs:" + self.selector(node.children[index + 1]) + "}"
         return p_string
 
@@ -76,13 +83,13 @@ class Parser_Call_Maker():
         try:
             child = node.children[0]
             child_str = self.selector(child)
-            p_string = "Subexpression{arg:" + child_str + "}"
+            p_string = "_SubExpression{arg:" + child_str + "}"
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string
 
     def p_var_name(self, node):
-        p_string = "VarName{arg:" + node.content + "}"
+        p_string = "_VarName{arg:" + make_camelcase(node.content) + "}"
         return p_string
 
     def p_rule(self, node):
@@ -101,26 +108,26 @@ class Parser_Call_Maker():
         return p_string
 
     def p_and_predicate(self, node):
-        p_string = "AndPredicate{arg: " + \
+        p_string = "_AndPredicate{arg: " + \
             self.selector(node.children[0]) + "}"
         return p_string
 
     def p_not_predicate(self, node):
-        p_string = "NotPredicate{arg: " + \
+        p_string = "_NotPredicate{arg: " + \
             self.selector(node.children[0]) + "}"
         return p_string
 
     def p_optional(self, node):
-        p_string = "Optional{arg: " + self.selector(node.children[0]) + "}"
+        p_string = "_Optional{arg: " + self.selector(node.children[0]) + "}"
         return p_string
 
     def p_one_or_more(self, node):
-        p_string = "OneOrMore{arg: " + \
+        p_string = "_OneOrMore{arg: " + \
             self.selector(node.children[0]) + "}"
         return p_string
 
     def p_zero_or_more(self, node):
-        p_string = "ZeroOrMore{arg: " + \
+        p_string = "_ZeroOrMore{arg: " + \
             self.selector(node.children[0]) + "}"
         return p_string
 
@@ -131,13 +138,13 @@ class Parser_Call_Maker():
 
     def p_TERMINAL(self, node):
         if (node.content == '"'):
-            p_string = "Terminal{arg:'" + node.content + "'.to_string().as_bytes()[0]}"
+            p_string = "_Terminal{arg:'" + node.content + "'.to_string().as_bytes()[0]}"
         elif (node.content == "\\"):
-            p_string = "Terminal{arg:'" + "\\\\" + "'.to_string().as_bytes()[0]}"
+            p_string = "_Terminal{arg:'" + "\\\\" + "'.to_string().as_bytes()[0]}"
         else:
             if (node.content is None):
-                p_string = "Terminal{arg:" + '"' + \
+                p_string = "_Terminal{arg:" + '"' + \
                     "\033[31mERROR: NONE\033[0m" + '"' + ".to_string().as_bytes()[0]}"
             else:
-                p_string = "Terminal{arg:" + '"' + node.content + '"' + ".to_string().as_bytes()[0]}"
+                p_string = "_Terminal{arg:" + '"' + node.content + '"' + ".to_string().as_bytes()[0]}"
         return p_string

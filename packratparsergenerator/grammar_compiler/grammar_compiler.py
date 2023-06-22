@@ -6,12 +6,18 @@ import importlib.resources
 
 
 def create_rule_header(rule_name):
+    c= rule_name.split("_")
+    camelcase = ""
+    for i in c:
+        camelcase += i.title()
+    
     rule = f"""
     #[derive(Copy, Clone)]
-    struct {rule_name.title()};
-    impl Resolvable for {rule_name.title()} {{
+    pub struct {camelcase};
+    impl Resolvable for {camelcase} {{
     fn resolve(&self, position: u32, source: &str) -> (bool, u32) {{
-        return {rule_name.lower()}(position, source); 
+        let hook = {rule_name.lower()}(position, source); 
+        return hook;
         }}
     }}
     
