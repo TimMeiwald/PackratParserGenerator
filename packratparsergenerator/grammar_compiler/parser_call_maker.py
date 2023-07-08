@@ -95,7 +95,7 @@ class Parser_Call_Maker():
     def p_rule(self, node):
         try:
             p_string = self.selector(node.children[1])
-            p_string = p_string + ".resolve(position, source)"
+            p_string = p_string #+ ".resolve(cache, position, source)"
         except IndexError:
             p_string = self.p_var_name(node)
         return p_string
