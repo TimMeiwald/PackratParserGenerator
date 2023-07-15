@@ -24,13 +24,14 @@ def create_rule_header(count, rule_name, rule_content):
             if position != hook.1 {{
                 let e: StackEntry = StackEntry{{rule: Rules::{camelcase}, start_position: position, end_position: hook.1}};
                 stack.push(e);
-                println!("{"{}"}, {"{}"}, {"{}"}, {"{}"}", Rules::{camelcase} as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 }};
             }};
         return hook;
         }}
     }}
     """
+    # println!("{"{}"}, {"{}"}, {"{}"}, {"{}"}", Rules::{camelcase} as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
+
     return rule
 
 

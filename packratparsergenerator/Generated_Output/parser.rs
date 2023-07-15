@@ -55,7 +55,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::AlphabetUpper, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::AlphabetUpper as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -73,7 +72,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::AlphabetLower, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::AlphabetLower as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -91,7 +89,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Num, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Num as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -109,7 +106,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Spaces, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Spaces as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -127,7 +123,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Specials, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Specials as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -145,7 +140,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Ascii, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Ascii as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -163,7 +157,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Apostrophe, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Apostrophe as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -181,7 +174,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::LeftAngleBracket, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::LeftAngleBracket as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -199,7 +191,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::RightAngleBracket, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::RightAngleBracket as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -217,7 +208,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::LeftBracket, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::LeftBracket as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -235,7 +225,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::RightBracket, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::RightBracket as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -253,7 +242,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Assignment, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Assignment as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -271,7 +259,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::EndRule, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::EndRule as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -289,7 +276,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Ampersand, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Ampersand as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -307,7 +293,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::ExclamationMark, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::ExclamationMark as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -325,7 +310,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Plus, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Plus as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -343,7 +327,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Star, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Star as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -361,7 +344,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::QuestionMark, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::QuestionMark as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -379,7 +361,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Comma, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Comma as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -397,7 +378,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Backslash, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Backslash as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -415,7 +395,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::VarName, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::VarName as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -433,7 +412,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Subexpression, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Subexpression as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -451,7 +429,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Epsilon, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Epsilon as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -469,7 +446,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Lterminal, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Lterminal as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -487,7 +463,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Nucleus, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Nucleus as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -505,7 +480,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Atom, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Atom as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -523,7 +497,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::AndPredicate, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::AndPredicate as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -541,7 +514,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::NotPredicate, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::NotPredicate as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -559,7 +531,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Sequence, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Sequence as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -577,7 +548,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::OrderedChoice, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::OrderedChoice as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -595,7 +565,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::OneOrMore, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::OneOrMore as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -613,7 +582,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::ZeroOrMore, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::ZeroOrMore as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -631,7 +599,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Optional, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Optional as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -649,7 +616,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Whitespace, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Whitespace as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -667,7 +633,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Rhs, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Rhs as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -685,7 +650,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Lhs, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Lhs as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -703,7 +667,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Rule, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Rule as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -721,7 +684,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Grammar, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Grammar as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -739,7 +701,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Comment, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Comment as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -757,7 +718,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::SemanticInstructions, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::SemanticInstructions as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -775,7 +735,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Delete, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Delete as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -793,7 +752,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Passthrough, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Passthrough as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
@@ -811,7 +769,6 @@ Collect,
             if position != hook.1 {
                 let e: StackEntry = StackEntry{rule: Rules::Collect, start_position: position, end_position: hook.1};
                 stack.push(e);
-                println!("{}, {}, {}, {}", Rules::Collect as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 };
             };
         return hook;
