@@ -22,7 +22,7 @@ def create_rule_header(count, rule_name, rule_content):
         let hook = cache_struct_wrapper(stack, cache, rule, Rules::{camelcase} as u32, position, source);
         if hook.0 == true {{ 
             if position != hook.1 {{
-                let e: StackEntry = StackEntry{{rule: Rules::{camelcase} as u32, start_position: position, end_position: hook.1}};
+                let e: StackEntry = StackEntry{{rule: Rules::{camelcase}, start_position: position, end_position: hook.1}};
                 stack.push(e);
                 println!("{"{}"}, {"{}"}, {"{}"}, {"{}"}", Rules::{camelcase} as u32, position, hook.1, &source[position as usize..hook.1 as usize]); 
                 }};
@@ -55,7 +55,7 @@ class Grammar_Compiler():
             self.count += 1
             self.rules.append(header)
         
-        result = "pub enum Rules{"
+        result = "#[derive(Debug)]\npub enum Rules{"
         for i in self.enum_list:
             result += i + ",\n"
         result += "}\n\n"
