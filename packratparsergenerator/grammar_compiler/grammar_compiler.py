@@ -19,13 +19,16 @@ def create_rule_header(count, rule_name, rule_content):
     impl Resolvable for {camelcase} {{
     fn resolve(&self, stack: &mut Stack, cache: &mut Cache, position: u32, source: &str) -> (bool, u32) {{ 
         let rule = {rule_content};
+        let e: StackEntry = StackEntry{{rule: Rules::{camelcase}, start_position: position, end_position: 0}};
+        let e_position = stack.push(e);
         let hook = cache_struct_wrapper(stack, cache, rule, Rules::{camelcase} as u32, position, source);
-        if hook.0 == true {{ 
-            if position != hook.1 {{
-                let e: StackEntry = StackEntry{{rule: Rules::{camelcase}, start_position: position, end_position: hook.1}};
-                stack.push(e);
-                }};
-            }};
+        stack.update(e_position, hook.1);
+        if hook.0 == true && position != hook.1 {{ 
+                stack.update(e_position, hook.1);
+        }}
+        else{{
+            stack.pop();
+        }}
         return hook;
         }}
     }}
